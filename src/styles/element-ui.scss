@@ -1,0 +1,457 @@
+// cover some element-ui styles
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: bold !important;
+  color: #999999;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+.cell {
+  .el-tag {
+    margin-right: 0px;
+  }
+}
+
+.small-padding {
+  .cell {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+.fixed-width {
+  .el-button--mini {
+    padding: 7px 10px;
+    min-width: 60px;
+  }
+}
+
+.status-col {
+  .cell {
+    padding: 0 10px;
+    text-align: center;
+
+    .el-tag {
+      margin-right: 0px;
+    }
+  }
+}
+
+// to fixed https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+}
+
+// refine element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+// dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+// fix date-picker ui bug in filter-item
+.el-range-editor.el-input__inner {
+  display: inline-flex !important;
+}
+
+// to fix el-date-picker css style
+.el-range-separator {
+  box-sizing: content-box;
+}
+
+.el-button {
+  padding: 0;
+  color: #333;
+  font-size: 16px;
+  border: 1px solid #DDDDDD;
+
+  &.el-button--primary {
+    color: #FFFFFD;
+    border: 1px solid #096BED;
+  }
+
+  &.el-button--medium {
+    width: 240px;
+    height: 48px;
+  }
+
+  &.el-button--small {
+    width: 96px;
+    height: 36px;
+  }
+
+  &.el-button--text {
+    width: unset;
+    border: none;
+  }
+}
+
+.el-button+.el-button {
+  margin-left: 20px;
+}
+
+
+.el-dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+  margin: 0 !important;
+
+  .el-dialog__header {
+    padding: 40px;
+
+    .el-dialog__title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333333;
+    }
+
+    .el-dialog__headerbtn {
+
+      top: 40px;
+      right: 40px;
+
+      .el-dialog__close {
+        color: #474747;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .el-dialog__body {
+    padding: 0 40px;
+  }
+
+  .el-dialog__footer {
+    padding: 0 105px 81px 0;
+  }
+}
+
+.edit-box {
+  .el-form-item {
+    margin-bottom: 20px;
+
+    .el-form-item__label {
+      font-size: 16px;
+      color: #525252;
+      line-height: 48px;
+    }
+
+    .el-input__inner,
+    .el-textarea__inner {
+      background: #ffffff;
+      border: 1px solid #d9d9d9;
+      border-radius: 2px;
+      padding: 12px 20px;
+      font-size: 16px;
+    }
+
+    .el-input__inner {
+      height: 48px;
+    }
+
+    .el-textarea__inner {
+      line-height: 24px;
+    }
+
+    .el-select {
+      width: 100%;
+    }
+  }
+}
+
+.search-box {
+  margin-bottom: 40px;
+  .el-input__inner {
+    height: 36px;
+    line-height: 36px;
+    padding: 0 13px;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .el-range-separator {
+    line-height: 36px;
+    font-size: 16px;
+    color: #525252;
+  }
+}
+
+// 数据看板公用表格样式
+.panel_table {
+  th {
+    padding: 0;
+  }
+
+  thead {
+    th {
+      height: 48px;
+      line-height: 48px;
+      font-size: 16px;
+      font-weight: 400;
+      color: #666666;
+      background: #f8f8f8;
+    }
+  }
+
+  tbody {
+    tr {
+      height: 64px;
+      line-height: 64px;
+      font-size: 16px;
+      color: #333333;
+    }
+
+    td {
+      padding: 0;
+    }
+  }
+
+  &::before {
+    height: 0;
+  }
+}
+
+// 类别看板公用表格样式
+.sort_table {
+  th {
+    padding: 0;
+  }
+
+  thead {
+    th {
+      height: 44px;
+      line-height: 44px;
+      font-size: 16px;
+      font-weight: 400;
+      color: #666666;
+      background: #f8f8f8;
+    }
+  }
+
+  tbody {
+    tr {
+      height: 80px;
+      line-height: 80px;
+      font-size: 16px;
+      color: #333333;
+    }
+
+    td {
+      padding: 0;
+    }
+  }
+
+  &::before {
+    height: 0;
+  }
+}
+
+// 排行榜公用表格样式
+.ranking_table {
+  margin-bottom: 66px;
+
+  .index-box {
+    width: 40px;
+    height: 36px;
+
+    .pic {
+      width: 100%;
+      height: 100%;
+    }
+
+    span {
+      font-size: 24px;
+      font-weight: 800;
+      color: #333333;
+    }
+  }
+
+  .flex {
+    .thumb {
+      width: 64px;
+      height: 64px;
+      margin-right: 11px;
+    }
+
+    .content-box {
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .onelines {
+        font-size: 16px;
+        font-weight: 400;
+        color: #333333;
+      }
+    }
+  }
+
+  th {
+    padding: 0;
+  }
+
+  th.is-leaf {
+    border-bottom: 0;
+  }
+
+  thead {
+    th {
+      height: 48px;
+      line-height: 48px;
+      font-weight: 400;
+      font-size: 16px;
+      color: #666666;
+      background: #f8f8f8;
+    }
+  }
+
+  .el-image {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+  }
+
+  tbody {
+
+    tr {
+      height: 96px;
+      line-height: 96px;
+      font-size: 16px;
+      color: #333333;
+    }
+
+    td {
+      padding: 0;
+      border-bottom: 0;
+    }
+  }
+
+  &::before {
+    height: 0;
+  }
+}
+
+// 数据分析公用表格样式
+.analysis_table {
+  margin-bottom: 58px;
+
+  .index-box {
+
+    span {
+      line-height: 17px;
+      font-size: 24px;
+      font-weight: 800;
+      color: #333333;
+    }
+  }
+
+  .thumb {
+    width: 165px;
+    height: 100px;
+    border-radius: 4px;
+    margin-right: 11px;
+  }
+
+  .content-box {
+    flex-direction: column;
+    justify-content: flex-start;
+
+    .onelines {
+      font-size: 16px;
+      font-weight: 400;
+      color: #333333;
+      line-height: 16px;
+      margin-bottom: 68px;
+    }
+
+    .timer {
+      font-size: 16px;
+      font-weight: 400;
+      color: #999999;
+      line-height: 16px;
+    }
+  }
+
+  th {
+    padding: 0;
+  }
+
+  th.is-leaf {
+    border-bottom: 0;
+  }
+
+  thead {
+    th {
+      height: 44px;
+      line-height: 44px;
+      font-weight: 400;
+      font-size: 16px;
+      color: #666666;
+      background: #f8f8f8;
+    }
+  }
+
+
+  tbody {
+
+    tr {
+      height: 156px;
+      line-height: 156px;
+      font-size: 16px;
+      color: #333333;
+    }
+
+    td {
+      padding: 0;
+      border-bottom: 0;
+    }
+  }
+
+  &::before {
+    height: 0;
+  }
+}
+
+.tab-box {
+  .flex {
+    .thumb {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      margin-right: 18px;
+    }
+
+    .content-box {
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+  }
+}

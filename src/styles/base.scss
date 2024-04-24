@@ -1,0 +1,29 @@
+//手机模型公共样式
+.iframe {
+    width: 100%;
+    height: 0;
+    padding-bottom: 180%;
+    background: #536187;
+    border-radius: 40px;
+    position: relative;
+  
+    &-content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 10px;
+  
+      iframe {
+        width: 100%;
+        height: 100%;
+        border-radius: 30px;
+  
+        &::-webkit-scrollbar {
+          width: 0px;
+          height: 0px;
+        }
+      }
+    }
+  }
