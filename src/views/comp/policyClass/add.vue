@@ -36,7 +36,7 @@
       </el-form-item>
       <el-form-item>
         <div class="but-b">
-          <el-button >取消</el-button>
+          <el-button @click="$router.go(-1)">取消</el-button>
           <el-button type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>

@@ -36,8 +36,8 @@
       </el-form-item>
       <el-form-item>
         <div class="but-b">
-          <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">修改</el-button>
+          <el-button >取消</el-button>
+          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -47,7 +47,7 @@
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
-import {allAddCategoryreq,GetCategoryInfo,UpdateCategory} from '@/api/user'
+import {allAddCategoryreq} from '@/api/user'
 import { getToken } from '@/utils/auth'
 
 export default {
@@ -86,28 +86,10 @@ export default {
       },
     };
   },
-  created(){
-    this.getinfofn()
-  },
   mounted() {
     this.upheaders = {'Authorization':getToken()}
   },
   methods: {
-    async getinfofn(){
-      let {datalist:{Categorytitle:categorytitle,Isshow:isshow,Sortid:sortid,Imgurl:imgurl}} = await GetCategoryInfo({id:this.$route.query.id})
-      this.ruleForm.categorytitle = categorytitle
-      this.ruleForm.sortid = sortid
-      this.ruleForm.isshow = isshow?true:false
-      this.ruleForm.imgurl = imgurl
-      if(imgurl){
-        this.fileList = [{url:imgurl}]
-      }
-    },
-    // 图片上传成功
-    handleAvatarSuccess(res, file) {
-      this.ruleForm.imgurl = res.filepath;
-      this.fileList = [{url:imgurl}]
-    },
     beforeUpload(file) {  
       const isJPG = file.type === 'image/jpeg';  
       const isPNG = file.type === 'image/png';  
@@ -137,7 +119,7 @@ export default {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           let {isshow} = this.ruleForm
-          let res = await UpdateCategory({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
+          let res = await allAddCategoryreq({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

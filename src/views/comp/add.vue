@@ -157,7 +157,7 @@ export default {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           let {isshow,hotstr} = this.ruleForm
-          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(',')})
+          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           console.log(res);
         }
       });

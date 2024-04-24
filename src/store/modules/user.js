@@ -8,7 +8,7 @@ const state = {
   avatar: '',
   introduction: '',
   roles: [],
-  beseFile:'https://fayuan.qiieer.net/cloud/UploadReturnPathAndSite'
+  beseFile:'https://syzw.qiieer.net/cloud/UploadReturnPathAndSite'
 }
 
 const mutations = {

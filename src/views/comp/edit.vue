@@ -1,56 +1,51 @@
 <template>
   <div class="container-box">
     <!-- 政策模块 -->
-    <el-form class="my-form" :rules="rules" ref="myform" :model="form" label-width="100px">
-      <el-form-item label="政策标题" prop="zcTitle">
-        <el-input v-model="form.zcTitle" placeholder="请输入政策标题"></el-input>
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
+      <el-form-item label="政策标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
       </el-form-item>
       <el-form-item label="政策内容" prop="content">
-        <Tinymce ref="editor" v-model="form.content" :height="300">
+        <Tinymce v-if="ruleForm.content" ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
-      </el-form-item>
-      <el-form-item label="发布时间" prop="zcTime">
-        <el-date-picker
-        style="width: 100%;"
-        v-model="form.zcTime"
-        type="date"
-        placeholder="选择日期">
-      </el-date-picker>
       </el-form-item>
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
-          <el-checkbox-group v-model="ruleForm.isTop">
-            <el-checkbox label="置顶"></el-checkbox>
-            <el-checkbox label="热门"></el-checkbox>
+          <el-checkbox-group v-model="ruleForm.hotstr">
+            <el-checkbox label="置顶" value="1"></el-checkbox>
+            <el-checkbox label="热门" value="2"></el-checkbox>
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属分类" prop="categoryId">
-        <el-select v-model="form.categoryId" clearable placeholder="请选择分类" style="width: 100%;">
+      <el-form-item label="所属分类" prop="categoryid">
+        <el-select v-model="ruleForm.categoryid" clearable placeholder="请选择分类" style="width: 100%;">
           <el-option
             v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="排序ID">
-        <el-input v-model="form.zcId" placeholder="ID越小越靠前"></el-input>
+        <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
-      <el-form-item label="封面" prop="imgUrl">
-        <el-upload
-          action="https://jsonplaceholder.typicode.com/posts/"
-          list-type="picture-card"
-          >
-         <div style="display: flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
-          <i style="font-size: 80px;" class="el-icon-picture-outline"></i>
-          <i style="font-size: 14px;margin-top: 10px;" class="el-icon-plus">添加封面</i>
-         </div>
+      <el-form-item label="活动封面" prop="imgurl">
+        <el-upload  
+          :action="$store.state.user.beseFile"  
+          list-type="picture-card"  
+          :on-success="handleSuccess"  
+          :on-error="handleError"  
+          :before-upload="beforeUpload"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :limit="1"
+        >  
+          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
+            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+          </div>  
         </el-upload>
-        <el-dialog :visible.sync="imgdialogVisible">
-          <img width="100%" :src="form.imgUrl" alt="">
-        </el-dialog>
       </el-form-item>
       <el-form-item>
         <div class="but-b">
@@ -65,6 +60,7 @@
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
+import {GetArtcileInfo,GetSelectCategory,UpdateArticle} from '@/api/user'
 export default {
   components: {
     ImageUpload,
@@ -81,47 +77,96 @@ export default {
       };
     return {
       form:{},
+      fileList:[],
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
+      containertext:'',
       ruleForm: {
-        zcTitle:'',
+        title:'',
         content:'',
-        zcTime:'',
-        isTop:[],
-        zcId:'',
-        imgUrl:'',
-        categoryId:''
+        hotstr:[],
+        categoryid:'',
+        sortid:'',
+        imgurl:'',
       },
       rules: {
-        zcTitle: [
+        title: [
             { required: true, message: '请输入政策标题', trigger: 'blur' },
           ],
           content: [
             { required: true, message: '请填写政策内容', trigger: 'change' }
           ],
-          zcTime: [
-            { type: 'date', required: true, message: '请选择发布日期', trigger: 'change' }
-          ],
           categoryId: [
             {  required: true, message: '请选择所属类别', trigger: 'change' }
           ],
-          imgUrl: [
+          imgurl: [
             { required: true, trigger: 'change', validator: validateImg, }
           ],
       },
     options:[
-      { value: 1, label: '分类1' },
-      { value: 2, label: '分类2' },
-      { value: 3, label: '分类3' },
     ]
     }
   },
+  created(){
+    // 获取分类无分页
+    this.getselectlist()
+  },
+  mounted(){
+    // 获取文章详情
+    GetArtcileInfo({id:this.$route.query.id}).then(res=>{
+      let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl} = res.datalist
+      this.ruleForm.title = title
+      this.ruleForm.hotstr = hotstr.split(',')
+      this.ruleForm.categoryid = categoryid
+      this.ruleForm.sortid = sortid
+      this.ruleForm.imgurl = imgurl
+      this.fileList = [{url:imgurl}]
+       this.$nextTick(()=>{
+        this.ruleForm.content = content
+        console.log(this.$refs.editor);
+      // 获取富文本内容
+      })
+    })
+   
+  },
   methods: {
+    beforeUpload(file) {  
+      const isJPG = file.type === 'image/jpeg';  
+      const isPNG = file.type === 'image/png';  
+      const isLt10M = file.size / 1024 / 1024 < 10;  
+      if (!isJPG && !isPNG) {  
+        this.$message.error('上传图片只能是 JPG/PNG 格式!');  
+      }  
+      if (!isLt10M) {  
+        this.$message.error('上传图片大小不能超过 10MB!');  
+      }  
+      return isJPG || isPNG && isLt10M;  
+    },  
+    handleSuccess(response) {
+      this.ruleForm.imgurl = response.filepath;
+    },  
+    handleError(error) {  
+      this.$message.error(error.msg);  
+      // 你可以在这里处理上传失败后的逻辑  
+    },  
+    handleRemove() {
+      this.ruleForm.imgurl = '';
+      this.fileList = [];
+      // 你可以在这里处理删除文件后的逻辑，比如更新fileList
+    },
+    async getselectlist(){
+      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
+      this.options = res.datalist
+    },
     submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          console.log("submit!");
+          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname})
+          if(res.status == 200){
+            this.$message.success(res.msg)
+            this.$router.go(-1)
+          }
         }
       });
     }

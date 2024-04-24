@@ -68,13 +68,21 @@
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text">
-              <router-link :to="'/policy/adedit/8881' + scope.row.id">
+            <el-button type="text" @click="$router.push({path:'/policy/classedit',query:{id:scope.row.id}}
+            )">
               编辑
-            </router-link>
             </el-button>
             <span class="line">|</span>
-            <el-button type="text">删除</el-button>
+            <el-popconfirm
+              confirm-button-text='确定'
+              cancel-button-text='取消'
+              icon="el-icon-info"
+              @confirm="deletaFn"
+              icon-color="red"
+              title="你确定删除此内容吗?"
+            >
+              <el-button slot="reference" type="text">删除</el-button>
+            </el-popconfirm>
           </div>
         </template>
       </el-table-column>
@@ -132,6 +140,9 @@ export default {
     this.getList();
   },
   methods: {
+    deletaFn(){
+      alert(9)
+    },
     getList() {
       this.listLoading = true;
       getClasslistreq({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {

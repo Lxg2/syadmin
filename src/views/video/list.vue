@@ -1,173 +1,176 @@
-<template>
-  <div class="video-container flex">
-
-    <div class="left-menu mr32">
-      <el-row class="tac">
-      <el-col :span="12" style="width: 244px;">
-        <el-menu default-active="2" :default-openeds="openeds" class="el-menu-vertical-demo">
-          <el-submenu index="1">
-            <template slot="title"><span>热门视频</span></template>
-            <el-menu-item-group>
-              <el-menu-item index="1-1">行情</el-menu-item>
-              <el-menu-item index="1-2">财经</el-menu-item>
-              <el-menu-item index="1-3">科技</el-menu-item>
-              <el-menu-item index="1-4">政策</el-menu-item>
-            </el-menu-item-group>
-            <el-submenu index="1-5">
-              <template slot="title">政府政策</template>
-              <el-menu-item index="1-5-1">教育政策</el-menu-item>
-              <el-submenu index="1-5-2">
-              <template slot="title">补贴政策</template>
-              <el-menu-item index="1-5-2-1">创业补贴</el-menu-item>
-            </el-submenu>
-            </el-submenu>
-            <el-menu-item index="1-6">
-            <span slot="title">初创企业补贴</span>
-          </el-menu-item>
-          <el-menu-item index="1-7">
-            <span slot="title">社会保险补贴</span>
-          </el-menu-item>
-          <el-menu-item index="1-8">
-            <span slot="title">创业租金补贴</span>
-          </el-menu-item>
-          <el-menu-item index="1-9">
-            <span slot="title">创业带动就业补贴</span>
-          </el-menu-item>
-          </el-submenu>
-        </el-menu>
-      </el-col>
-    </el-row>
-    </div>
-
-    <div class="app-container">
-      <TabSearchBox :btnText="'新增'">
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="全部" name="1"></el-tab-pane>
-        <el-tab-pane label="已发布" name="2"></el-tab-pane>
-        <el-tab-pane label="未发布" name="3"></el-tab-pane>
-      </el-tabs>
-    </TabSearchBox>
-
-    <div class="cell" v-for="item in list" :key="item.id">
-      <el-image
-        style="width: 140px; height: 95px; margin-right: 15px"
-        :src="item.image_uri"
-      >
-        <div slot="error" class="image-slot">
-          <i class="el-icon-picture-outline"></i></div
-      ></el-image>
-      <div class="content">
-        <div class="top-content">
-          <span class="title">{{ item.title }}</span>
-          <span class="time">{{ item.display_time }}</span>
-        </div>
-        <div class="down-content">
-          <div class="number">
-            <span> <i class="el-icon-view"></i> {{ item.pageviews }} </span>
-            <span> <i class="el-icon-chat-dot-square"></i> 7893 </span>
-            <span> <i class="el-icon-position"></i> 8761 </span>
-          </div>
-          <div class="operate">
-            <el-button type="text" size="mini" @click="showDetail"
-              >查看评论</el-button
-            >
-            <el-button type="text" size="mini">编辑</el-button>
-            <el-button type="text" size="mini">删除</el-button>
-          </div>
-        </div>
+\<template>
+  <div class="comp-container">
+    <div class="search-box row-between">
+      <router-link :to="'/policy/policyadd'">
+        <el-button type="primary" size="small" icon="el-icon-plus">
+        新增
+        </el-button>
+    </router-link>
+      <div class="search-right" style="align-items: center;display: flex;">
+        <el-input
+          v-model="listQuery.keywords"
+          placeholder="标题"
+          style="width: 200px"
+          class="mr20"
+          @keyup.enter.native="handleFilter"
+        />
+        <el-button @click="handleFilter" size="small" type="primary">
+          搜索
+        </el-button>
+        <el-button size="small">重置</el-button>
       </div>
     </div>
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      fit
+      highlight-current-row
+      style="width: 100%"
+      class="ranking_table"
+    >
+      <el-table-column type="selection" align="center" />
 
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
-      @pagination="getList"
-    />
-    <CommentDetails ref="comDetails" />
+      <el-table-column width="208px" label="ID">
+        <template slot-scope="scope">
+          <span>{{ scope.row.title }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="177px" label="图片">
+        <template>
+          <el-image class="thumb" />
+        </template>
+      </el-table-column>
+
+      <el-table-column label="跳转链接">
+        <template>
+          <span>https://www.baidu.com</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="排序" width="110" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.id }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column min-width="153px" label="状态" align="center">
+        <template slot-scope="{ row }">
+          <el-switch
+            v-model="row.status"
+            active-color="#1BD9A1"
+            inactive-color="#D1D1D1"
+          />
+        </template>
+      </el-table-column>
+
+      <el-table-column width="135px" label="创建时间">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.timestamp
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="操作" width="200">
+        <template slot-scope="scope">
+          <div class="operate">
+            <el-button type="text" @click="$router.push({path:'/policy/policyedit',query:{id:scope.row.id}}
+            )">
+              编辑
+            </el-button>
+            <span class="line">|</span>
+            <el-button type="text">删除</el-button>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <div class="row-center">
+      <pagination
+        v-show="total > 0"
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.pageSize"
+        @pagination="getList"
+      />
     </div>
   </div>
 </template>
 
 <script>
-import { fetchList } from "@/api/article";
+const calendarTypeOptions = [
+  { key: "CN", display_name: "China" },
+  { key: "US", display_name: "USA" },
+  { key: "JP", display_name: "Japan" },
+  { key: "EU", display_name: "Eurozone" },
+];
+import { GetArtcileList } from "@/api/user";
 import Pagination from "@/components/Pagination";
-import TabSearchBox from "@/components/TabSearchBox";
-import CommentDetails from "./components/CommentDetails.vue";
 
 export default {
-  name: "InfoList",
-  components: { Pagination, TabSearchBox, CommentDetails },
+  name: "ArticleList",
+  components: { Pagination },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        published: "success",
+        draft: "info",
+        deleted: "danger",
+      };
+      return statusMap[status];
+    },
+  },
   data() {
     return {
-      activeName: "1",
       list: null,
       total: 0,
+      calendarTypeOptions,
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: "+id",
+        pageSize: 10,
+        keywords:'',
       },
-      openeds:['1'],
-      uniqueOpened: false
     };
   },
   created() {
     this.getList();
   },
   methods: {
+    handleFilter(){
+      this.getList()
+    },
     getList() {
       this.listLoading = true;
-      fetchList(this.listQuery).then((response) => {
-        console.log(response.data.items);
-        this.list = response.data.items;
-        this.total = response.data.total;
-
-        setTimeout(() => {
-          this.listLoading = false;
-        }, 1.5 * 1000);
+      GetArtcileList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
+        this.list = response.datalist.datalist;
+        this.total = response.datalist.totalcount;
+        this.listLoading = false;
       });
     },
-    showDetail() {
-      this.$refs.comDetails.showCommentDetail();
-    },
-
-    handleClick(tab, event) {},
-
-    handleDelete(row, index) {
-      this.$notify({
-        title: "Success",
-        message: "Delete Successfully",
-        type: "success",
-        duration: 2000,
-      });
-      this.list.splice(index, 1);
-    },
+    resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.video-container {
-  .app-container {
-    width: 85%;
+
+.comp-container {
+  padding: 40px 40px 55px;
+  background: #FFFFFF;
+  .row-center {
+    margin-top: 52px;
+  }
+  .tab-box {
+    .thumb {
+      width: 88px;
+      height: 64px;
+      border-radius: 4px;
+    }
   }
 }
-::v-deep .item-input .el-input__inner {
-  color: #999999;
-  background: #f8f8f8;
-}
-::v-deep .operate .el-button {
-  color: #2060e3;
-}
 
-::v-deep .el-menu {
-  border: none;
-  background: #FFFFFF;
-}
 </style>

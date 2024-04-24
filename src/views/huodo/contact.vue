@@ -56,7 +56,6 @@
             }}</span>
         </template>
       </el-table-column>
-
       <el-table-column width="175px" label="创建时间">
         <template slot-scope="scope">
           <span>{{
@@ -68,10 +67,8 @@
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text">
-              <router-link :to="'/policy/adedit/8881' + scope.row.id">
+            <el-button type="text" @click="$router.push({path:'/activity/hdclassedit',query:{id:scope.row.id}})">
               编辑
-            </router-link>
             </el-button>
             <span class="line">|</span>
             <el-button type="text">删除</el-button>
