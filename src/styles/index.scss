@@ -705,3 +705,13 @@ aside {
   .my-form .el-form-item .el-form-item__label{
     font-size: 16px !important;
 }
+.el-popconfirm__action{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 50px;
+  .el-button{
+    width: 50px;
+    height: 30px;
+  }
+}

@@ -1,13 +1,16 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="政策标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
+      <el-form-item label="公告标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入公告标题"></el-input>
       </el-form-item>
-      <el-form-item label="政策内容" prop="content">
+      <el-form-item label="公告内容" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
+      <!-- <el-form-item label="发布时间" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入咨询标题"></el-input>
+      </el-form-item> -->
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
@@ -16,7 +19,7 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属分类" prop="categoryid">
+      <!-- <el-form-item label="所属分类" :prop="categoryid">
         <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
           <el-option
             v-for="item in options"
@@ -25,7 +28,7 @@
             :value="item.id">
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
@@ -38,7 +41,7 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="政策封面" prop="imgurl">
+      <!-- <el-form-item label="资讯封面" prop="imgurl">
         <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
@@ -55,7 +58,7 @@
             <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
           </div>  
         </el-upload>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
@@ -82,7 +85,7 @@ export default {
     // 图片验证规则
     var validateImg = (rule, value, callback) => {
         if (value === '' || value === undefined) {
-          callback(new Error('请上传活动封面'));
+          callback(new Error('请上传封面'));
         } else {
           callback();
         }
@@ -99,23 +102,23 @@ export default {
         content:'',
         hotstr:[],
         sortid:'',
-        imgurl:'',
+        // imgurl:'',
         isshow:true,
-        categoryid:''
+        // categoryid:''
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
-          categoryid: [
-            { required: true, message: '请选择分类', trigger: 'blur' },
-          ],
+          // categoryid: [
+          //   { required: true, message: '请选择分类', trigger: 'blur' },
+          // ],
           content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+            { required: true, message: '请填写内容', trigger: 'change' }
           ],
-          imgurl: [
-            { required: true, trigger: 'change', validator: validateImg, }
-          ],
+          // imgurl: [
+          //   { required: true, trigger: 'change', validator: validateImg, }
+          // ],
       },
     };
   },

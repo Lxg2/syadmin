@@ -4,9 +4,9 @@
       <el-form-item label="分类标题" prop="categorytitle">
         <el-input v-model="ruleForm.categorytitle" placeholder="请输入分类标题"></el-input>
       </el-form-item>
-      <el-form-item label="排序ID">
+      <!-- <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
           <el-switch
@@ -36,7 +36,7 @@
       </el-form-item>
       <el-form-item>
         <div class="but-b">
-          <el-button >取消</el-button>
+          <el-button @click="$router.go(-1)">取消</el-button>
           <el-button type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
@@ -72,7 +72,7 @@ export default {
       dialogImageUrl:'',
       ruleForm: {
         categorytitle:'',
-        sortid:'',
+        // sortid:'',
         imgurl:'',
         isshow:false,
       },

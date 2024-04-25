@@ -1,7 +1,7 @@
 <template>
   <div class="comp-container">
-    <div class="search-box row-between">
-      <router-link :to="'/policy/policyadd'">
+    <!-- <div class="search-box row-between">
+      <router-link :to="'/partybuilding/registeradd'">
         <el-button type="primary" size="small" icon="el-icon-plus">
         新增
         </el-button>
@@ -19,7 +19,7 @@
         </el-button>
         <el-button size="small">重置</el-button>
       </div>
-    </div>
+    </div> -->
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -28,46 +28,26 @@
       style="width: 100%"
       class="ranking_table"
     >
-      <el-table-column type="selection" align="center" />
+    <el-table-column width="10" align="center" />
+      <el-table-column width="237px" label="标题" prop="Title">
+      </el-table-column>
 
-      <el-table-column width="208px" label="ID">
+      <!-- <el-table-column label="排序" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
+          <span>{{ scope.row.Sortid }}</span>
         </template>
-      </el-table-column>
-
-      <el-table-column width="177px" label="图片">
-        <template>
-          <el-image class="thumb" />
-        </template>
-      </el-table-column>
-
-      <el-table-column label="跳转链接">
-        <template>
-          <span>https://www.baidu.com</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="排序" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column min-width="153px" label="状态" align="center">
         <template slot-scope="{ row }">
-          <el-switch
-            v-model="row.status"
-            active-color="#1BD9A1"
-            inactive-color="#D1D1D1"
-          />
+          <span>{{row.Isshow?'显示':'隐藏'}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="135px" label="创建时间">
+      <el-table-column width="205px" label="创建时间">
         <template slot-scope="scope">
           <span>{{
-            scope.row.timestamp
+            scope.row.Createtime
           }}</span>
         </template>
       </el-table-column>
@@ -75,18 +55,27 @@
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text" @click="$router.push({path:'/policy/policyedit',query:{id:scope.row.id}}
+            <el-button type="text" @click="$router.push({path:'/partybuilding/registeredit',query:{id:scope.row.id}}
             )">
               编辑
             </el-button>
-            <span class="line">|</span>
-            <el-button type="text">删除</el-button>
+            <!-- <span class="line">|</span>
+            <el-popconfirm
+              confirm-button-text='确定'
+              cancel-button-text='取消'
+              icon="el-icon-info"
+              @onConfirm="deletaFn(scope.row.id)"
+              icon-color="red"
+              title="你确定删除此内容吗?"
+            >
+            <el-button type="text" slot="reference">删除</el-button>
+            </el-popconfirm> -->
           </div>
         </template>
       </el-table-column>
     </el-table>
 
-    <div class="row-center">
+    <!-- <div class="row-center">
       <pagination
         v-show="total > 0"
         :total="total"
@@ -94,7 +83,7 @@
         :limit.sync="listQuery.pageSize"
         @pagination="getList"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -105,7 +94,7 @@ const calendarTypeOptions = [
   { key: "JP", display_name: "Japan" },
   { key: "EU", display_name: "Eurozone" },
 ];
-import { GetArtcileList } from "@/api/user";
+import { GetArtcileList,DeleteArticle } from "@/api/user";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -138,6 +127,13 @@ export default {
     this.getList();
   },
   methods: {
+    async deletaFn(id){
+      let res = await DeleteArticle({id})
+      if(res.status === 200){
+        this.getList()
+        this.$message.success(res.msg)
+      }
+    },
     handleFilter(){
       this.getList()
     },
@@ -159,6 +155,7 @@ export default {
 <style lang="scss" scoped>
 
 .comp-container {
+  min-height: 100%;
   padding: 40px 40px 55px;
   background: #FFFFFF;
   .row-center {

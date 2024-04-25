@@ -8,25 +8,41 @@ const caseRouter = {
   redirect: '/case/list',
   name: 'case',
   meta: {
-    title: '案例管理',
+    title: '资讯管理',
     icon: 'case',
+    channelname: "zixun",
   },
   children: [{
       path: 'list',
-      component: () => import('@/views/case/list'),
+      component: () => import('@/views/case'),
       name: 'List',
       meta: {
-        title: '案例列表'
+        title: '资讯管理',
+        channelname: "zixun",
       }
     }, {
-      path: 'case-add',
-      component: () => import('@/views/case/case-add'),
+      path: 'caseadd',
+      component: () => import('@/views/case/add.vue'),
       name: 'CaseAdd',
       meta: {
-        title: '发布案例',
+        title: '新建资讯',
+        channelname: "zixun",
         noCache: true,
         activeMenu: '/case/list'
-      }
+      },
+      hidden: true,
+    },
+    {
+      path: 'caseedit',
+      component: () => import('@/views/case/edit.vue'),
+      name: 'CaseAdd',
+      meta: {
+        title: '编辑资讯',
+        channelname: "zixun",
+        noCache: true,
+        activeMenu: '/case/list'
+      },
+      hidden: true,
     }
   ]
 }

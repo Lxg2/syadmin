@@ -1,12 +1,18 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="融资标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入融资标题"></el-input>
+      <el-form-item label="金融标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入金融标题"></el-input>
       </el-form-item>
-      <el-form-item label="融资内容" prop="content">
+      <el-form-item label="详情描述" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
+      </el-form-item>
+      <el-form-item label="企业">
+        <el-input v-model="ruleForm.jrCompanyname" placeholder="请输入企业"></el-input>
+      </el-form-item>
+      <el-form-item label="内容描述">
+        <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
       </el-form-item>
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
@@ -16,7 +22,7 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属分类" :prop="categoryid">
+      <el-form-item label="所属分类" prop="categoryid">
         <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
           <el-option
             v-for="item in options"
@@ -38,7 +44,7 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="融资封面" prop="imgurl" >
+      <el-form-item label="融资封面" prop="imgurl">
         <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
@@ -58,7 +64,7 @@
       </el-form-item>
       <el-form-item>
         <div class="but-b">
-          <el-button >取消</el-button>
+          <el-button @click="$router.go(-1)">取消</el-button>
           <el-button type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
@@ -98,6 +104,8 @@ export default {
         title:'',
         content:'',
         hotstr:[],
+        jrCompanyname:'',
+        remarks:'',
         sortid:'',
         imgurl:'',
         isshow:true,
@@ -158,7 +166,11 @@ export default {
         if (valid) {
           let {isshow,hotstr} = this.ruleForm
           let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
-          console.log(res);
+          if(res.status === 200){
+            this.$message.success(res.msg)
+            // 回退
+            this.$router.go(-1)
+          }
         }
       });
     }

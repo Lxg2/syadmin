@@ -1,7 +1,7 @@
 <template>
   <div class="comp-container">
     <div class="search-box row-between">
-      <router-link :to="'/partybuilding/buildingaddfwq'">
+      <router-link :to="'/financing/financingclassifyaddthren'">
         <el-button type="primary" size="small" icon="el-icon-plus">
         新增
         </el-button>
@@ -14,7 +14,7 @@
           class="mr20"
           @keyup.enter.native="handleFilter"
         />
-        <el-button @click="handleFilter" size="small" type="primary">
+        <el-button size="small" type="primary">
           搜索
         </el-button>
         <el-button size="small">重置</el-button>
@@ -28,59 +28,44 @@
       style="width: 100%"
       class="ranking_table"
     >
-      <el-table-column type="selection" align="center" />
-
-      <el-table-column width="208px" label="ID">
-        <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="177px" label="图片">
-        <template>
-          <el-image class="thumb" />
-        </template>
-      </el-table-column>
-
-      <el-table-column label="跳转链接">
-        <template>
-          <span>https://www.baidu.com</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="排序" width="110" align="center">
+    <el-table-column align="center" width="10" />
+      <el-table-column width="108px" label="ID">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
 
+      <el-table-column label="标题" prop="Categorytitle">
+      </el-table-column>
+
       <el-table-column min-width="153px" label="状态" align="center">
         <template slot-scope="{ row }">
-          <el-switch
-            v-model="row.status"
-            active-color="#1BD9A1"
-            inactive-color="#D1D1D1"
-          />
+          <span>{{ 
+            row.Isshow?'显示':'隐藏'
+            }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="135px" label="创建时间">
+      <el-table-column label="创建时间">
         <template slot-scope="scope">
           <span>{{
-            scope.row.timestamp
+            scope.row.Createtime
           }}</span>
         </template>
       </el-table-column>
-
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text" @click="$router.push({path:'/partybuilding/buildingaddfwq',query:{id:scope.row.id}}
-            )">
+            <el-button type="text" @click="$router.push({path:'/financing/financingclassifyeditthren',query:{id:scope.row.id}})">
               编辑
             </el-button>
             <span class="line">|</span>
-            <el-button type="text">删除</el-button>
+            <el-popconfirm
+              title="你确定删除此内容吗？"
+              @confirm="deletaFn(scope.row.id)"
+            >
+            <el-button slot="reference" type="text">删除</el-button>
+          </el-popconfirm>
           </div>
         </template>
       </el-table-column>
@@ -88,7 +73,6 @@
 
     <div class="row-center">
       <pagination
-        v-show="total > 0"
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.pageSize"
@@ -105,7 +89,7 @@ const calendarTypeOptions = [
   { key: "JP", display_name: "Japan" },
   { key: "EU", display_name: "Eurozone" },
 ];
-import { GetArtcileList } from "@/api/user";
+import { getClasslistreq } from "@/api/article";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -123,7 +107,7 @@ export default {
   },
   data() {
     return {
-      list: null,
+      list: [],
       total: 0,
       calendarTypeOptions,
       listLoading: true,
@@ -131,6 +115,7 @@ export default {
         page: 1,
         pageSize: 10,
         keywords:'',
+        channelname:''
       },
     };
   },
@@ -138,12 +123,17 @@ export default {
     this.getList();
   },
   methods: {
-    handleFilter(){
-      this.getList()
+    // 删除
+    async deletaFn(id){
+      let res = await DeleteCategory({id})
+      if(res.status === 200){
+        this.getList();
+        this.$message.success(res.msg)
+      }
     },
     getList() {
       this.listLoading = true;
-      GetArtcileList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
+      getClasslistreq({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
         this.list = response.datalist.datalist;
         this.total = response.datalist.totalcount;
         this.listLoading = false;

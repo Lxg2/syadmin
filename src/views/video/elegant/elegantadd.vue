@@ -1,136 +1,184 @@
 <template>
-    <div class="container-box">
-      <!-- 政策模块 -->
-      <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="150px">
-        <el-form-item label="推荐类产品标题" prop="zcTitle">
-          <el-input v-model="form.zcTitle" placeholder="请输入活动标题"></el-input>
-        </el-form-item>
-        <el-form-item label="活动内容" prop="content">
-          <Tinymce ref="editor" v-model="form.content" :height="300">
-          </Tinymce>
-        </el-form-item>
-        <el-form-item label="活动地点" prop="houdodidian">
-          <el-input v-model="form.houdodidian" placeholder="请输入活动地点"></el-input>
-        </el-form-item>
-        <el-form-item label="报名人数">
-          <el-input v-model="form.num" placeholder="默认为不限"></el-input>
-        </el-form-item>
-        <el-form-item label="活动开始时间" prop="zcTime">
-          <el-date-picker
-          style="width: 100%;"
-          v-model="form.zcTime"
-          type="date"
-          placeholder="选择日期">
-        </el-date-picker>
-        </el-form-item>
-        <el-form-item label="置顶/热门">
-          <div style="margin-left: 10px;">
-            <el-checkbox-group v-model="ruleForm.isTop">
-              <el-checkbox label="置顶"></el-checkbox>
-              <el-checkbox label="热门"></el-checkbox>
-            </el-checkbox-group>
-          </div>
-        </el-form-item>
-        <el-form-item label="排序ID">
-          <el-input v-model="form.zcId" placeholder="ID越小越靠前"></el-input>
-        </el-form-item>
-        <el-form-item label="活动封面" prop="imgUrl">
-          <el-upload
-            action="https://jsonplaceholder.typicode.com/posts/"
-            list-type="picture-card"
-            >
-           <div style="display: flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
-            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>
-            <i style="font-size: 14px;margin-top: 10px;" class="el-icon-plus">添加封面</i>
-           </div>
-          </el-upload>
-          <el-dialog :visible.sync="imgdialogVisible">
-            <img width="100%" :src="form.imgUrl" alt="">
-          </el-dialog>
-        </el-form-item>
-        <el-form-item>
-          <div class="but-b">
-            <el-button >取消</el-button>
-            <el-button type="primary" @click="submitForm('myform')">发布</el-button>
-           </div>
-        </el-form-item>
-      </el-form>
-    </div>
-  </template>
-  
-  <script>
-  import ImageUpload from "@/components/Upload/ImageUpload.vue";
-  import Tinymce from "@/components/Tinymce";
-  export default {
-    components: {
-      ImageUpload,
-      Tinymce
-    },
-    data() {
-      // 图片验证规则
-      var validateImg = (rule, value, callback) => {
-          if (value === '' || value === undefined) {
-            callback(new Error('请上传活动封面'));
-          } else {
-            callback();
-          }
-        };
-      return {
-        form:{},
-        imgdialogVisible:false,
-        validateImg,
-        dialogImageUrl:'',
-        ruleForm: {
-          zcTitle:'',
-          houdodidian:'',
-          content:'',
-          zcTime:'',
-          isTop:[],
-          zcId:'',
-          imgUrl:''
-        },
-        rules: {
-          zcTitle: [
-              { required: true, message: '请输入活动标题', trigger: 'blur' },
-            ],
-            content: [
-              { required: true, message: '请填写活动内容', trigger: 'change' }
-            ],
-            houdodidian: [
-              { required: true, message: '请输入活动地点', trigger: 'blur' },
-            ],
-            zcTime: [
-              { type: 'date', required: true, message: '请选择活动开始时间', trigger: 'change' }
-            ],
-            imgUrl: [
-              { required: true, trigger: 'change', validator: validateImg, }
-            ],
-        },
+  <div class="container-box">
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+      <el-form-item label="党建风采标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入党建风采标题"></el-input>
+      </el-form-item>
+      <el-form-item label="风采内容" prop="content">
+        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce>
+      </el-form-item>
+      <el-form-item label="置顶/热门">
+        <div style="margin-left: 10px;">
+          <el-checkbox-group v-model="ruleForm.hotstr">
+            <el-checkbox label="置顶" value="1"></el-checkbox>
+            <el-checkbox label="热门" value="2"></el-checkbox>
+          </el-checkbox-group>
+        </div>
+      </el-form-item>
+      <!-- <el-form-item label="所属分类" :prop="categoryid">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item> -->
+      <el-form-item label="排序ID">
+        <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
+      </el-form-item>
+      <el-form-item label="是否显示">
+        <div style="margin-left: 10px;">
+          <el-switch
+            v-model="ruleForm.isshow"
+            active-text="显示"
+            inactive-text="隐藏">
+          </el-switch>
+        </div>
+      </el-form-item>
+      <el-form-item label="风采封面" prop="imgurl">
+        <el-upload
+          :action="$store.state.user.beseFile"  
+          list-type="picture-card"  
+          :on-success="handleSuccess"
+          :on-error="handleError"  
+          :before-upload="beforeUpload"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :headers="upheaders"
+          :limit="1"
+        >  
+          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
+            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+          </div>  
+        </el-upload>
+      </el-form-item>
+      <el-form-item>
+        <div class="but-b">
+          <el-button @click="$router.go(-1)">取消</el-button>
+          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+         </div>
+      </el-form-item>
+    </el-form>
+  </div>
+</template>
+
+<script>
+import ImageUpload from "@/components/Upload/ImageUpload.vue";
+import Tinymce from "@/components/Tinymce";
+import {allAddreq} from '@/api/user'
+import { getToken } from '@/utils/auth'
+import {GetSelectCategory} from '@/api/user'
+
+export default {
+  components: {
+    ImageUpload,
+    Tinymce
+  },
+  data() {
+    // 图片验证规则
+    var validateImg = (rule, value, callback) => {
+        if (value === '' || value === undefined) {
+          callback(new Error('请上传活动封面'));
+        } else {
+          callback();
+        }
       };
+    return {
+      options:[],
+      fileList: [],
+      upheaders:{},
+      imgdialogVisible:false,
+      validateImg,
+      dialogImageUrl:'',
+      ruleForm: {
+        title:'',
+        content:'',
+        hotstr:[],
+        sortid:'',
+        imgurl:'',
+        isshow:true,
+        // categoryid:''
+      },
+      rules: {
+        title: [
+            { required: true, message: '请输入政策标题', trigger: 'blur' },
+          ],
+          // categoryid: [
+          //   { required: true, message: '请选择分类', trigger: 'blur' },
+          // ],
+          content: [
+            { required: true, message: '请填写政策内容', trigger: 'change' }
+          ],
+          imgurl: [
+            { required: true, trigger: 'change', validator: validateImg, }
+          ],
+      },
+    };
+  },
+  mounted() {
+    this.upheaders = {'Authorization':getToken()}
+    this.getclasslist()
+  },
+  methods: {
+    async getclasslist() {
+      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
+      this.options = res.datalist
     },
-    methods: {
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            console.log("submit!");
+    beforeUpload(file) {  
+      const isJPG = file.type === 'image/jpeg';  
+      const isPNG = file.type === 'image/png';  
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (!isJPG && !isPNG) {  
+        this.$message.error('上传图片只能是 JPG/PNG 格式!');  
+      }  
+      if (!isLt10M) {
+        this.$message.error('上传图片大小不能超过 10MB!');
+      }  
+      return isJPG || isPNG && isLt10M;
+    },  
+    handleSuccess(response) {
+      this.ruleForm.imgurl = response.filepath;
+    },  
+    handleError(error) {  
+      this.$message.error(error.msg);  
+      // 你可以在这里处理上传失败后的逻辑  
+    },  
+    handleRemove() {
+      this.ruleForm.imgurl = '';
+      this.fileList = [];
+      // 你可以在这里处理删除文件后的逻辑，比如更新fileList  
+    },
+    // 提交表单
+    async submitForm(formName) {
+      this.$refs[formName].validate(async(valid) => {
+        if (valid) {
+          let {isshow,hotstr} = this.ruleForm
+          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+          if(res.status === 200){
+            this.$message.success(res.msg)
+            this.$router.go(-1)
           }
-        });
-      }
+        }
+      });
     }
   }
-  </script>
-  
-  <style lang="scss" scoped>
-  ::v-deep {
-    .my-form .el-form-item .el-form-item__label{
-      font-size: 17px !important;
-  }
-  }
-  .container-box {
-    min-height: 100%;
-    height: auto !important;
-    padding: 3.038% 3.038% 1%;
-    box-sizing: border-box;
-  }
-  </style>
-  
+}
+</script>
+
+<style lang="scss" scoped>
+::v-deep {
+  .my-form .el-form-item .el-form-item__label{
+    font-size: 17px !important;
+}
+}
+.container-box {
+  min-height: 100%;
+  height: auto !important;
+  padding: 3.038% 3.038% 1%;
+  box-sizing: border-box;
+}
+</style>

@@ -21,7 +21,7 @@
         @click="logout"
       >
         <!-- <svg-icon icon-class="guide" /> -->
-        <i class="el-icon-s-promotion">退出登录</i>
+        <i class="el-icon-thumb">退出登录</i>
       </div>
     </div>
   </div>

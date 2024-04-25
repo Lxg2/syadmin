@@ -1,7 +1,7 @@
 <template>
   <div class="comp-container">
     <div class="search-box row-between">
-      <router-link :to="'/policy/policyadd'">
+      <router-link :to="'/financing/enterpriseadd'">
         <el-button type="primary" size="small" icon="el-icon-plus">
         新增
         </el-button>
@@ -75,7 +75,7 @@
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text" @click="$router.push({path:'/policy/policyedit',query:{id:scope.row.id}}
+            <el-button type="text" @click="$router.push({path:'/financing/enterpriseedit',query:{id:scope.row.id}}
             )">
               编辑
             </el-button>

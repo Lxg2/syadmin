@@ -8,13 +8,16 @@
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
+      <el-form-item label="发布单位">
+        <el-input v-model="ruleForm.author" placeholder="请输入发布单位"></el-input>
+      </el-form-item>
       <el-form-item label="活动地点" prop="hdAddress">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入活动地点"></el-input>
       </el-form-item>
       <el-form-item label="活动人数">
         <el-input v-model="ruleForm.limitusercount" placeholder="默认为不限"></el-input>
       </el-form-item>
-      <el-form-item label="所属分类" :prop="categoryid">
+      <el-form-item label="所属分类" prop="categoryid">
         <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
           <el-option
             v-for="item in options"
@@ -112,6 +115,7 @@ export default {
       ruleForm: {
         title:'',
         categoryid:'',
+        author:'',
         isshow:false,
         hdAddress:'',
         limitusercount:'',
@@ -179,7 +183,10 @@ export default {
         if (valid) {
           let {isshow,hotstr} = this.ruleForm
           let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
-          console.log(res);
+          if(res.status === 200){
+            this.$message.success(res.msg)
+            this.$router.go(-1)
+          }
         }
       });
     }

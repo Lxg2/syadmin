@@ -173,11 +173,24 @@ export default {
           progress(0);
           const token = _this.$store.state.user.token;
             const formData = new FormData();
-            formData.append('token', response.data.qiniu_token);
-            formData.append('file', blobInfo.blob(), url);
-            upload(formData).then(() => {
-              success(url);
-              progress(100);
+            formData.append('token',token);
+            formData.append('file', blobInfo.blob());
+            fetch('https://syzw.qiieer.net/cloud/UploadReturnPathAndSite',{
+              method: 'POST',
+              body: formData,
+              headers: {
+                'Authorization': 'Bearer ' + token
+              }
+            }).then((res) => {
+              console.log(res,999999);
+              res.json().then((data) => {
+                if (data.status === 200){
+                  success(data.filepath);
+                  progress(100);
+                }else{
+                  this.$message.error(data.msg);
+                }
+              })
             })
         },
       })

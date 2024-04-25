@@ -6,14 +6,20 @@
         <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
       </el-form-item>
       <el-form-item label="政策内容" prop="content">
-        <Tinymce v-if="ruleForm.content" ref="editor" v-model="ruleForm.content" :height="300">
+        <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
+      </el-form-item>
+      <el-form-item label="企业">
+        <el-input v-model="ruleForm.jrCompanyname" placeholder="请输入企业"></el-input>
+      </el-form-item>
+      <el-form-item label="内容描述">
+        <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
       </el-form-item>
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
-            <el-checkbox label="置顶" value="1"></el-checkbox>
-            <el-checkbox label="热门" value="2"></el-checkbox>
+            <el-checkbox label="置顶" :value="1"></el-checkbox>
+            <el-checkbox label="热门" :value="2"></el-checkbox>
           </el-checkbox-group>
         </div>
       </el-form-item>
@@ -78,6 +84,7 @@ export default {
     return {
       form:{},
       fileList:[],
+      editflag:false,
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
@@ -115,8 +122,11 @@ export default {
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl} = res.datalist
+      let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Remarks:remarks,JrCompanyname:jrCompanyname} = res.datalist
       this.ruleForm.title = title
+      this.ruleForm.remarks = remarks
+      this.editflag = true
+      this.ruleForm.jrCompanyname = jrCompanyname
       this.ruleForm.hotstr = hotstr.split(',')
       this.ruleForm.categoryid = categoryid
       this.ruleForm.sortid = sortid
@@ -162,6 +172,8 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
+          let {hotstr} = this.ruleForm
+          this.ruleForm.hotstr = hotstr.join(',')
           let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname})
           if(res.status == 200){
             this.$message.success(res.msg)

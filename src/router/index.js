@@ -21,6 +21,7 @@ import videoRouter from './modules/partybuilding'
 import mdmRouter from './modules/mdm'
 import datumRouter from './modules/datum'
 import caseRouter from './modules/case'
+import gogaoRouter from './modules/gogao'
 import goodsRouter from './modules/goods'
 import orderRouter from './modules/order'
 import courierRouter from './modules/courier'
@@ -88,10 +89,11 @@ export const asyncRoutes = [
   infoRouter,//找融资
   huodo,//找活动
   videoRouter,//党建
-  proRouter,//角色用户
+  // proRouter,//角色用户
   // mdmRouter,
   // datumRouter,
-  // caseRouter,
+  caseRouter,
+  gogaoRouter,
   // goodsRouter,
   // orderRouter,
   // courierRouter,

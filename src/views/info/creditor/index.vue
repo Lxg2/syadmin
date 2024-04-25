@@ -1,7 +1,7 @@
 <template>
   <div class="comp-container">
     <div class="search-box row-between">
-      <router-link :to="'/policy/policyadd'">
+      <router-link :to="'/financing/creditoradd'">
         <el-button type="primary" size="small" icon="el-icon-plus">
         新增
         </el-button>
@@ -28,46 +28,41 @@
       style="width: 100%"
       class="ranking_table"
     >
-      <el-table-column type="selection" align="center" />
-
-      <el-table-column width="208px" label="ID">
+    <el-table-column width="10" align="center" />
+      <el-table-column width="237px" label="标题" prop="Title">
+      </el-table-column>
+      <el-table-column width="208px" label="封面">
         <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
+          <el-image 
+            style="width: 100px; height: 100px;margin: 10px 0px !important;"
+            :src="scope.row.Imgurl" 
+            :preview-src-list="[scope.row.Imgurl]">
+          </el-image>
         </template>
       </el-table-column>
 
-      <el-table-column width="177px" label="图片">
-        <template>
-          <el-image class="thumb" />
-        </template>
-      </el-table-column>
-
-      <el-table-column label="跳转链接">
-        <template>
-          <span>https://www.baidu.com</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="排序" width="110" align="center">
+      <el-table-column label="类别" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.CategoryName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="排序" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Sortid }}</span>
         </template>
       </el-table-column>
 
       <el-table-column min-width="153px" label="状态" align="center">
         <template slot-scope="{ row }">
-          <el-switch
-            v-model="row.status"
-            active-color="#1BD9A1"
-            inactive-color="#D1D1D1"
-          />
+          <span>{{row.Isshow?'显示':'隐藏'}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="135px" label="创建时间">
+      <el-table-column width="175px" label="创建时间">
         <template slot-scope="scope">
           <span>{{
-            scope.row.timestamp
+            scope.row.Createtime
           }}</span>
         </template>
       </el-table-column>
@@ -75,12 +70,21 @@
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text" @click="$router.push({path:'/policy/policyedit',query:{id:scope.row.id}}
+            <el-button type="text" @click="$router.push({path:'/financing/creditoredit',query:{id:scope.row.id}}
             )">
               编辑
             </el-button>
             <span class="line">|</span>
-            <el-button type="text">删除</el-button>
+            <el-popconfirm
+              confirm-button-text='确定'
+              cancel-button-text='取消'
+              icon="el-icon-info"
+              @onConfirm="deletaFn(scope.row.id)"
+              icon-color="red"
+              title="你确定删除此内容吗?"
+            >
+              <el-button type="text" slot="reference">删除</el-button>
+            </el-popconfirm>
           </div>
         </template>
       </el-table-column>
@@ -105,7 +109,7 @@ const calendarTypeOptions = [
   { key: "JP", display_name: "Japan" },
   { key: "EU", display_name: "Eurozone" },
 ];
-import { GetArtcileList } from "@/api/user";
+import { GetArtcileList,DeleteArticle} from "@/api/user";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -138,6 +142,13 @@ export default {
     this.getList();
   },
   methods: {
+    async deletaFn(id){
+      let res = await DeleteArticle({id})
+      if(res.status === 200){
+        this.getList()
+        this.$message.success(res.msg)
+      }
+    },
     handleFilter(){
       this.getList()
     },
@@ -161,6 +172,7 @@ export default {
 .comp-container {
   padding: 40px 40px 55px;
   background: #FFFFFF;
+  min-height: 100%;
   .row-center {
     margin-top: 52px;
   }

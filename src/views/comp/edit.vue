@@ -6,14 +6,14 @@
         <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
       </el-form-item>
       <el-form-item label="政策内容" prop="content">
-        <Tinymce v-if="ruleForm.content" ref="editor" v-model="ruleForm.content" :height="300">
+        <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
-            <el-checkbox label="置顶" value="1"></el-checkbox>
-            <el-checkbox label="热门" value="2"></el-checkbox>
+            <el-checkbox label="置顶" :value="1"></el-checkbox>
+            <el-checkbox label="热门" :value="2"></el-checkbox>
           </el-checkbox-group>
         </div>
       </el-form-item>
@@ -26,6 +26,15 @@
             :value="item.id">
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="是否显示">
+        <div style="margin-left: 10px;">
+          <el-switch
+            v-model="ruleForm.isshow"
+            active-text="显示"
+            inactive-text="隐藏">
+          </el-switch>
+        </div>
       </el-form-item>
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
@@ -81,6 +90,7 @@ export default {
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
+      editflag:false,
       containertext:'',
       ruleForm: {
         title:'',
@@ -88,6 +98,7 @@ export default {
         hotstr:[],
         categoryid:'',
         sortid:'',
+        isshow:true,
         imgurl:'',
       },
       rules: {
@@ -115,11 +126,13 @@ export default {
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl} = res.datalist
+      let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Isshow:isshow} = res.datalist
       this.ruleForm.title = title
       this.ruleForm.hotstr = hotstr.split(',')
       this.ruleForm.categoryid = categoryid
+      this.editflag = true
       this.ruleForm.sortid = sortid
+      this.ruleForm.isshow = isshow? true : false
       this.ruleForm.imgurl = imgurl
       this.fileList = [{url:imgurl}]
        this.$nextTick(()=>{
@@ -128,7 +141,6 @@ export default {
       // 获取富文本内容
       })
     })
-   
   },
   methods: {
     beforeUpload(file) {  
@@ -147,8 +159,8 @@ export default {
       this.ruleForm.imgurl = response.filepath;
     },  
     handleError(error) {  
-      this.$message.error(error.msg);  
-      // 你可以在这里处理上传失败后的逻辑  
+      this.$message.error(error.msg);
+      // 你可以在这里处理上传失败后的逻辑
     },  
     handleRemove() {
       this.ruleForm.imgurl = '';
@@ -162,7 +174,9 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname})
+          let {hotstr,isshow} = this.ruleForm
+          this.ruleForm.hotstr = hotstr.join(',')
+          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
           if(res.status == 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

@@ -8,27 +8,13 @@
     </router-link>
       <div class="search-right" style="align-items: center;display: flex;">
         <el-input
-          v-model="listQuery.title"
+          v-model="listQuery.keywords"
           placeholder="标题"
           style="width: 200px"
           class="mr20"
           @keyup.enter.native="handleFilter"
         />
-        <el-select
-          v-model="listQuery.type"
-          placeholder="状态"
-          clearable
-          class="mr20"
-          style="width: 130px"
-        >
-          <el-option
-            v-for="item in calendarTypeOptions"
-            :key="item.key"
-            :label="item.display_name + '(' + item.key + ')'"
-            :value="item.key"
-          />
-        </el-select>
-        <el-button size="small" type="primary">
+        <el-button @click="handleFilter" size="small" type="primary">
           搜索
         </el-button>
         <el-button size="small">重置</el-button>
@@ -42,46 +28,41 @@
       style="width: 100%"
       class="ranking_table"
     >
-      <el-table-column type="selection" align="center" />
-
-      <el-table-column width="208px" label="ID">
+    <el-table-column width="10" align="center" />
+      <el-table-column width="237px" label="标题" prop="Title">
+      </el-table-column>
+      <el-table-column width="208px" label="封面">
         <template slot-scope="scope">
-          <span>{{ scope.row.title }}</span>
+          <el-image 
+            style="width: 100px; height: 100px;margin: 10px 0px !important;"
+            :src="scope.row.Imgurl" 
+            :preview-src-list="[scope.row.Imgurl]">
+          </el-image>
         </template>
       </el-table-column>
 
-      <el-table-column width="177px" label="图片">
-        <template>
-          <el-image class="thumb" />
-        </template>
-      </el-table-column>
-
-      <el-table-column label="跳转链接">
-        <template>
-          <span>https://www.baidu.com</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="排序" width="110" align="center">
+      <el-table-column label="类别" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.CategoryName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="排序" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Sortid }}</span>
         </template>
       </el-table-column>
 
       <el-table-column min-width="153px" label="状态" align="center">
         <template slot-scope="{ row }">
-          <el-switch
-            v-model="row.status"
-            active-color="#1BD9A1"
-            inactive-color="#D1D1D1"
-          />
+          <span>{{row.Isshow?'显示':'隐藏'}}</span>
         </template>
       </el-table-column>
 
       <el-table-column width="135px" label="创建时间">
         <template slot-scope="scope">
           <span>{{
-            scope.row.timestamp
+            scope.row.Createtime
           }}</span>
         </template>
       </el-table-column>
@@ -89,13 +70,21 @@
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text">
-              <router-link :to="'/activity/activityedit' ">
+            <el-button type="text" @click="$router.push({path:'/activity/activityedit',query:{id:scope.row.id}}
+            )">
               编辑
-            </router-link>
             </el-button>
             <span class="line">|</span>
-            <el-button type="text">删除</el-button>
+            <el-popconfirm
+              confirm-button-text='确定'
+              cancel-button-text='取消'
+              icon="el-icon-info"
+              @onConfirm="deletaFn(scope.row.id)"
+              icon-color="red"
+              title="你确定删除此内容吗?"
+            >
+              <el-button type="text" slot="reference">删除</el-button>
+            </el-popconfirm>
           </div>
         </template>
       </el-table-column>
@@ -106,7 +95,7 @@
         v-show="total > 0"
         :total="total"
         :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
+        :limit.sync="listQuery.pageSize"
         @pagination="getList"
       />
     </div>
@@ -120,7 +109,7 @@ const calendarTypeOptions = [
   { key: "JP", display_name: "Japan" },
   { key: "EU", display_name: "Eurozone" },
 ];
-import { fetchList } from "@/api/article";
+import { GetArtcileList,DeleteArticle} from "@/api/user";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -144,12 +133,8 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: "+id",
-        value1: null,
+        pageSize: 10,
+        keywords:'',
       },
     };
   },
@@ -157,11 +142,21 @@ export default {
     this.getList();
   },
   methods: {
+    async deletaFn(id){
+      let res = await DeleteArticle({id})
+      if(res.status === 200){
+        this.getList()
+        this.$message.success(res.msg)
+      }
+    },
+    handleFilter(){
+      this.getList()
+    },
     getList() {
       this.listLoading = true;
-      fetchList(this.listQuery).then((response) => {
-        this.list = response.data.items;
-        this.total = response.data.total;
+      GetArtcileList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
+        this.list = response.datalist.datalist;
+        this.total = response.datalist.totalcount;
         this.listLoading = false;
       });
     },
@@ -177,13 +172,11 @@ export default {
 .comp-container {
   padding: 40px 40px 55px;
   background: #FFFFFF;
-
+  min-height: 100%;
   .row-center {
     margin-top: 52px;
   }
-
   .tab-box {
-
     .thumb {
       width: 88px;
       height: 64px;

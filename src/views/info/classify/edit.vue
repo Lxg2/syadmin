@@ -4,9 +4,9 @@
       <el-form-item label="分类标题" prop="categorytitle">
         <el-input v-model="ruleForm.categorytitle" placeholder="请输入分类标题"></el-input>
       </el-form-item>
-      <el-form-item label="排序ID">
+      <!-- <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
           <el-switch
@@ -72,7 +72,7 @@ export default {
       dialogImageUrl:'',
       ruleForm: {
         categorytitle:'',
-        sortid:'',
+        // sortid:'',
         imgurl:'',
         isshow:false,
       },
@@ -94,9 +94,8 @@ export default {
   },
   methods: {
     async getinfofn(){
-      let {datalist:{Categorytitle:categorytitle,Isshow:isshow,Sortid:sortid,Imgurl:imgurl}} = await GetCategoryInfo({id:this.$route.query.id})
+      let {datalist:{Categorytitle:categorytitle,Isshow:isshow,Imgurl:imgurl}} = await GetCategoryInfo({id:this.$route.query.id})
       this.ruleForm.categorytitle = categorytitle
-      this.ruleForm.sortid = sortid
       this.ruleForm.isshow = isshow?true:false
       this.ruleForm.imgurl = imgurl
       if(imgurl){

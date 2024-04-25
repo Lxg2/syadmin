@@ -1,8 +1,8 @@
 <template>
   <div class="login-container">
     <div class="login-box row-center">
-      <div class="company-profile">
-        <div class="name mb24">深腾数字科技</div>
+      <div class="company-profile" >
+        <div class="name mb24">石岩街道虚拟园区</div>
         <div class="explain">数字化管理-助力企业数字化转型</div>
       </div>
       <el-form
@@ -142,7 +142,11 @@ export default {
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
-              alert("登录成功");
+              this.$notify({
+              title: '登录成功',
+              message: '欢迎回来！',
+              type: 'success'
+            });
               this.$router.push({
                 path: this.redirect || "/",
                 query: this.otherQuery,

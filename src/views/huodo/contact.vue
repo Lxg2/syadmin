@@ -28,27 +28,16 @@
       style="width: 100%"
       class="ranking_table"
     >
-      <el-table-column align="center" width="10" />
+    <el-table-column align="center" width="10" />
       <el-table-column width="108px" label="ID">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="177px" label="标题" prop="Categorytitle">
+      <el-table-column label="标题" prop="Categorytitle">
       </el-table-column>
 
-      <el-table-column width="210" label="跳转链接">
-        <template>
-          <span>https://www.baidu.com</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="排序"  align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
       <el-table-column min-width="153px" label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ 
@@ -56,7 +45,8 @@
             }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="175px" label="创建时间">
+
+      <el-table-column label="创建时间">
         <template slot-scope="scope">
           <span>{{
             scope.row.Createtime

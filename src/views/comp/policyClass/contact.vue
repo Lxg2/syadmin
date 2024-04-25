@@ -35,20 +35,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="177px" label="标题" prop="Categorytitle">
+      <el-table-column label="标题" prop="Categorytitle">
       </el-table-column>
 
-      <el-table-column label="跳转链接">
-        <template>
-          <span>https://www.baidu.com</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="排序" width="210" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
       <el-table-column min-width="153px" label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ 
@@ -57,7 +46,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="135px" label="创建时间">
+      <el-table-column label="创建时间">
         <template slot-scope="scope">
           <span>{{
             scope.row.Createtime
@@ -77,7 +66,7 @@
               confirm-button-text='确定'
               cancel-button-text='取消'
               icon="el-icon-info"
-              @confirm="deletaFn"
+              @onConfirm="deletaFn(scope.row.id)"
               icon-color="red"
               title="你确定删除此内容吗?"
             >
@@ -106,7 +95,7 @@ const calendarTypeOptions = [
   { key: "JP", display_name: "Japan" },
   { key: "EU", display_name: "Eurozone" },
 ];
-import { getClasslistreq } from "@/api/article";
+import {DeleteCategory,GetCategoryList} from "@/api/user";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -140,12 +129,16 @@ export default {
     this.getList();
   },
   methods: {
-    deletaFn(){
-      alert(9)
+    async deletaFn(id){
+      let res = await DeleteCategory({id})
+      if(res.status === 200){
+        this.getList()
+        this.$message.success(res.msg)
+      }
     },
     getList() {
       this.listLoading = true;
-      getClasslistreq({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
+      GetCategoryList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
         this.list = response.datalist.datalist;
         this.total = response.datalist.totalcount;
         this.listLoading = false;
