@@ -1,18 +1,18 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="股权标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入股权标题"></el-input>
+      <el-form-item label="公司名称" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
       </el-form-item>
-      <el-form-item label="详情描述" prop="content">
+      <el-form-item label="公司简介" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
-      <el-form-item label="企业">
-        <el-input v-model="ruleForm.jrCompanyname" placeholder="请输入企业"></el-input>
+      <el-form-item label="成立时间">
+        <el-input v-model="ruleForm.null" placeholder="请输入成立时间"></el-input>
       </el-form-item>
-      <el-form-item label="内容描述">
-        <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
+      <el-form-item label="公司地址">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
       </el-form-item>
       <el-form-item label="标签展示">
         <el-tag
@@ -37,27 +37,6 @@
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
       </el-form-item>
-      <el-form-item label="服务类型" prop="servicetype">
-        <el-input v-model="ruleForm.servicetype" placeholder="请输入服务类型"></el-input>
-      </el-form-item>
-
-      <el-form-item label="投资领域">
-        <el-input v-model="ruleForm.touzilingyu" placeholder="请输入投资领域"></el-input>
-      </el-form-item>
-      <el-form-item label="基金规模">
-        <el-input v-model="ruleForm.jijinguimo" placeholder="请输入基金规模"></el-input>
-      </el-form-item>
-      <el-form-item label="基金管理人">
-        <el-input v-model="ruleForm.jijinguanliren" placeholder="请输入基金管理人"></el-input>
-      </el-form-item>
-      <el-form-item label="管理人简介">
-        <Tinymce ref="editor" v-model="ruleForm.guanlirenjieshao" :height="300">
-        </Tinymce>
-      </el-form-item>
-      <el-form-item label="管理人投资案例">
-        <Tinymce ref="editor" v-model="ruleForm.guanlirentouzianli" :height="300">
-        </Tinymce>
-      </el-form-item>
 
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
@@ -67,16 +46,6 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <!-- <el-form-item label="所属分类" prop="categoryid">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item> -->
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
@@ -89,7 +58,7 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="股权封面" prop="imgurl">
+      <el-form-item label="企业封面" prop="imgurl">
         <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
@@ -106,6 +75,26 @@
             <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
           </div>  
         </el-upload>
+      </el-form-item>
+<!-- <el-form-item label="所属分类" prop="categoryid">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item> -->
+      <el-form-item label="旗下服务">
+        <el-select style="width: 100%;" v-model="ruleForm.service" multiple placeholder="请选择服务产品">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <div class="but-b">
@@ -133,7 +122,7 @@ export default {
     // 图片验证规则
     var validateImg = (rule, value, callback) => {
         if (value === '' || value === undefined) {
-          callback(new Error('请上传封面'));
+          callback(new Error('请上传活动封面'));
         } else {
           callback();
         }
@@ -148,30 +137,25 @@ export default {
       inputVisible: false,
       inputValue: '',
       ruleForm: {
+        dynamicTags:[],
+        service:[],
         title:'',
         content:'',
         hotstr:[],
-        dynamicTags:[],
         sortid:'',
         imgurl:'',
         isshow:true,
-        servicetype:'',
-        // categoryid:'',
-        touzilingyu:'',
-        jijinguimo:'',
-        jijinguanliren:'',
-        guanlirenjieshao:'',
-        guanlirentouzianli:'',
+        // categoryid:''
       },
       rules: {
         title: [
-            { required: true, message: '请输入标题', trigger: 'blur' },
+            { required: true, message: '请输入政策标题', trigger: 'blur' },
           ],
           // categoryid: [
           //   { required: true, message: '请选择分类', trigger: 'blur' },
           // ],
           content: [
-            { required: true, message: '请填写内容', trigger: 'change' }
+            { required: true, message: '请填写政策内容', trigger: 'change' }
           ],
           imgurl: [
             { required: true, trigger: 'change', validator: validateImg, }
@@ -184,8 +168,8 @@ export default {
     this.getclasslist()
   },
   methods: {
-      // 添加标签
-      handleInputConfirm(){
+    // 添加标签
+    handleInputConfirm(){
       let inputValue = this.inputValue;
         if (inputValue) {
           // 去重
@@ -206,9 +190,10 @@ export default {
       },
     async getclasslist() {
       let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
-      this.options = res.datalist
+      // this.options = res.datalist
+      this.options = [{value:0,label:'测试服务测试'},{value:19,label:'测试服务测试'},{value:17,label:'测试服务测试'},{value:16,label:'测试服务测试'},{value:15,label:'测试服务测试'},{value:14,label:'测试服务测试'},{value:13,label:'测试服务测试'},{value:12,label:'测试服务测试'},{value:11,label:'测试服务测试'},{value:9,label:'测试服务测试'},{value:3,label:'测试服务测试'},{value:4,label:'测试服务测试'}]
     },
-    beforeUpload(file) {  
+    beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg';  
       const isPNG = file.type === 'image/png';  
       const isLt10M = file.size / 1024 / 1024 < 10;
@@ -240,7 +225,6 @@ export default {
           let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
-            // 回退
             this.$router.go(-1)
           }
         }

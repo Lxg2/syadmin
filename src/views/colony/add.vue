@@ -1,64 +1,13 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="股权标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入股权标题"></el-input>
+      <el-form-item label="政策标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
       </el-form-item>
-      <el-form-item label="详情描述" prop="content">
+      <el-form-item label="政策内容" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
-      <el-form-item label="企业">
-        <el-input v-model="ruleForm.jrCompanyname" placeholder="请输入企业"></el-input>
-      </el-form-item>
-      <el-form-item label="内容描述">
-        <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
-      </el-form-item>
-      <el-form-item label="标签展示">
-        <el-tag
-          :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
-          closable
-          :disable-transitions="false"
-          @close="(tag)=>{
-            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
-          }">
-          {{tag}}
-        </el-tag>
-        <el-input
-          class="input-new-tag"
-          v-if="inputVisible"
-          v-model="inputValue"
-          ref="saveTagInput"
-          size="small"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        >
-        </el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
-      </el-form-item>
-      <el-form-item label="服务类型" prop="servicetype">
-        <el-input v-model="ruleForm.servicetype" placeholder="请输入服务类型"></el-input>
-      </el-form-item>
-
-      <el-form-item label="投资领域">
-        <el-input v-model="ruleForm.touzilingyu" placeholder="请输入投资领域"></el-input>
-      </el-form-item>
-      <el-form-item label="基金规模">
-        <el-input v-model="ruleForm.jijinguimo" placeholder="请输入基金规模"></el-input>
-      </el-form-item>
-      <el-form-item label="基金管理人">
-        <el-input v-model="ruleForm.jijinguanliren" placeholder="请输入基金管理人"></el-input>
-      </el-form-item>
-      <el-form-item label="管理人简介">
-        <Tinymce ref="editor" v-model="ruleForm.guanlirenjieshao" :height="300">
-        </Tinymce>
-      </el-form-item>
-      <el-form-item label="管理人投资案例">
-        <Tinymce ref="editor" v-model="ruleForm.guanlirentouzianli" :height="300">
-        </Tinymce>
-      </el-form-item>
-
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
@@ -67,7 +16,7 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <!-- <el-form-item label="所属分类" prop="categoryid">
+      <el-form-item label="所属分类" prop="categoryid">
         <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
           <el-option
             v-for="item in options"
@@ -76,7 +25,7 @@
             :value="item.id">
           </el-option>
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
@@ -89,7 +38,7 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="股权封面" prop="imgurl">
+      <el-form-item label="政策封面" prop="imgurl">
         <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
@@ -133,7 +82,7 @@ export default {
     // 图片验证规则
     var validateImg = (rule, value, callback) => {
         if (value === '' || value === undefined) {
-          callback(new Error('请上传封面'));
+          callback(new Error('请上传活动封面'));
         } else {
           callback();
         }
@@ -145,33 +94,24 @@ export default {
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
-      inputVisible: false,
-      inputValue: '',
       ruleForm: {
         title:'',
         content:'',
         hotstr:[],
-        dynamicTags:[],
         sortid:'',
         imgurl:'',
         isshow:true,
-        servicetype:'',
-        // categoryid:'',
-        touzilingyu:'',
-        jijinguimo:'',
-        jijinguanliren:'',
-        guanlirenjieshao:'',
-        guanlirentouzianli:'',
+        categoryid:''
       },
       rules: {
         title: [
-            { required: true, message: '请输入标题', trigger: 'blur' },
+            { required: true, message: '请输入政策标题', trigger: 'blur' },
           ],
-          // categoryid: [
-          //   { required: true, message: '请选择分类', trigger: 'blur' },
-          // ],
+          categoryid: [
+            { required: true, message: '请选择分类', trigger: 'blur' },
+          ],
           content: [
-            { required: true, message: '请填写内容', trigger: 'change' }
+            { required: true, message: '请填写政策内容', trigger: 'change' }
           ],
           imgurl: [
             { required: true, trigger: 'change', validator: validateImg, }
@@ -184,26 +124,6 @@ export default {
     this.getclasslist()
   },
   methods: {
-      // 添加标签
-      handleInputConfirm(){
-      let inputValue = this.inputValue;
-        if (inputValue) {
-          // 去重
-          if(this.ruleForm.dynamicTags.length !== 0){
-            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
-          }else{
-            this.ruleForm.dynamicTags.push(inputValue);
-          }
-        }
-        this.inputVisible = false;
-        this.inputValue = '';
-    },
-    showInput() {
-        this.inputVisible = true;
-        this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
-      },
     async getclasslist() {
       let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
       this.options = res.datalist
@@ -240,7 +160,6 @@ export default {
           let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
-            // 回退
             this.$router.go(-1)
           }
         }

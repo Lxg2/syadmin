@@ -1,7 +1,7 @@
 <template>
   <div class="container-box">
     <!-- 政策模块 -->
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
       <el-form-item label="债权融资标题" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入债权融资标题"></el-input>
       </el-form-item>
@@ -15,18 +15,41 @@
       <el-form-item label="内容描述">
         <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
       </el-form-item>
+      <el-form-item label="标签展示">
+        <el-tag
+          :key="tag"
+          v-for="tag in ruleForm.dynamicTags"
+          closable
+          :disable-transitions="false"
+          @close="(tag)=>{
+            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
+          }">
+          {{tag}}
+        </el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        >
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
+      </el-form-item>
       <el-form-item label="服务类型" prop="servicetype">
         <el-input v-model="ruleForm.servicetype" placeholder="请输入服务类型"></el-input>
       </el-form-item>
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
-            <el-checkbox label="置顶" :value="1"></el-checkbox>
-            <el-checkbox label="热门" :value="2"></el-checkbox>
+            <el-checkbox label="置顶"></el-checkbox>
+            <el-checkbox label="热门"></el-checkbox>
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属分类" prop="categoryid">
+      <!-- <el-form-item label="所属分类" prop="categoryid">
         <el-select v-model="ruleForm.categoryid" clearable placeholder="请选择分类" style="width: 100%;">
           <el-option
             v-for="item in options"
@@ -35,7 +58,7 @@
             :value="item.id">
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
           <el-switch
@@ -100,18 +123,21 @@ export default {
       validateImg,
       dialogImageUrl:'',
       containertext:'',
+      inputVisible: false,
+      inputValue: '',
+      editflag:false,
       ruleForm: {
         title:'',
         content:'',
         hotstr:[],
-        categoryid:'',
+        dynamicTags:[],
+       // categoryid:'',
         remarks:'',
         jrCompanyname:'',
         servicetype:'',
         sortid:'',
         isshow:true,
         imgurl:'',
-        editflag:false,
       },
       rules: {
         title: [
@@ -120,9 +146,9 @@ export default {
           content: [
             { required: true, message: '请填写政策内容', trigger: 'change' }
           ],
-          categoryId: [
-            {  required: true, message: '请选择所属类别', trigger: 'change' }
-          ],
+          //categoryId: [
+           // {  required: true, message: '请选择所属类别', trigger: 'change' }
+          //],
           imgurl: [
             { required: true, trigger: 'change', validator: validateImg, }
           ],
@@ -139,13 +165,13 @@ export default {
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {JrCompanyname:jrCompanyname,Remarks:remarks,Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Isshow:isshow,Servicetype:servicetype} = res.datalist
+      let {JrCompanyname:jrCompanyname,Remarks:remarks,Title:title,Content:content,Hotstr:hotstr,Sortid:sortid,Imgurl:imgurl,Isshow:isshow,Servicetype:servicetype} = res.datalist
       this.ruleForm.title = title
       this.ruleForm.jrCompanyname = jrCompanyname
       this.ruleForm.remarks = remarks
-      this.editflag = false
+      this.editflag = true
       this.ruleForm.hotstr = hotstr.split(',')
-      this.ruleForm.categoryid = categoryid
+      //this.ruleForm.categoryid = categoryid
       this.ruleForm.sortid = sortid
       this.ruleForm.servicetype = servicetype
       this.ruleForm.isshow = isshow? true : false
@@ -159,6 +185,26 @@ export default {
     })
   },
   methods: {
+    // 添加标签
+    handleInputConfirm(){
+      let inputValue = this.inputValue;
+        if (inputValue) {
+          // 去重
+          if(this.ruleForm.dynamicTags.length !== 0){
+            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
+          }else{
+            this.ruleForm.dynamicTags.push(inputValue);
+          }
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+    },
+    showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
     beforeUpload(file) {  
       const isJPG = file.type === 'image/jpeg';  
       const isPNG = file.type === 'image/png';  

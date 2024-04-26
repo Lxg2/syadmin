@@ -131,72 +131,72 @@ const infoRouter = {
       },
       hidden: true,
     },
-    {
-      path: "financingclassifytow",
-      component: () => import("@/views/info/classify2"),
-      name: "financingclassifytow",
-      meta: {
-        title: "债权分类管理",
-        channelname: "zhaiquan",
-      },
-    },
-    {
-      path: "financingclassifyaddtow",
-      component: () => import("@/views/info/classify2/add.vue"),
-      name: "financingclassifyaddtow",
-      meta: {
-        title: "新建债权分类",
-        noCache: true,
-        activeMenu: "/financing/financingclassifytow",
-        channelname: "zhaiquan",
-      },
-      hidden: true,
-    },
-    {
-      path: "financingclassifyedittow",
-      component: () => import("@/views/info/classify2/edit.vue"),
-      name: "financingclassifyedittow",
-      meta: {
-        title: "编辑债权分类",
-        noCache: true,
-        activeMenu: "/financing/financingclassifytow",
-        channelname: "zhaiquan",
-      },
-      hidden: true,
-    },
-    {
-      path: "financingclassifythren",
-      component: () => import("@/views/info/classify3"),
-      name: "financingclassifythren",
-      meta: {
-        title: "股权分类管理",
-        channelname: "guquan",
-      },
-    },
-    {
-      path: "financingclassifyaddthren",
-      component: () => import("@/views/info/classify3/add.vue"),
-      name: "financingclassifyaddthren",
-      meta: {
-        title: "新建股权分类",
-        noCache: true,
-        activeMenu: "/financing/financingclassifythren",
-        channelname: "guquan",
-      },
-      hidden: true,
-    },
-    {
-      path: "financingclassifyeditthren",
-      component: () => import("@/views/info/classify3/edit.vue"),
-      name: "financingclassifyeditthren",
-      meta: {
-        title: "编辑股权分类",
-        noCache: true,
-        activeMenu: "/financing/financingclassifythren",
-        channelname: "guquan",
-      },
-      hidden: true,
-    },
+    // {
+    //   path: "financingclassifytow",
+    //   component: () => import("@/views/info/classify2"),
+    //   name: "financingclassifytow",
+    //   meta: {
+    //     title: "债权分类管理",
+    //     channelname: "zhaiquan",
+    //   },
+    // },
+    // {
+    //   path: "financingclassifyaddtow",
+    //   component: () => import("@/views/info/classify2/add.vue"),
+    //   name: "financingclassifyaddtow",
+    //   meta: {
+    //     title: "新建债权分类",
+    //     noCache: true,
+    //     activeMenu: "/financing/financingclassifytow",
+    //     channelname: "zhaiquan",
+    //   },
+    //   hidden: true,
+    // },
+    // {
+    //   path: "financingclassifyedittow",
+    //   component: () => import("@/views/info/classify2/edit.vue"),
+    //   name: "financingclassifyedittow",
+    //   meta: {
+    //     title: "编辑债权分类",
+    //     noCache: true,
+    //     activeMenu: "/financing/financingclassifytow",
+    //     channelname: "zhaiquan",
+    //   },
+    //   hidden: true,
+    // },
+    // {
+    //   path: "financingclassifythren",
+    //   component: () => import("@/views/info/classify3"),
+    //   name: "financingclassifythren",
+    //   meta: {
+    //     title: "股权分类管理",
+    //     channelname: "guquan",
+    //   },
+    // },
+    // {
+    //   path: "financingclassifyaddthren",
+    //   component: () => import("@/views/info/classify3/add.vue"),
+    //   name: "financingclassifyaddthren",
+    //   meta: {
+    //     title: "新建股权分类",
+    //     noCache: true,
+    //     activeMenu: "/financing/financingclassifythren",
+    //     channelname: "guquan",
+    //   },
+    //   hidden: true,
+    // },
+    // {
+    //   path: "financingclassifyeditthren",
+    //   component: () => import("@/views/info/classify3/edit.vue"),
+    //   name: "financingclassifyeditthren",
+    //   meta: {
+    //     title: "编辑股权分类",
+    //     noCache: true,
+    //     activeMenu: "/financing/financingclassifythren",
+    //     channelname: "guquan",
+    //   },
+    //   hidden: true,
+    // },
 
 
     {

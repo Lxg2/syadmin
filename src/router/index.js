@@ -16,19 +16,19 @@ import huodo from './modules/huodo'
 //角色
 import proRouter from './modules/promotion'
 import videoRouter from './modules/partybuilding'
-
-
-import mdmRouter from './modules/mdm'
-import datumRouter from './modules/datum'
+// 企业管理
+import enterpriseRouter from './modules/enterprise'
 import caseRouter from './modules/case'
 import gogaoRouter from './modules/gogao'
-import goodsRouter from './modules/goods'
-import orderRouter from './modules/order'
-import courierRouter from './modules/courier'
-import roleRouter from './modules/role'
-import userRouter from './modules/user'
-import finaRouter from './modules/finance'
-import setRouter from './modules/set'
+// 找市场
+import marketRouter from './modules/market'
+// 空间
+import spaceRouter from './modules/space'
+// 产业集群
+import IndustrialClusterRouter from './modules/IndustrialCluster'
+// 找直播
+import directSeedingRouter from './modules/directSeeding'
+
 
 /**
  * constantRoutes
@@ -85,22 +85,18 @@ export const constantRoutes = [{
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  caseRouter,
+  gogaoRouter,
   policyRouter,//找政策
   infoRouter,//找融资
   huodo,//找活动
+  marketRouter,
+  enterpriseRouter,
   videoRouter,//党建
-  // proRouter,//角色用户
-  // mdmRouter,
-  // datumRouter,
-  caseRouter,
-  gogaoRouter,
-  // goodsRouter,
-  // orderRouter,
-  // courierRouter,
-  // roleRouter,
-  // userRouter,
-  // finaRouter,
-  // setRouter,
+  spaceRouter,// 找空间
+  directSeedingRouter,//直播
+  IndustrialClusterRouter,// 产业集群
+  proRouter,//角色用户
 ]
 
 const createRouter = () => new Router({

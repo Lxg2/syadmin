@@ -14,6 +14,29 @@
       <el-form-item label="内容描述">
         <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
       </el-form-item>
+      <el-form-item label="标签展示">
+        <el-tag
+          :key="tag"
+          v-for="tag in ruleForm.dynamicTags"
+          closable
+          :disable-transitions="false"
+          @close="(tag)=>{
+            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
+          }">
+          {{tag}}
+        </el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        >
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
+      </el-form-item>
       <el-form-item label="服务类型" prop="servicetype">
         <el-input v-model="ruleForm.servicetype" placeholder="请输入服务类型"></el-input>
       </el-form-item>
@@ -25,7 +48,7 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属分类" prop="categoryid">
+      <!-- <el-form-item label="所属分类" prop="categoryid">
         <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
           <el-option
             v-for="item in options"
@@ -34,7 +57,7 @@
             :value="item.id">
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
@@ -103,9 +126,12 @@ export default {
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
+      inputVisible: false,
+      inputValue: '',
       ruleForm: {
         title:'',
         content:'',
+        dynamicTags:[],
         hotstr:[],
         sortid:'',
         jrCompanyname:'',
@@ -113,15 +139,15 @@ export default {
         imgurl:'',
         isshow:true,
         servicetype:'',
-        categoryid:''
+        // categoryid:''
       },
       rules: {
         title: [
             { required: true, message: '请输入标题', trigger: 'blur' },
           ],
-          categoryid: [
-            { required: true, message: '请选择分类', trigger: 'blur' },
-          ],
+          // categoryid: [
+          //   { required: true, message: '请选择分类', trigger: 'blur' },
+          // ],
           content: [
             { required: true, message: '请填写内容', trigger: 'change' }
           ],
@@ -136,6 +162,26 @@ export default {
     this.getclasslist()
   },
   methods: {
+     // 添加标签
+     handleInputConfirm(){
+      let inputValue = this.inputValue;
+        if (inputValue) {
+          // 去重
+          if(this.ruleForm.dynamicTags.length !== 0){
+            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
+          }else{
+            this.ruleForm.dynamicTags.push(inputValue);
+          }
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+    },
+    showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
     async getclasslist() {
       let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
       this.options = res.datalist
