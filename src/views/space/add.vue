@@ -1,19 +1,72 @@
 <template>
   <div class="container-box">
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="150px">
       <el-form-item label="空间名称" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item>
+      <el-form-item label="热度" prop="title">
+        <el-input type="number" v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      </el-form-item>
+      <el-form-item label="楼层/栋" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      </el-form-item>
+      <el-form-item label="租金" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      </el-form-item>
+      <el-form-item label="面积" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      </el-form-item>
+      <el-form-item label="房屋类型" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      </el-form-item>
+      <el-form-item label="分类" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      </el-form-item>
+      <el-form-item label="月租价格(单位:元/m²)" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      </el-form-item>
+      <el-form-item label="层高(单位:m)" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      </el-form-item>
+      <el-form-item label="是否有客梯">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item label="是否有货梯">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item label="荷载(单位:kg/m²)">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item label="荷载(单位:kg/m²)">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item label="在租楼层与户型">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item label="交付标准">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item label="建成年份">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item label="联系电话">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      
       <el-form-item label="空间简介" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        <Tinymce ref="editor" v-model="ruleForm.content" :height="250">
         </Tinymce>
       </el-form-item>
-      <el-form-item label="成立时间">
+      <el-form-item label="配套设施" prop="content">
+        <Tinymce ref="editor" v-model="ruleForm.content" :height="250">
+        </Tinymce>
+      </el-form-item>
+      <!-- <el-form-item label="成立时间">
         <el-input v-model="ruleForm.null" placeholder="请输入成立时间"></el-input>
       </el-form-item>
       <el-form-item label="公司地址">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="标签展示">
         <el-tag
           :key="tag"
