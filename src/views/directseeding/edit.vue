@@ -47,7 +47,7 @@
         </div>
       </el-form-item>
       <el-form-item label="直播简介" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        <Tinymce ref="editor" v-if="editflag" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
       <el-form-item label="咨询电话" prop="communityusermobile">
@@ -55,8 +55,7 @@
       </el-form-item>
       <el-form-item>
         <div class="but-b">
-          <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button type="primary" @click="submitForm('myform')">保存</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -140,7 +139,7 @@ export default {
   },
   mounted(){
     // 获取文章详情
-    GetArtcileInfo({id:this.$route.query.id}).then(res=>{
+    GetArtcileInfo({id:this.$route.meta.queryid}).then(res=>{
       let {Title:title,Content:content,Imgurl:imgurl,Communityusermobile:communityusermobile} = res.datalist
       this.ruleForm.title = title
       this.ruleForm.communityusermobile = communityusermobile
@@ -202,7 +201,7 @@ export default {
         if (valid) {
           let {hotstr,isshow} = this.ruleForm
           this.ruleForm.hotstr = hotstr.join(',')
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
+          let res = await UpdateArticle({...this.ruleForm,id:this.$route.meta.queryid,channelname:this.$route.meta.channelname,isshow:+isshow})
           if(res.status == 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

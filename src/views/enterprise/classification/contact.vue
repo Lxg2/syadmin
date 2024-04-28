@@ -14,7 +14,7 @@
           class="mr20"
           @keyup.enter.native="handleFilter"
         />
-        <el-button size="small" type="primary">
+        <el-button @click="handleFilter" size="small" type="primary">
           搜索
         </el-button>
         <el-button size="small">重置</el-button>
@@ -28,25 +28,38 @@
       style="width: 100%"
       class="ranking_table"
     >
-      <el-table-column align="center" width="10" />
-      <el-table-column width="108px" label="ID">
+      <el-table-column width="10" align="center" />
+      <el-table-column width="237px" label="标题" prop="Title">
+      </el-table-column>
+      <el-table-column width="208px" label="封面">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <el-image 
+            style="width: 100px; height: 100px;margin: 10px 0px !important;"
+            :src="scope.row.Imgurl" 
+            :preview-src-list="[scope.row.Imgurl]">
+          </el-image>
         </template>
       </el-table-column>
 
-      <el-table-column label="标题" prop="Categorytitle">
+      <el-table-column label="类别" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.CategoryName }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="排序" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Sortid }}</span>
+        </template>
       </el-table-column>
 
       <el-table-column min-width="153px" label="状态" align="center">
         <template slot-scope="{ row }">
-          <span>{{ 
-            row.Isshow?'显示':'隐藏'
-            }}</span>
+          <span>{{row.Isshow?'显示':'隐藏'}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间">
+      <el-table-column width="135px" label="创建时间">
         <template slot-scope="scope">
           <span>{{
             scope.row.Createtime
@@ -57,7 +70,7 @@
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text" @click="$router.push({path:'/enterprise/classificationedit',query:{id:scope.row.id}}
+            <el-button type="text" @click="$router.push({path:'/enterprise/enterpriseclassedit',query:{id:scope.row.id}}
             )">
               编辑
             </el-button>
@@ -70,7 +83,7 @@
               icon-color="red"
               title="你确定删除此内容吗?"
             >
-              <el-button slot="reference" type="text">删除</el-button>
+            <el-button type="text" slot="reference">删除</el-button>
             </el-popconfirm>
           </div>
         </template>
@@ -79,9 +92,10 @@
 
     <div class="row-center">
       <pagination
+        v-show="total > 0"
         :total="total"
         :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
+        :limit.sync="listQuery.pageSize"
         @pagination="getList"
       />
     </div>
@@ -95,7 +109,7 @@ const calendarTypeOptions = [
   { key: "JP", display_name: "Japan" },
   { key: "EU", display_name: "Eurozone" },
 ];
-import {DeleteCategory,GetCategoryList} from "@/api/user";
+import { GetArtcileList,DeleteArticle } from "@/api/user";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -113,15 +127,14 @@ export default {
   },
   data() {
     return {
-      list: [],
+      list: null,
       total: 0,
       calendarTypeOptions,
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10,
+        pageSize: 10,
         keywords:'',
-        channelname:''
       },
     };
   },
@@ -130,15 +143,18 @@ export default {
   },
   methods: {
     async deletaFn(id){
-      let res = await DeleteCategory({id})
+      let res = await DeleteArticle({id})
       if(res.status === 200){
         this.getList()
         this.$message.success(res.msg)
       }
     },
+    handleFilter(){
+      this.getList()
+    },
     getList() {
       this.listLoading = true;
-      GetCategoryList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
+      GetArtcileList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
         this.list = response.datalist.datalist;
         this.total = response.datalist.totalcount;
         this.listLoading = false;
@@ -156,6 +172,7 @@ export default {
 .comp-container {
   padding: 40px 40px 55px;
   background: #FFFFFF;
+  min-height: 100%;
   .row-center {
     margin-top: 52px;
   }

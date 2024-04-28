@@ -1,11 +1,7 @@
 <template>
   <div class="comp-container">
     <div class="search-box row-between">
-      <router-link :to="'/enterprise/enterpriseadminadd'">
-        <el-button type="primary" size="small" icon="el-icon-plus">
-        新增
-        </el-button>
-    </router-link>
+      <div></div>
       <div class="search-right" style="align-items: center;display: flex;">
         <el-input
           v-model="listQuery.keywords"
@@ -70,9 +66,13 @@
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text" @click="$router.push({path:'/enterprise/enterpriseadminedit',query:{id:scope.row.id}}
+            <!-- <el-button type="text" @click="$router.push({path:'/market/enterpriseadminedit',query:{id:scope.row.id}}
             )">
               编辑
+            </el-button> -->
+            <!-- <span class="line">|</span> -->
+            <el-button type="text" @click="$router.push({path:'/market/spacedetail',query:{id:scope.row.id}})">
+              查看评论
             </el-button>
             <span class="line">|</span>
             <el-popconfirm
@@ -155,7 +155,7 @@ export default {
     getList() {
       this.listLoading = true;
       GetArtcileList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
-        this.list = response.datalist.datalist;
+        this.list = [{}];
         this.total = response.datalist.totalcount;
         this.listLoading = false;
       });

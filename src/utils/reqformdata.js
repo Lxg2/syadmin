@@ -11,6 +11,23 @@ const service = axios.create({
 // 2.请求拦截器
 service.interceptors.request.use(
   (config) => {
+    let {hotstr} = config.data
+    if(hotstr){
+      hotstr = hotstr.split(',');
+      hotstr.forEach((item,index) => {
+        switch(item){
+          case '置顶':
+            hotstr[index] = '1';
+            break;
+          case '热门':
+            hotstr[index] = '2';
+            break;
+            default:
+              break;
+        }
+      });
+      config.data.hotstr = hotstr.join(',')
+    }
     if (config.data instanceof FormData === false) {
       config.transformRequest = function (obj) {
         var str = [];
@@ -56,6 +73,7 @@ service.interceptors.response.use(
      */
     response => {
       const res = response.data
+      console.log(res);
       // if the custom code is not 20000, it is judged as an error.
       if (res.status !== 200) {
         Message({

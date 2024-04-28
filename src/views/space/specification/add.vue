@@ -45,7 +45,7 @@
           <el-button style="width: 100px;height: 40px !important;" @click="changedialogVisible = false">取 消</el-button>
           <el-button style="width: 100px;height: 40px !important;" type="primary" @click="confrimchangetagFn">确 定</el-button>
         </span>
-      </el-dialog>
+    </el-dialog>
 
   </div>
 </template>

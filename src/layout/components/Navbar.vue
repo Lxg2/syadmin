@@ -21,7 +21,10 @@
         @click="logout"
       >
         <!-- <svg-icon icon-class="guide" /> -->
-        <i class="el-icon-thumb">退出登录</i>
+       <div style="display: flex;align-items: center;">
+          <span>退出登录</span><svg-icon style="font-size:20px" icon-class="outlog"/>
+       </div>
+        <!-- <i class="el-icon-thumb">退出登录</i> -->
       </div>
     </div>
   </div>

@@ -1,14 +1,60 @@
 <template>
   <div class="container-box">
-    <!-- 政策模块 -->
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
-      <el-form-item label="政策标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+      <el-form-item label="企业名称" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入企业名称"></el-input>
       </el-form-item>
-      <el-form-item label="政策内容" prop="content">
-        <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
+      <el-form-item label="标签展示">
+        <el-tag
+          :key="tag"
+          v-for="tag in ruleForm.dynamicTags"
+          closable
+          :disable-transitions="false"
+          @close="(tag)=>{
+            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
+          }">
+          {{tag}}
+        </el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        >
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
+      </el-form-item>
+      <el-form-item label="企业简介" prop="content">
+        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
+      <el-form-item label="产业集群定位">
+        <el-select style="width: 100%;" v-model="ruleForm.service" multiple placeholder="请选择服务产品">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="成立时间">
+        <el-date-picker
+          style="width: 100%;"
+          v-model="ruleForm.begintime"
+          format="yyyy-MM-dd"
+          type="date"
+          placeholder="选择日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="企业地址">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入企业地址"></el-input>
+      </el-form-item>
+      
+
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
@@ -17,15 +63,8 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属分类" prop="categoryid">
-        <el-select v-model="ruleForm.categoryid" clearable placeholder="请选择分类" style="width: 100%;">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
+      <el-form-item label="排序ID">
+        <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
@@ -36,18 +75,16 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="排序ID">
-        <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
-      </el-form-item>
-      <el-form-item label="活动封面" prop="imgurl">
-        <el-upload  
+      <el-form-item label="企业封面" prop="imgurl">
+        <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
-          :on-success="handleSuccess"  
+          :on-success="handleSuccess"
           :on-error="handleError"  
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
+          :headers="upheaders"
           :limit="1"
         >  
           <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
@@ -56,6 +93,16 @@
           </div>  
         </el-upload>
       </el-form-item>
+<!-- <el-form-item label="所属分类" prop="categoryid">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item> -->
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
@@ -92,8 +139,11 @@ export default {
       dialogImageUrl:'',
       editflag:false,
       containertext:'',
+      inputVisible: false,
+      inputValue: '',
       ruleForm: {
         title:'',
+        dynamicTags: [],
         content:'',
         hotstr:[],
         categoryid:'',
@@ -143,6 +193,26 @@ export default {
     })
   },
   methods: {
+     // 添加标签
+     handleInputConfirm(){
+      let inputValue = this.inputValue;
+        if (inputValue) {
+          // 去重
+          if(this.ruleForm.dynamicTags.length !== 0){
+            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
+          }else{
+            this.ruleForm.dynamicTags.push(inputValue);
+          }
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+    },
+    showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
     beforeUpload(file) {  
       const isJPG = file.type === 'image/jpeg';  
       const isPNG = file.type === 'image/png';  

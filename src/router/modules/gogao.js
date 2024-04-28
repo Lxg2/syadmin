@@ -9,7 +9,7 @@ const caseRouter = {
   name: 'announcementgogao',
   meta: {
     title: '公告管理',
-    icon: 'case',
+    icon: 'datum',
     channelname: "gonggao",
   },
   children: [{

@@ -10,7 +10,7 @@ const compRouter = {
   name: "enterprise",
   meta: {
     title: "企业服务管理",
-    icon: "comp",
+    icon: "qiye",
   },
   children: [
     {
@@ -86,7 +86,7 @@ const compRouter = {
       component: () => import("@/views/enterprise/classification/contact"),
       name: "classification",
       meta: {
-        title: "服务分类",
+        title: "人才管理",
         channelname: "fuwu",
       },
     },
@@ -95,7 +95,7 @@ const compRouter = {
       component: () => import("@/views/enterprise/classification/add"),
       name: "classificationadd",
       meta: {
-        title: "新建服务分类",
+        title: "新建招聘",
         noCache: true,
         activeMenu: "/enterprise/classification",
         channelname: "fuwu",
@@ -104,10 +104,11 @@ const compRouter = {
     },
     {
       path: "classificationedit",
+
       component: () => import("@/views/enterprise/classification/edit"),
       name: "classificationedit",
       meta: {
-        title: "编辑服务分类",
+        title: "编辑招聘",
         noCache: true,
         activeMenu: "/enterprise/classification",
         channelname: "fuwu",

@@ -9,7 +9,7 @@ const infoRouter = {
   name: "financing",
   meta: {
     title: "融资管理",
-    icon: "info",
+    icon: "fina",
   },
   children: [
     {

@@ -355,3 +355,8 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+
+// 处理热门置顶绑定需要数字问题。在拦截器统一处理
+export function HotstrFnormat(data) {
+  
+}

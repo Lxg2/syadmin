@@ -8,7 +8,7 @@ const proRouter = {
   name: 'role',
   meta: {
     title: '权限管理',
-    icon: 'pro'
+    icon: 'set'
   },
   children: [{
     path: 'users',

@@ -8,7 +8,7 @@ const compRouter = {
   name: 'activity',
   meta: {
     title: '活动管理',
-    icon: 'comp',
+    icon: 'huodo',
     channelname:'huodong'
   },
   children: [{

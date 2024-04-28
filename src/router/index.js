@@ -28,6 +28,7 @@ import spaceRouter from './modules/space'
 import IndustrialClusterRouter from './modules/IndustrialCluster'
 // 找直播
 import directSeedingRouter from './modules/directSeeding'
+import userinfoRouter from './modules/useradmin'
 
 
 /**
@@ -97,6 +98,7 @@ export const asyncRoutes = [
   directSeedingRouter,//直播
   IndustrialClusterRouter,// 产业集群
   proRouter,//角色用户
+  userinfoRouter
 ]
 
 const createRouter = () => new Router({

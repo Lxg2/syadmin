@@ -13,6 +13,23 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
+    let {hotstr} = config.data
+    if(hotstr){
+      hotstr = hotstr.split(',');
+      hotstr.forEach((item,index) => {
+        switch(item){
+          case '置顶':
+            hotstr[index] = '1';
+            break;
+          case '热门':
+            hotstr[index] = '2';
+            break;
+            default:
+              break;
+        }
+      });
+      config.data.hotstr = hotstr.join(',')
+    }
     //发请求前做的一些处理，数据转化，配置请求头，设置token,设置loading等，根据需求去添加
    config.data = JSON.stringify(config.data); //数据转化,也可以使用qs转换
    config.headers = {

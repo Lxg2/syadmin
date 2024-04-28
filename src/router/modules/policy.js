@@ -9,7 +9,7 @@ const compRouter = {
   name: 'policyadmin',
   meta: {
     title: '政策管理',
-    icon: 'comp',
+    icon: 'zhengce',
   },
   children: [{
     path: 'policyadd',

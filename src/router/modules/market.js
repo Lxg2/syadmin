@@ -9,7 +9,7 @@ const compRouter = {
   name: "market",
   meta: {
     title: "市场管理",
-    icon: "comp",
+    icon: "shichang",
   },
   children: [
     {
@@ -45,35 +45,47 @@ const compRouter = {
       },
       hidden: true,
     },
+    // {
+    //   path: "spaceclass",
+    //   component: () => import("@/views/market/policyClass/contact"),
+    //   name: "spaceclass",
+    //   meta: {
+    //     title: "市场分类",
+    //     channelname: "shichang",
+    //   },
+    // },
+    // {
+    //   path: "spaceclassadd",
+    //   component: () => import("@/views/market/policyClass/add"),
+    //   name: "spaceclassadd",
+    //   meta: {
+    //     title: "新建市场分类",
+    //     noCache: true,
+    //     activeMenu: "/market/spaceclass",
+    //     channelname: "shichang",
+    //   },
+    //   hidden: true,
+    // },
+    // {
+    //   path: "spaceclassedit",
+    //   component: () => import("@/views/market/policyClass/edit"),
+    //   name: "spaceclassedit",
+    //   meta: {
+    //     title: "编辑市场分类",
+    //     noCache: true,
+    //     activeMenu: "/market/spaceclass",
+    //     channelname: "shichang",
+    //   },
+    //   hidden: true,
+    // },
     {
-      path: "spaceclass",
-      component: () => import("@/views/market/policyClass/contact"),
-      name: "spaceclass",
+      path: "spacedetail",
+      component: () => import("@/views/market/detail"),
+      name: "spacedetail",
       meta: {
-        title: "市场分类",
-        channelname: "shichang",
-      },
-    },
-    {
-      path: "spaceclassadd",
-      component: () => import("@/views/market/policyClass/add"),
-      name: "spaceclassadd",
-      meta: {
-        title: "新建市场分类",
+        title: "市场详情",
         noCache: true,
-        activeMenu: "/space/spaceclass",
-        channelname: "shichang",
-      },
-      hidden: true,
-    },
-    {
-      path: "spaceclassedit",
-      component: () => import("@/views/market/policyClass/edit"),
-      name: "spaceclassedit",
-      meta: {
-        title: "编辑市场分类",
-        noCache: true,
-        activeMenu: "/space/spaceclass",
+        activeMenu: "/market/marketadmin",
         channelname: "shichang",
       },
       hidden: true,

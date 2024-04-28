@@ -1,18 +1,8 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="公司名称" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
-      </el-form-item>
-      <el-form-item label="公司简介" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
-        </Tinymce>
-      </el-form-item>
-      <el-form-item label="成立时间">
-        <el-input v-model="ruleForm.null" placeholder="请输入成立时间"></el-input>
-      </el-form-item>
-      <el-form-item label="公司地址">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      <el-form-item label="企业名称" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入企业名称"></el-input>
       </el-form-item>
       <el-form-item label="标签展示">
         <el-tag
@@ -37,6 +27,33 @@
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
       </el-form-item>
+      <el-form-item label="企业简介" prop="content">
+        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce>
+      </el-form-item>
+      <el-form-item label="产业集群定位">
+        <el-select style="width: 100%;" v-model="ruleForm.service" multiple placeholder="请选择服务产品">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="成立时间">
+        <el-date-picker
+          style="width: 100%;"
+          v-model="ruleForm.begintime"
+          format="yyyy-MM-dd"
+          type="date"
+          placeholder="选择日期">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="企业地址">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入企业地址"></el-input>
+      </el-form-item>
+      
 
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
@@ -86,16 +103,6 @@
           </el-option>
         </el-select>
       </el-form-item> -->
-      <el-form-item label="旗下服务">
-        <el-select style="width: 100%;" v-model="ruleForm.service" multiple placeholder="请选择服务产品">
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
-          </el-option>
-        </el-select>
-      </el-form-item>
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
@@ -139,6 +146,7 @@ export default {
       ruleForm: {
         dynamicTags:[],
         service:[],
+        begintime:'',
         title:'',
         content:'',
         hotstr:[],

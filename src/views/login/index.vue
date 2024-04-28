@@ -1,9 +1,10 @@
 <template>
   <div class="login-container">
     <div class="login-box row-center">
-      <div class="company-profile" >
+      <div class="company-profile">
         <div class="name mb24">石岩街道虚拟园区</div>
         <div class="explain">数字化管理-助力企业数字化转型</div>
+        <svg-icon icon-class="3d" style="font-size: 400px;" />
       </div>
       <el-form
         ref="loginForm"
@@ -17,7 +18,7 @@
         <div class="title">登录您的账号</div>
         <el-form-item prop="username">
           <span class="svg-container">
-            <svg-icon icon-class="users" />
+            <svg-icon icon-class="users"/>
           </span>
           <el-input
             ref="username"
@@ -55,10 +56,10 @@
         >
       </el-form>
     </div>
-    <div class="copyright">
+    <!-- <div class="copyright">
       Copyright © 2015-2021 All Rights Reserved 深圳市深腾数字科技有限公司
       粤ICP备16120692号 网站地图 联系我们
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -193,9 +194,8 @@ $light_gray: #eee;
       width: 44.45%;
       color: #fff;
       background-color: #096bed;
-      padding: 6.945% 0 37.083%;
+      padding: 6.945% 0 0;
       text-align: center;
-
       .name {
         height: 38px;
         font-size: 40px;
@@ -211,7 +211,7 @@ $light_gray: #eee;
     .login-form {
       overflow: hidden;
       flex: 1;
-      padding: 5.556% 6.945% 7%;
+      padding: 4.656% 6.945% 4.2%;
       background-color: #fff;
       .welcome {
         height: 20px;

@@ -1,8 +1,8 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="分类标题" prop="categorytitle">
-        <el-input v-model="ruleForm.categorytitle" placeholder="请输入分类标题"></el-input>
+      <el-form-item label="产业定位标题" prop="categorytitle">
+        <el-input v-model="ruleForm.categorytitle" placeholder="请输入产业定位标题"></el-input>
       </el-form-item>
       <!-- <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
@@ -78,7 +78,7 @@ export default {
       },
       rules: {
         categorytitle: [
-            { required: true, message: '请输入分类标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
           // imgurl: [
           //   { required: true, trigger: 'change', validator: validateImg, }

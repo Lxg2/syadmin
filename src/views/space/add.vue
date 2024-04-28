@@ -1,47 +1,93 @@
 <template>
   <div class="container-box">
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="150px">
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="200px">
       <el-form-item label="空间名称" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item>
-      <el-form-item label="热度" prop="title">
+      <el-form-item label="标签展示">
+        <el-tag
+          :key="tag"
+          v-for="tag in ruleForm.dynamicTags"
+          closable
+          :disable-transitions="false"
+          @close="colseitem(tag)">
+          {{tag}}
+        </el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        >
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
+      </el-form-item>
+      <!-- <el-form-item label="热度" prop="title">
         <el-input type="number" v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      </el-form-item> -->
+      <el-form-item label="所属分类" prop="categoryid">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="区域" prop="title">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid2" filterable placeholder="请选择区域">
+          <el-option
+            v-for="item in options2"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+      </el-select>
       </el-form-item>
       <el-form-item label="楼层/栋" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+        <el-input v-model="ruleForm.title" placeholder="例如C栋3层"></el-input>
       </el-form-item>
-      <el-form-item label="租金" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      <el-form-item label="租金(单位:元/m²)" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入租金"></el-input>
       </el-form-item>
-      <el-form-item label="面积" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      <el-form-item label="面积(单位:m²)" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入面积"></el-input>
       </el-form-item>
-      <el-form-item label="房屋类型" prop="title">
+
+
+
+      
+      <!-- <el-form-item label="房屋类型" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item>
       <el-form-item label="分类" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
-      </el-form-item>
-      <el-form-item label="月租价格(单位:元/m²)" prop="title">
+      </el-form-item> -->
+      <!-- <el-form-item label="月租价格(单位:元/m²)" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="层高(单位:m)" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+        <el-input type="number" v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item>
-      <el-form-item label="是否有客梯">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
-      </el-form-item>
-      <el-form-item label="是否有货梯">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      <el-form-item label="电梯类型">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid3" clearable placeholder="请选择电梯默认为无">
+          <el-option
+            v-for="item in options3"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="荷载(单位:kg/m²)">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
-      </el-form-item>
-      <el-form-item label="荷载(单位:kg/m²)">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入荷载"></el-input>
       </el-form-item>
       <el-form-item label="在租楼层与户型">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入在租楼层与户型"></el-input>
       </el-form-item>
       <el-form-item label="交付标准">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
@@ -67,29 +113,6 @@
       <el-form-item label="公司地址">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
       </el-form-item> -->
-      <el-form-item label="标签展示">
-        <el-tag
-          :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
-          closable
-          :disable-transitions="false"
-          @close="(tag)=>{
-            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
-          }">
-          {{tag}}
-        </el-tag>
-        <el-input
-          class="input-new-tag"
-          v-if="inputVisible"
-          v-model="inputValue"
-          ref="saveTagInput"
-          size="small"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        >
-        </el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
-      </el-form-item>
 
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
@@ -98,16 +121,6 @@
             <el-checkbox label="热门" :value="2"></el-checkbox>
           </el-checkbox-group>
         </div>
-      </el-form-item>
-      <el-form-item label="所属分类" prop="categoryid">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
       </el-form-item>
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
@@ -171,7 +184,44 @@ export default {
         }
       };
     return {
-      options:[],
+      options:[
+        {
+          id:1,
+          Categorytitle:'工业'
+        },
+        {
+          id:2,
+          Categorytitle:'办公'
+        },
+        {
+          id:3,
+          Categorytitle:'商业'
+        }
+      ],
+      options2:[
+        {
+          id:1,
+          Categorytitle:'井田社区'
+        },
+        {
+          id:2,
+          Categorytitle:'金龟社区'
+        },
+        {
+          id:3,
+          Categorytitle:'金龙社区'
+        }
+      ],
+      options3:[
+        {
+          id:1,
+          Categorytitle:'客梯'
+        },
+        {
+          id:2,
+          Categorytitle:'货梯'
+        },
+      ],
       fileList: [],
       upheaders:{},
       imgdialogVisible:false,
@@ -187,7 +237,9 @@ export default {
         sortid:'',
         imgurl:'',
         isshow:true,
-        categoryid:''
+        categoryid:'',
+        categoryid2:'',
+        categoryid3:''
       },
       rules: {
         title: [
@@ -207,9 +259,12 @@ export default {
   },
   mounted() {
     this.upheaders = {'Authorization':getToken()}
-    this.getclasslist()
+    // this.getclasslist()
   },
   methods: {
+    colseitem(tag){
+        this.ruleForm.dynamicTags.splice(this.ruleForm.dynamicTags.indexOf(tag), 1);
+      },
     // 添加标签
     handleInputConfirm(){
       let inputValue = this.inputValue;

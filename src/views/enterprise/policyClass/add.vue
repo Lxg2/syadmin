@@ -27,12 +27,29 @@
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
       </el-form-item>
+      <el-form-item label="所属企业" prop="categoryid">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="服务类型" prop="categoryid">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options2"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="服务详情描述" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="250">
         </Tinymce>
-      </el-form-item>
-      <el-form-item label="服务类型" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入服务类型"></el-input>
       </el-form-item>
       <el-form-item label="联系人">
         <el-input v-model="ruleForm.communityusername" placeholder="请输入联系人"></el-input>
@@ -48,16 +65,7 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属企业" prop="categoryid">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item>
+     
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
@@ -121,6 +129,7 @@ export default {
       };
     return {
       options:[],
+      options2:[],
       fileList: [],
       upheaders:{},
       imgdialogVisible:false,
@@ -138,7 +147,8 @@ export default {
         communityusermobile:'',
         communityusername:'',
         isshow:true,
-        categoryid:''
+        categoryid:'',
+        categoryid2:''
       },
       rules: {
         title: [

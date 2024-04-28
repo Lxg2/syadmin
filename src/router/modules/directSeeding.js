@@ -5,42 +5,43 @@ import Layout from '@/layout'
 const compRouter = {
   path: '/directseeding',
   component: Layout,
-  redirect: '/directseeding/directseedingadmin',
+  redirect: '/directseeding/directseedingadminedit',
   name: 'directseeding',
   meta: {
     title: '直播管理',
-    icon: 'comp',
+    icon: 'zhibo',
   },
   children: [
-    {
-    path: 'directseedingadmin',
-    component: () => import('@/views/directseeding'),
-    name: 'directseedingadmin',
-    meta: {
-      title: '直播管理',
-      channelname:'zhibo'
-    }
-  },
+  //   {
+  //   path: 'directseedingadmin',
+  //   component: () => import('@/views/directseeding'),
+  //   name: 'directseedingadmin',
+  //   meta: {
+  //     title: '直播管理',
+  //     channelname:'zhibo'
+  //   }
+  // },
+  // {
+  //   path: 'directseedingadminadd',
+  //   component: () => import('@/views/directseeding/add'),
+  //   name: 'directseedingadminadd',
+  //   meta: {
+  //     title: '新建直播',
+  //     noCache: true,
+  //     activeMenu: '/directseeding/directseedingadmin',
+  //     channelname:'zhibo'
+  //   },
+  //   hidden: true
+  // }, 
   {
-    path: 'directseedingadminadd',
-    component: () => import('@/views/directseeding/add'),
-    name: 'directseedingadminadd',
-    meta: {
-      title: '新建直播',
-      noCache: true,
-      activeMenu: '/directseeding/directseedingadmin',
-      channelname:'zhibo'
-    },
-    hidden: true
-  }, {
     path: 'directseedingadminedit',
     component: () => import('@/views/directseeding/edit'),
     name: 'directseedingadminedit',
     meta: {
-      title: '编辑直播',
       noCache: true,
-      activeMenu: '/directseeding/directseedingadmin',
-      channelname:'zhibo'
+      activeMenu: '/directseeding',
+      channelname:'zhibo',
+      queryid:'8ee90c33-3dcd-4c24-8c3f-0b81a10bd52b'
     },
     hidden: true
   },

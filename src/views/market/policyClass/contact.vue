@@ -1,7 +1,7 @@
 <template>
   <div class="comp-container">
     <div class="search-box row-between">
-      <router-link :to="'/policy/classadd'">
+      <router-link :to="'/market/spaceclassadd'">
         <el-button type="primary" size="small" icon="el-icon-plus">
         新增
         </el-button>
@@ -57,7 +57,7 @@
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text" @click="$router.push({path:'/policy/classedit',query:{id:scope.row.id}}
+            <el-button type="text" @click="$router.push({path:'/market/spaceclassedit',query:{id:scope.row.id}}
             )">
               编辑
             </el-button>

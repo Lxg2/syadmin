@@ -7,7 +7,7 @@ const videoRouter = {
   name: "partybuilding",
   meta: {
     title: "党建管理",
-    icon: "video",
+    icon: "dangjian",
     channelname: "dangjian",
   },
   children: [

@@ -9,47 +9,48 @@ const compRouter = {
   name: 'colonymain',
   meta: {
     title: '产业集群',
-    icon: 'comp',
+    icon: 'chanyejiqun',
   },
-  children: [{
-    path: 'colonyadmin',
-    component: () => import('@/views/colony/add'),
-    name: 'colonyadmin',
-    meta: {
-      title: '产业集群',
-      noCache: true,
-      channelname:'chanye'
-    },
-    hidden: true
-  },
-  {
-    path: 'colonyadminadd',
-    component: () => import('@/views/colony/add.vue'),
-    name: 'pAd',
-    meta: {
-      title: '新建产业',
-      channelname:'chanye',
-      activeMenu: '/colony/colonyadmin',
-    }
-  }, {
-    path: 'colonyadminedit',
-    component: () => import('@/views/colony/edit.vue'),
-    name: 'policyedit',
-    meta: {
-      title: '编辑产业',
-      noCache: true,
-      activeMenu: '/colony/colonyadmin',
-      channelname:'chanye'
-    },
-    hidden: true
-  },
+  children: [
+  //   {
+  //   path: 'colonyadmin',
+  //   component: () => import('@/views/colony/add'),
+  //   name: 'colonyadmin',
+  //   meta: {
+  //     title: '产业集群',
+  //     noCache: true,
+  //     channelname:'chanye'
+  //   },
+  //   hidden: true
+  // },
+  // {
+  //   path: 'colonyadminadd',
+  //   component: () => import('@/views/colony/add.vue'),
+  //   name: 'pAd',
+  //   meta: {
+  //     title: '新建产业',
+  //     channelname:'chanye',
+  //     activeMenu: '/colony/colonyadmin',
+  //   }
+  // }, {
+  //   path: 'colonyadminedit',
+  //   component: () => import('@/views/colony/edit.vue'),
+  //   name: 'policyedit',
+  //   meta: {
+  //     title: '编辑产业',
+  //     noCache: true,
+  //     activeMenu: '/colony/colonyadmin',
+  //     channelname:'chanye'
+  //   },
+  //   hidden: true
+  // },
   {
     path: 'colonyclass',
     component: () => import('@/views/colony/policyClass/contact'),
     name: 'colonyclass',
     meta: {
-      title: '集群分类',
-      channelname:'chanye'
+      title: '产业集群分类',
+      channelname:'chanyejiqun'
     },
   },
     {
@@ -60,7 +61,7 @@ const compRouter = {
         title: '新建分类',
         noCache: true,
         activeMenu: '/colony/colonyclass',
-        channelname:'chanye'
+        channelname:'chanyejiqun'
       },
       hidden: true
     }, {
@@ -71,7 +72,7 @@ const compRouter = {
         title: '编辑分类',
         noCache: true,
         activeMenu: '/colony/colonyclass',
-        channelname:'chanye'
+        channelname:'chanyejiqun'
       },
       hidden: true
     },

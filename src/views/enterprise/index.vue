@@ -155,7 +155,7 @@ export default {
     getList() {
       this.listLoading = true;
       GetArtcileList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
-        this.list = response.datalist.datalist;
+        this.list = [{}];
         this.total = response.datalist.totalcount;
         this.listLoading = false;
       });
