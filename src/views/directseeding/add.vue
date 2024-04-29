@@ -42,7 +42,7 @@
           <div class="el-upload__text">将视频拖到此处，或<em>点击上传</em></div>
         </el-upload>
         <div v-else style="position: relative;">
-          <video width="500"  controls :src="ruleForm.imgurl"></video>
+          <video width="500" preload="https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg" controls :src="ruleForm.imgurl"></video>
           <i @click="ruleForm.imgurl = ''" class="el-icon-circle-close" style="font-size: 30px;position: absolute;top: -10px;left: 505px;cursor: pointer;"></i>
         </div>
       </el-form-item>

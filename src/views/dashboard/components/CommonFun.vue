@@ -2,14 +2,16 @@
     <div class="panel-box mb32 card-box">
         <div class="title">常用功能</div>
         <ul class="flex">
-            <li v-for="(item, index) in panelData" :key="index" class="panel-item row">
-                <div class="img-box row-center" :style="{ background: item.color }">
+            <li v-for="(item, index) in panelData" :key="index" style="width: 25%;">
+                <router-link :to="item.path" class="img-box panel-item row" >
+                    <div class="img-box row-center" :style="{ background: item.color }">
                     <img src="" alt="">
-                </div>
-                <div class="content-box flex">
-                    <span class="text">{{ item.text }}</span>
-                    <span class="explain">{{ item.explain }}</span>
-                </div>
+                    </div>
+                    <div class="content-box flex">
+                        <span class="text">{{ item.text }}</span>
+                        <span class="explain">{{ item.explain }}</span>
+                    </div>
+                </router-link>
             </li>
         </ul>
     </div>
@@ -21,13 +23,13 @@ export default {
     data() {
         return {
             panelData: [{
-                icon: '', color: '#606DF6', text: '发布资讯', explain: '实时了解行业资讯'
+                icon: '', color: '#606DF6', text: '发布资讯', explain: '实时了解行业资讯',path: '/dashboard/news/publish'
             }, {
-                icon: '', color: '#FCB546', text: '发布视频', explain: '提高企业影响力'
+                icon: '', color: '#FCB546', text: '发布视频', explain: '提高企业影响力',path: '/dashboard/news/publish'
             }, {
-                icon: '', color: '#2B71FF', text: '上传资料', explain: '方便共享资料'
+                icon: '', color: '#2B71FF', text: '上传资料', explain: '方便共享资料',path: '/dashboard/news/publish'
             }, {
-                icon: '', color: '#12DFC9', text: '新增案例', explain: '提高说服力'
+                icon: '', color: '#12DFC9', text: '新增案例', explain: '提高说服力',path: '/dashboard/news/publish'
             }]
         };
     },

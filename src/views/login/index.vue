@@ -182,16 +182,18 @@ $light_gray: #eee;
 .login-container {
   height: 100%;
   width: 100%;
-  padding-top: 5.885%;
+  padding-top: 13.885%;
   background-color: #e4eff9;
   overflow: hidden;
 
   .login-box {
     width: 75%;
+    height: 60%;
+    box-sizing: border-box;
     max-width: 100%;
     margin: 0 auto;
     .company-profile {
-      width: 44.45%;
+      width: 48%;
       color: #fff;
       background-color: #096bed;
       padding: 6.945% 0 0;
@@ -211,7 +213,7 @@ $light_gray: #eee;
     .login-form {
       overflow: hidden;
       flex: 1;
-      padding: 4.656% 6.945% 4.2%;
+      padding: 4.656% 6.945% 5.3%;
       background-color: #fff;
       .welcome {
         height: 20px;

@@ -74,7 +74,7 @@
         <el-input type="number" v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item>
       <el-form-item label="电梯类型">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid3" clearable placeholder="请选择电梯默认为无">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid3" clearable placeholder="请选择电梯">
           <el-option
             v-for="item in options3"
             :key="item.id"
@@ -90,7 +90,14 @@
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入在租楼层与户型"></el-input>
       </el-form-item>
       <el-form-item label="交付标准">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid4" clearable placeholder="请选择交付标准">
+          <el-option
+            v-for="item in options4"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="建成年份">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
@@ -222,6 +229,16 @@ export default {
           Categorytitle:'货梯'
         },
       ],
+      options4:[
+        {
+          id:1,
+          Categorytitle:'毛坯'
+        },
+        {
+          id:2,
+          Categorytitle:'精装'
+        },
+      ],
       fileList: [],
       upheaders:{},
       imgdialogVisible:false,
@@ -239,7 +256,8 @@ export default {
         isshow:true,
         categoryid:'',
         categoryid2:'',
-        categoryid3:''
+        categoryid3:'',
+        categoryid4:''
       },
       rules: {
         title: [
