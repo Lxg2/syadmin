@@ -35,7 +35,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="标题" prop="Categorytitle">
+      <el-table-column label="标题" prop="Title">
       </el-table-column>
 
       <el-table-column min-width="153px" label="状态" align="center">
@@ -95,7 +95,7 @@ const calendarTypeOptions = [
   { key: "JP", display_name: "Japan" },
   { key: "EU", display_name: "Eurozone" },
 ];
-import {DeleteCategory,GetCategoryList,GetArtcileList} from "@/api/user";
+import {DeleteCategory,DeleteArticle,GetCategoryList,GetArtcileList} from "@/api/user";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -130,7 +130,7 @@ export default {
   },
   methods: {
     async deletaFn(id){
-      let res = await DeleteCategory({id})
+      let res = await DeleteArticle({id})
       if(res.status === 200){
         this.getList()
         this.$message.success(res.msg)
