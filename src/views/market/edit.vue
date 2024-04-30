@@ -1,14 +1,41 @@
 <template>
   <div class="container-box">
-    <!-- 政策模块 -->
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
-      <el-form-item label="政策标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+      <el-form-item label="供需标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入供需标题"></el-input>
       </el-form-item>
-      <el-form-item label="政策内容" prop="content">
-        <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
+      <el-form-item label="供需类型" prop="categoryid2">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid2" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options2"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="供需信息" prop="content">
+        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
+      <el-form-item label="供应企业" prop="categoryid" v-if="ruleForm.categoryid2 === 1">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <template v-else>
+        <el-form-item label="联系人" prop="title">
+        <el-input v-model="ruleForm.communityusername " placeholder="请输入供需标题"></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话" prop="title">
+          <el-input v-model="ruleForm.communityusermobile" placeholder="请输入供需标题"></el-input>
+        </el-form-item>
+      </template>
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
@@ -17,15 +44,8 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属分类" prop="categoryid">
-        <el-select v-model="ruleForm.categoryid" clearable placeholder="请选择分类" style="width: 100%;">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
+      <el-form-item label="排序ID">
+        <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
@@ -36,19 +56,16 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="排序ID">
-        <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
-      </el-form-item>
-      <el-form-item label="活动封面" prop="imgurl">
-        <el-upload  
+      <el-form-item label="供需图片" prop="imgurl">
+        <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
-          :on-success="handleSuccess"  
-          :on-error="handleError"  
+          :on-success="handleSuccess"
+          :on-error="handleError"
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
-          :limit="1"
+          :headers="upheaders"
         >  
           <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
             <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
@@ -87,6 +104,17 @@ export default {
     return {
       form:{},
       fileList:[],
+      options:[],
+      options2:[
+        {
+          id: 1,
+          Categorytitle: '供应'
+        },
+        {
+          id: 2,
+          Categorytitle: '需求'
+        },
+      ],
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',

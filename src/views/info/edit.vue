@@ -91,6 +91,8 @@ export default {
       containertext:'',
       ruleForm: {
         title:'',
+        jrCompanyname:'',
+        remarks:'',
         content:'',
         hotstr:[],
         categoryid:'',

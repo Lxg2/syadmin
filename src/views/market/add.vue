@@ -1,44 +1,41 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="公司名称" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
+      <el-form-item label="供需标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入供需标题"></el-input>
       </el-form-item>
-      <el-form-item label="公司简介" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
-        </Tinymce>
+      <el-form-item label="供需类型" prop="supplytype">
+        <el-select style="width: 100%;" v-model="ruleForm.supplytype" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options2"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="成立时间">
-        <el-input v-model="ruleForm.null" placeholder="请输入成立时间"></el-input>
+      <el-form-item label="供需内容" prop="remarks">
+        <!-- <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce> -->
+        <el-input type="textarea" v-model="ruleForm.remarks" placeholder="请输入供需信息"></el-input>
       </el-form-item>
-      <el-form-item label="公司地址">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+      <!-- <el-form-item label="供应企业" v-if="ruleForm.supplytype === 0">
+        <el-select style="width: 100%;" filterable v-model="ruleForm.categoryid" clearable placeholder="请选择">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.Title"
+            :value="item.id">
+          </el-option>
+        </el-select>
+        <el-input v-model="ruleForm.communityusername " placeholder="请输入企业标题"></el-input>
       </el-form-item>
-      
-      <el-form-item label="标签展示">
-        <el-tag
-          :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
-          closable
-          :disable-transitions="false"
-          @close="(tag)=>{
-            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
-          }">
-          {{tag}}
-        </el-tag>
-        <el-input
-          class="input-new-tag"
-          v-if="inputVisible"
-          v-model="inputValue"
-          ref="saveTagInput"
-          size="small"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        >
-        </el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
-      </el-form-item>
-
+        <el-form-item label="联系人">
+        <el-input v-model="ruleForm.communityusername " placeholder="请输入供需标题"></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话">
+          <el-input v-model="ruleForm.communityusermobile" placeholder="请输入供需标题"></el-input>
+        </el-form-item> -->
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
@@ -46,16 +43,6 @@
             <el-checkbox label="热门" :value="2"></el-checkbox>
           </el-checkbox-group>
         </div>
-      </el-form-item>
-      <el-form-item label="所属分类" prop="categoryid">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
       </el-form-item>
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
@@ -69,17 +56,16 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="企业封面" prop="imgurl">
+      <el-form-item label="供需图片" prop="Filelist">
         <el-upload
-          :action="$store.state.user.beseFile"  
+          :action="$store.state.user.beseFile"
           list-type="picture-card"  
           :on-success="handleSuccess"
-          :on-error="handleError"  
+          :on-error="handleError"
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
           :headers="upheaders"
-          :limit="1"
         >  
           <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
             <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
@@ -102,7 +88,7 @@ import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
 import {allAddreq} from '@/api/user'
 import { getToken } from '@/utils/auth'
-import {GetSelectCategory} from '@/api/user'
+import {GetSelectCategory,GetArtcileList} from '@/api/user'
 
 export default {
   components: {
@@ -112,14 +98,25 @@ export default {
   data() {
     // 图片验证规则
     var validateImg = (rule, value, callback) => {
+      console.log(value);
         if (value === '' || value === undefined) {
-          callback(new Error('请上传活动封面'));
+          callback(new Error('请上传封面'));
         } else {
           callback();
         }
       };
     return {
       options:[],
+      options2:[
+        {
+          id: 0,
+          Categorytitle: '供应'
+        },
+        {
+          id: 1,
+          Categorytitle: '需求'
+        },
+      ],
       fileList: [],
       upheaders:{},
       imgdialogVisible:false,
@@ -128,26 +125,31 @@ export default {
       inputVisible: false,
       inputValue: '',
       ruleForm: {
-        dynamicTags:[],
+        // dynamicTags:[],
+        communityusermobile:'',
+        communityusername:'',
         title:'',
-        content:'',
+        remarks:'',
         hotstr:[],
         sortid:'',
-        imgurl:'',
+        Filelist:[],
         isshow:true,
-        categoryid:''
+        supplytype:'',
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
           categoryid: [
             { required: true, message: '请选择分类', trigger: 'blur' },
           ],
-          content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+          supplytype: [
+            { required: true, message: '请选择类型', trigger: 'blur' },
           ],
-          imgurl: [
+          remarks: [
+            { required: true, message: '请填写内容', trigger: 'change' }
+          ],
+          Filelist: [
             { required: true, trigger: 'change', validator: validateImg, }
           ],
       },
@@ -179,39 +181,43 @@ export default {
         });
       },
     async getclasslist() {
-      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
-      this.options = res.datalist
+      let res = await GetArtcileList({channelname:'qiye',...{page: 1,pageSize: 10,keywords:'',}})
+      this.options = res.datalist.datalist
     },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg';  
       const isPNG = file.type === 'image/png';  
-      const isLt10M = file.size / 1024 / 1024 < 10;
+      const isLt10M = file.size / 1024 / 1024 < 20;
       if (!isJPG && !isPNG) {  
-        this.$message.error('上传图片只能是 JPG/PNG 格式!');  
-      }  
+        this.$message.error('上传图片只能是 JPG/PNG 格式!');
+      }
       if (!isLt10M) {
-        this.$message.error('上传图片大小不能超过 10MB!');
+        this.$message.error('上传图片大小不能超过 20MB!');
       }  
       return isJPG || isPNG && isLt10M;
     },  
     handleSuccess(response) {
-      this.ruleForm.imgurl = response.filepath;
-    },  
-    handleError(error) {  
+      // 多张
+      this.ruleForm.Filelist.push(response.filepath);
+    },
+    handleError(error) {
       this.$message.error(error.msg);  
       // 你可以在这里处理上传失败后的逻辑  
     },  
-    handleRemove() {
-      this.ruleForm.imgurl = '';
+    handleRemove(data) {
+      // 排除
+      console.log(data.uid);
+      this.ruleForm.Filelist  = '';
       this.fileList = [];
-      // 你可以在这里处理删除文件后的逻辑，比如更新fileList  
+      // 你可以在这里处理删除文件后的逻辑，比如更新fileList
     },
     // 提交表单
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {isshow,hotstr} = this.ruleForm
-          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+          let {isshow,hotstr,Filelist} = this.ruleForm
+          Filelist = Filelist.join(',')
+          let res = await allAddreq({...this.ruleForm,Filelist,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

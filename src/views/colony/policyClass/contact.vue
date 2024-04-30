@@ -95,7 +95,7 @@ const calendarTypeOptions = [
   { key: "JP", display_name: "Japan" },
   { key: "EU", display_name: "Eurozone" },
 ];
-import {DeleteCategory,GetCategoryList} from "@/api/user";
+import {DeleteCategory,GetCategoryList,GetArtcileList} from "@/api/user";
 import Pagination from "@/components/Pagination";
 
 export default {
@@ -138,7 +138,7 @@ export default {
     },
     getList() {
       this.listLoading = true;
-      GetCategoryList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
+      GetArtcileList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
         this.list = response.datalist.datalist;
         this.total = response.datalist.totalcount;
         this.listLoading = false;

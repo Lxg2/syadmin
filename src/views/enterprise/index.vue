@@ -9,7 +9,7 @@
       <div class="search-right" style="align-items: center;display: flex;">
         <el-input
           v-model="listQuery.keywords"
-          placeholder="标题"
+          placeholder="名称"
           style="width: 200px"
           class="mr20"
           @keyup.enter.native="handleFilter"
@@ -29,15 +29,31 @@
       class="ranking_table"
     >
       <el-table-column width="10" align="center" />
-      <el-table-column width="237px" label="标题" prop="Title">
+      <el-table-column width="237px" label="名称" prop="Title">
       </el-table-column>
-      <el-table-column width="208px" label="封面">
+      <el-table-column width="208px" label="Logo">
         <template slot-scope="scope">
           <el-image 
-            style="width: 100px; height: 100px;margin: 10px 0px !important;"
+            style="width: 100px;height: auto;margin: 10px 0px !important;"
             :src="scope.row.Imgurl" 
             :preview-src-list="[scope.row.Imgurl]">
           </el-image>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="联系人" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Communityusername }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="联系方式" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Communityusermobile }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="企业地址" width="250">
+        <template slot-scope="scope">
+          <span>{{ scope.row.HdAddress }}</span>
         </template>
       </el-table-column>
 
@@ -59,15 +75,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="135px" label="创建时间">
+      <el-table-column width="135px" label="成立时间">
         <template slot-scope="scope">
           <span>{{
-            scope.row.Createtime
+            scope.row.Begintime
           }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" fixed="right" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">
             <el-button type="text" @click="$router.push({path:'/enterprise/enterpriseadminedit',query:{id:scope.row.id}}
@@ -155,7 +171,7 @@ export default {
     getList() {
       this.listLoading = true;
       GetArtcileList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
-        this.list = [{}];
+        this.list = response.datalist.datalist;
         this.total = response.datalist.totalcount;
         this.listLoading = false;
       });

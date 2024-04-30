@@ -31,13 +31,13 @@
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
-      <el-form-item label="产业集群定位">
-        <el-select style="width: 100%;" v-model="ruleForm.service" multiple placeholder="请选择服务产品">
+      <el-form-item label="产业集群定位" prop="categoryid">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" placeholder="请选择服务产品">
           <el-option
             v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -53,8 +53,12 @@
       <el-form-item label="企业地址">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入企业地址"></el-input>
       </el-form-item>
-      
-
+      <el-form-item label="联系人">
+        <el-input v-model="ruleForm.communityusername" placeholder="请输入联系人"></el-input>
+      </el-form-item>
+      <el-form-item label="联系电话">
+        <el-input type="number" v-model="ruleForm.communityusermobile" placeholder="请输入联系方式"></el-input>
+      </el-form-item>
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
@@ -129,13 +133,34 @@ export default {
     // 图片验证规则
     var validateImg = (rule, value, callback) => {
         if (value === '' || value === undefined) {
-          callback(new Error('请上传活动封面'));
+          callback(new Error('请上传封面'));
         } else {
           callback();
         }
       };
     return {
-      options:[],
+      options:[
+      {
+          id:1,
+          Categorytitle:'超高清视频产业'
+        },
+        {
+          id:2,
+          Categorytitle:'新能源产业'
+        },
+        {
+          id:3,
+          Categorytitle:'智能终端产业'
+        },
+        {
+          id:4,
+          Categorytitle:'半导体与集成电路产业'
+        },
+        {
+          id:5,
+          Categorytitle:'其他产业'
+        }
+      ],
       fileList: [],
       upheaders:{},
       imgdialogVisible:false,
@@ -145,25 +170,27 @@ export default {
       inputValue: '',
       ruleForm: {
         dynamicTags:[],
-        service:[],
         begintime:'',
+        communityusername:'',
+        communityusermobile:'',
+        hdAddress:'',
         title:'',
         content:'',
         hotstr:[],
         sortid:'',
         imgurl:'',
         isshow:true,
-        // categoryid:''
+        categoryid:''
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
-          // categoryid: [
-          //   { required: true, message: '请选择分类', trigger: 'blur' },
-          // ],
+          categoryid: [
+            { required: true, message: '请选择分类', trigger: 'blur' },
+          ],
           content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+            { required: true, message: '请填写内容', trigger: 'change' }
           ],
           imgurl: [
             { required: true, trigger: 'change', validator: validateImg, }
@@ -173,7 +200,7 @@ export default {
   },
   mounted() {
     this.upheaders = {'Authorization':getToken()}
-    this.getclasslist()
+    // this.getclasslist()
   },
   methods: {
     // 添加标签
@@ -196,11 +223,11 @@ export default {
           this.$refs.saveTagInput.$refs.input.focus();
         });
       },
-    async getclasslist() {
-      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
-      // this.options = res.datalist
-      this.options = [{value:0,label:'测试服务测试'},{value:19,label:'测试服务测试'},{value:17,label:'测试服务测试'},{value:16,label:'测试服务测试'},{value:15,label:'测试服务测试'},{value:14,label:'测试服务测试'},{value:13,label:'测试服务测试'},{value:12,label:'测试服务测试'},{value:11,label:'测试服务测试'},{value:9,label:'测试服务测试'},{value:3,label:'测试服务测试'},{value:4,label:'测试服务测试'}]
-    },
+    // async getclasslist() {
+    //   let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
+    //   // this.options = res.datalist
+    //   this.options = [{value:0,label:'测试服务测试'},{value:19,label:'测试服务测试'},{value:17,label:'测试服务测试'},{value:16,label:'测试服务测试'},{value:15,label:'测试服务测试'},{value:14,label:'测试服务测试'},{value:13,label:'测试服务测试'},{value:12,label:'测试服务测试'},{value:11,label:'测试服务测试'},{value:9,label:'测试服务测试'},{value:3,label:'测试服务测试'},{value:4,label:'测试服务测试'}]
+    // },
     beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg';  
       const isPNG = file.type === 'image/png';  

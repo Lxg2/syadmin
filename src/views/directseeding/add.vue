@@ -47,8 +47,32 @@
         </div>
       </el-form-item>
       <el-form-item label="直播简介" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
-        </Tinymce>
+        <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="textarea">
+        </el-input>
+        <!-- <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce> -->
+      </el-form-item>
+      <el-form-item label="分类封面" prop="imgurl">
+        <el-upload
+          :action="$store.state.user.beseFile"  
+          list-type="picture-card"  
+          :on-success="handleSuccess"  
+          :on-error="handleError"  
+          :before-upload="beforeUploadimg"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :headers="upheaders"
+          :limit="1"
+        >  
+          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>
+            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+          </div>  
+        </el-upload>
       </el-form-item>
       <el-form-item label="咨询电话" prop="communityusermobile">
         <el-input v-model="ruleForm.communityusermobile" placeholder="请输入电话"></el-input>
@@ -141,6 +165,18 @@ export default {
     this.getclasslist()
   },
   methods: {
+    beforeUploadimg(file){
+      const isJPG = file.type === 'image/jpeg';  
+      const isPNG = file.type === 'image/png';  
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (!isJPG && !isPNG) {  
+        this.$message.error('上传图片只能是 JPG/PNG 格式!');  
+      }  
+      if (!isLt10M) {
+        this.$message.error('上传图片大小不能超过 10MB!');
+      }  
+      return isJPG || isPNG && isLt10M;
+    },
     beforeUploadvideo(file) {
     const isVideo = file.type.startsWith('video/');  
     if (!isVideo) {  

@@ -33,6 +33,15 @@ export function GetSelectCategory(data) {
     data
   })
 }
+// // 获取企业无分类
+// export function GetSelectCategoryqy(data) {
+//   return fmreq({
+//     url: '/api/admin/GetSelectCategory',
+//     method: 'post',
+//     data
+//   })
+// }
+
 
 // 统一删除内容删除id
 export function DeleteArticle(data) {
@@ -59,7 +68,7 @@ export function GetArtcileInfo(data) {
     data
   })
 }
-// 统一回显内容列表
+// 统一内容列表
 export function GetArtcileList(data) {
   return request({
     url: '/api/admin/GetArtcileList',

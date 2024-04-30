@@ -28,16 +28,16 @@
         <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
       </el-form-item>
       <el-form-item label="企业简介" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        <Tinymce ref="editor" v-if="editflag" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
       <el-form-item label="产业集群定位">
-        <el-select style="width: 100%;" v-model="ruleForm.service" multiple placeholder="请选择服务产品">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" placeholder="请选择服务产品">
           <el-option
             v-for="item in options"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
           </el-option>
         </el-select>
       </el-form-item>
@@ -50,8 +50,15 @@
           placeholder="选择日期">
         </el-date-picker>
       </el-form-item>
+      
       <el-form-item label="企业地址">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入企业地址"></el-input>
+      </el-form-item>
+      <el-form-item label="联系人">
+        <el-input v-model="ruleForm.communityusername" placeholder="请输入联系人"></el-input>
+      </el-form-item>
+      <el-form-item label="联系电话">
+        <el-input type="number" v-model="ruleForm.communityusermobile" placeholder="请输入联系方式"></el-input>
       </el-form-item>
       
 
@@ -84,7 +91,6 @@
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
-          :headers="upheaders"
           :limit="1"
         >  
           <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
@@ -144,6 +150,10 @@ export default {
       ruleForm: {
         title:'',
         dynamicTags: [],
+        Begintime:'',
+        communityusername:'',
+        communityusermobile:'',
+        hdAddress:'',
         content:'',
         hotstr:[],
         categoryid:'',
@@ -158,7 +168,7 @@ export default {
           content: [
             { required: true, message: '请填写政策内容', trigger: 'change' }
           ],
-          categoryId: [
+          categoryid: [
             {  required: true, message: '请选择所属类别', trigger: 'change' }
           ],
           imgurl: [
@@ -166,18 +176,54 @@ export default {
           ],
       },
     options:[
+      {
+          id:1,
+          Categorytitle:'超高清视频产业'
+        },
+        {
+          id:2,
+          Categorytitle:'新能源产业'
+        },
+        {
+          id:3,
+          Categorytitle:'智能终端产业'
+        },
+        {
+          id:4,
+          Categorytitle:'半导体与集成电路产业'
+        },
+        {
+          id:5,
+          Categorytitle:'其他产业'
+        }
     ]
     }
   },
   created(){
     // 获取分类无分页
-    this.getselectlist()
+    // this.getselectlist()
   },
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Isshow:isshow} = res.datalist
+      let {
+        Title:title,
+        Content:content,
+        Hotstr:hotstr,
+        Categoryid:categoryid,
+        Sortid:sortid,
+        Imgurl:imgurl,
+        Isshow:isshow,
+        Communityusername:communityusername,
+        HdAddress:hdAddress,
+        Begintime:begintime,
+        Communityusermobile:communityusermobile,
+      } = res.datalist
       this.ruleForm.title = title
+      this.ruleForm.begintime = begintime 
+      this.ruleForm.communityusername = communityusername
+      this.ruleForm.communityusermobile = communityusermobile
+      this.ruleForm.hdAddress = hdAddress
       this.ruleForm.hotstr = hotstr.split(',')
       this.ruleForm.categoryid = categoryid
       this.editflag = true

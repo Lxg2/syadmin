@@ -26,7 +26,7 @@ const compRouter = {
       component: () => import("@/views/market/add"),
       name: "marketadminadd",
       meta: {
-        title: "发布供应",
+        title: "发布供需",
         noCache: true,
         activeMenu: "/market/marketadmin",
         channelname: "shichang",
@@ -34,11 +34,11 @@ const compRouter = {
       hidden: true,
     },
     {
-      path: "spaceadminedit",
+      path: "marketadminedit",
       component: () => import("@/views/market/edit"),
-      name: "spaceadminedit",
+      name: "marketadminedit",
       meta: {
-        title: "编辑供应",
+        title: "编辑供需",
         noCache: true,
         activeMenu: "/market/marketadmin",
         channelname: "shichang",

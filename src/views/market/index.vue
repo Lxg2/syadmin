@@ -1,7 +1,11 @@
 <template>
   <div class="comp-container">
     <div class="search-box row-between">
-      <div></div>
+      <router-link :to="'/market/marketadminadd'">
+        <el-button type="primary" size="small" style="width: 150px;" icon="el-icon-plus">
+        发布供需
+        </el-button>
+    </router-link>
       <div class="search-right" style="align-items: center;display: flex;">
         <el-input
           v-model="listQuery.keywords"
@@ -63,14 +67,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" label="操作" width="240">
         <template slot-scope="scope">
           <div class="operate">
-            <!-- <el-button type="text" @click="$router.push({path:'/market/enterpriseadminedit',query:{id:scope.row.id}}
+            <el-button type="text" @click="$router.push({path:'/market/marketadminedit',query:{id:scope.row.id}}
             )">
               编辑
-            </el-button> -->
-            <!-- <span class="line">|</span> -->
+            </el-button>
+            <span class="line">|</span>
             <el-button type="text" @click="$router.push({path:'/market/spacedetail',query:{id:scope.row.id}})">
               查看评论
             </el-button>
@@ -155,7 +159,7 @@ export default {
     getList() {
       this.listLoading = true;
       GetArtcileList({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {
-        this.list = [{}];
+        this.list =response.datalist.datalist;
         this.total = response.datalist.totalcount;
         this.listLoading = false;
       });
