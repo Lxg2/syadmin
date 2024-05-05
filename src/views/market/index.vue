@@ -9,7 +9,7 @@
       <div class="search-right" style="align-items: center;display: flex;">
         <el-input
           v-model="listQuery.keywords"
-          placeholder="标题"
+          placeholder="供需名称"
           style="width: 200px"
           class="mr20"
           @keyup.enter.native="handleFilter"
@@ -29,13 +29,13 @@
       class="ranking_table"
     >
       <el-table-column width="10" align="center" />
-      <el-table-column width="237px" label="标题" prop="Title">
+      <el-table-column width="237px" label="供需名称" prop="Title">
       </el-table-column>
       <el-table-column width="208px" label="封面">
         <template slot-scope="scope">
           <el-image 
             style="width: 100px; height: 100px;margin: 10px 0px !important;"
-            :src="scope.row.Imgurl" 
+            :src="scope.row.Fileslist[0]" 
             :preview-src-list="[scope.row.Imgurl]">
           </el-image>
         </template>
@@ -43,13 +43,13 @@
 
       <el-table-column label="类别" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.CategoryName }}</span>
+          <span>{{ scope.row.Supplytype===0?'供应':'需求' }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="排序" align="center">
+      <el-table-column show-overflow-tooltip label="描述" width="300">
         <template slot-scope="scope">
-          <span>{{ scope.row.Sortid }}</span>
+          <span>{{ scope.row.Remarks }}</span>
         </template>
       </el-table-column>
 
@@ -67,7 +67,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="240">
+      <el-table-column align="center" fixed="right" label="操作" width="240">
         <template slot-scope="scope">
           <div class="operate">
             <el-button type="text" @click="$router.push({path:'/market/marketadminedit',query:{id:scope.row.id}}
@@ -170,7 +170,10 @@ export default {
   },
 };
 </script>
-
+<style>
+.el-tooltip__popper{
+  max-width:50% !important;
+}</style>
 <style lang="scss" scoped>
 
 .comp-container {

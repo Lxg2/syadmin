@@ -29,19 +29,32 @@
       class="ranking_table"
     >
       <el-table-column align="center" width="10" />
-      <el-table-column width="108px" label="ID">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
+
+      <el-table-column label="企业名称" prop="Title">
       </el-table-column>
 
-      <el-table-column label="标题" prop="Title">
-      </el-table-column>
-
-      <el-table-column min-width="153px" label="状态" align="center">
+      
+      
+      <el-table-column width="200px" label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ 
             row.Isshow?'显示':'隐藏'
+            }}</span>
+        </template>
+      </el-table-column>
+      
+      <el-table-column label="所属集群">
+        <template slot-scope="scope">
+          <span>{{
+            scope.row.Categoryid === 1?'超高清视频产业':scope.row.Categoryid === 2?'新能源产业':scope.row.Categoryid === 3?'智能终端产业':scope.row.Categoryid === 4?'半导体与集成电路产业':'为归属'
+          }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="200px" label="龙头企业" align="center">
+        <template slot-scope="{ row }">
+          <span :style="{color:row.Sortid === 1?'#409EFF':'#909399'}">{{ 
+            row.Sortid === 1?'是':'否'
             }}</span>
         </template>
       </el-table-column>

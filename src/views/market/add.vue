@@ -56,7 +56,7 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="供需图片" prop="Filelist">
+      <el-form-item label="供需图片" prop="filelist">
         <el-upload
           :action="$store.state.user.beseFile"
           list-type="picture-card"  
@@ -132,7 +132,7 @@ export default {
         remarks:'',
         hotstr:[],
         sortid:'',
-        Filelist:[],
+        filelist:[],
         isshow:true,
         supplytype:'',
       },
@@ -149,7 +149,7 @@ export default {
           remarks: [
             { required: true, message: '请填写内容', trigger: 'change' }
           ],
-          Filelist: [
+          filelist: [
             { required: true, trigger: 'change', validator: validateImg, }
           ],
       },
@@ -196,28 +196,26 @@ export default {
       }  
       return isJPG || isPNG && isLt10M;
     },  
-    handleSuccess(response) {
+    handleSuccess(response, file) {
       // 多张
-      this.ruleForm.Filelist.push(response.filepath);
+      this.ruleForm.filelist.push({filepath:response.filepath,uid:file.uid});
     },
     handleError(error) {
-      this.$message.error(error.msg);  
-      // 你可以在这里处理上传失败后的逻辑  
-    },  
+      this.$message.error(error.msg);
+      // 你可以在这里处理上传失败后的逻辑
+    },
     handleRemove(data) {
       // 排除
-      console.log(data.uid);
-      this.ruleForm.Filelist  = '';
-      this.fileList = [];
-      // 你可以在这里处理删除文件后的逻辑，比如更新fileList
+      let index = this.ruleForm.filelist.findIndex(item => item.uid === data.uid);
+      this.ruleForm.filelist.splice(index, 1);
     },
     // 提交表单
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {isshow,hotstr,Filelist} = this.ruleForm
-          Filelist = Filelist.join(',')
-          let res = await allAddreq({...this.ruleForm,Filelist,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+          let {isshow,hotstr,filelist} = this.ruleForm
+          filelist = filelist.map(item => item.filepath).join(',')
+          let res = await allAddreq({...this.ruleForm,filelist,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

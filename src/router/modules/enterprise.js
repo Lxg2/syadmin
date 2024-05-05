@@ -9,43 +9,43 @@ const compRouter = {
   redirect: "/enterprise/enterpriseadmin",
   name: "enterprise",
   meta: {
-    title: "企业服务管理",
+    title: "服务管理",
     icon: "qiye",
   },
   children: [
-    {
-      path: "enterpriseadmin",
-      component: () => import("@/views/enterprise"),
-      name: "enterpriseadmin",
-      meta: {
-        title: "企业管理",
-        channelname: "qiye",
-      },
-    },
-    {
-      path: "enterpriseadminadd",
-      component: () => import("@/views/enterprise/add"),
-      name: "enterpriseadminadd",
-      meta: {
-        title: "新建企业",
-        noCache: true,
-        activeMenu: "/enterprise/enterpriseadmin",
-        channelname: "qiye",
-      },
-      hidden: true,
-    },
-    {
-      path: "enterpriseadminedit",
-      component: () => import("@/views/enterprise/edit"),
-      name: "enterpriseadminedit",
-      meta: {
-        title: "编辑企业",
-        noCache: true,
-        activeMenu: "/enterprise/enterpriseadmin",
-        channelname: "qiye",
-      },
-      hidden: true,
-    },
+    // {
+    //   path: "enterpriseadmin",
+    //   component: () => import("@/views/enterprise"),
+    //   name: "enterpriseadmin",
+    //   meta: {
+    //     title: "企业管理",
+    //     channelname: "qiye",
+    //   },
+    // },
+    // {
+    //   path: "enterpriseadminadd",
+    //   component: () => import("@/views/enterprise/add"),
+    //   name: "enterpriseadminadd",
+    //   meta: {
+    //     title: "新建企业",
+    //     noCache: true,
+    //     activeMenu: "/enterprise/enterpriseadmin",
+    //     channelname: "qiye",
+    //   },
+    //   hidden: true,
+    // },
+    // {
+    //   path: "enterpriseadminedit",
+    //   component: () => import("@/views/enterprise/edit"),
+    //   name: "enterpriseadminedit",
+    //   meta: {
+    //     title: "编辑企业",
+    //     noCache: true,
+    //     activeMenu: "/enterprise/enterpriseadmin",
+    //     channelname: "qiye",
+    //   },
+    //   hidden: true,
+    // },
     {
       path: "enterpriseclass",
       component: () => import("@/views/enterprise/policyClass/contact"),

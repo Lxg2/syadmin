@@ -4,8 +4,8 @@
       <el-form-item label="供需标题" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入供需标题"></el-input>
       </el-form-item>
-      <el-form-item label="供需类型" prop="categoryid2">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid2" clearable placeholder="请选择分类">
+      <el-form-item label="供需类型" prop="supplytype">
+        <el-select style="width: 100%;" v-model="ruleForm.supplytype" clearable placeholder="请选择分类">
           <el-option
             v-for="item in options2"
             :key="item.id"
@@ -14,28 +14,28 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="供需信息" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
-        </Tinymce>
+      <el-form-item label="供需内容" prop="remarks">
+        <!-- <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce> -->
+        <el-input type="textarea" v-model="ruleForm.remarks" placeholder="请输入供需信息"></el-input>
       </el-form-item>
-      <el-form-item label="供应企业" prop="categoryid" v-if="ruleForm.categoryid2 === 1">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择">
+      <!-- <el-form-item label="供应企业" v-if="ruleForm.supplytype === 0">
+        <el-select style="width: 100%;" filterable v-model="ruleForm.categoryid" clearable placeholder="请选择">
           <el-option
             v-for="item in options"
             :key="item.id"
-            :label="item.Categorytitle"
+            :label="item.Title"
             :value="item.id">
           </el-option>
         </el-select>
+        <el-input v-model="ruleForm.communityusername " placeholder="请输入企业标题"></el-input>
       </el-form-item>
-      <template v-else>
-        <el-form-item label="联系人" prop="title">
+        <el-form-item label="联系人">
         <el-input v-model="ruleForm.communityusername " placeholder="请输入供需标题"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话" prop="title">
+        <el-form-item label="联系电话">
           <el-input v-model="ruleForm.communityusermobile" placeholder="请输入供需标题"></el-input>
-        </el-form-item>
-      </template>
+        </el-form-item> -->
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
@@ -56,16 +56,15 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="供需图片" prop="imgurl">
+      <el-form-item label="供需图片" prop="filelist">
         <el-upload
-          :action="$store.state.user.beseFile"  
+          :action="$store.state.user.beseFile"
           list-type="picture-card"  
           :on-success="handleSuccess"
           :on-error="handleError"
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
-          :headers="upheaders"
         >  
           <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
             <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
@@ -107,11 +106,11 @@ export default {
       options:[],
       options2:[
         {
-          id: 1,
+          id: 0,
           Categorytitle: '供应'
         },
         {
-          id: 2,
+          id: 1,
           Categorytitle: '需求'
         },
       ],
@@ -121,13 +120,15 @@ export default {
       editflag:false,
       containertext:'',
       ruleForm: {
+        communityusermobile:'',
+        communityusername:'',
         title:'',
-        content:'',
+        remarks:'',
         hotstr:[],
-        categoryid:'',
         sortid:'',
+        filelist:[],
         isshow:true,
-        imgurl:'',
+        supplytype:'',
       },
       rules: {
         title: [
@@ -139,7 +140,7 @@ export default {
           categoryId: [
             {  required: true, message: '请选择所属类别', trigger: 'change' }
           ],
-          imgurl: [
+          filelist: [
             { required: true, trigger: 'change', validator: validateImg, }
           ],
       },
@@ -154,19 +155,29 @@ export default {
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Isshow:isshow} = res.datalist
+      let {Title:title,
+        Content:content,
+        Hotstr:hotstr,
+        Categoryid:categoryid,
+        Sortid:sortid,
+        Remarks:remarks,
+        Fileslist:fileslist,
+        Supplytype:supplytype,
+        Isshow:isshow} = res.datalist
       this.ruleForm.title = title
       this.ruleForm.hotstr = hotstr.split(',')
       this.ruleForm.categoryid = categoryid
       this.editflag = true
+      this.ruleForm.remarks = remarks
       this.ruleForm.sortid = sortid
+      let arr = []
+      fileslist.forEach(item=>arr.push({uid:Math.ceil(Math.random() * 10000000000000+Math.random(10)),url:item}))
+      this.ruleForm.filelist = arr
+      this.fileList = arr
       this.ruleForm.isshow = isshow? true : false
-      this.ruleForm.imgurl = imgurl
-      this.fileList = [{url:imgurl}]
+      this.ruleForm.supplytype = supplytype
        this.$nextTick(()=>{
         this.ruleForm.content = content
-        console.log(this.$refs.editor);
-      // 获取富文本内容
       })
     })
   },
@@ -176,24 +187,25 @@ export default {
       const isPNG = file.type === 'image/png';  
       const isLt10M = file.size / 1024 / 1024 < 10;  
       if (!isJPG && !isPNG) {  
-        this.$message.error('上传图片只能是 JPG/PNG 格式!');  
+        this.$message.error('上传图片只能是 JPG/PNG 格式!');
       }  
       if (!isLt10M) {  
         this.$message.error('上传图片大小不能超过 10MB!');  
       }  
       return isJPG || isPNG && isLt10M;  
     },  
-    handleSuccess(response) {
-      this.ruleForm.imgurl = response.filepath;
-    },  
+    handleSuccess(response, file) {
+      // 多张
+      this.ruleForm.filelist.push({url:response.filepath,uid:file.uid});
+    },
     handleError(error) {  
       this.$message.error(error.msg);
       // 你可以在这里处理上传失败后的逻辑
     },  
-    handleRemove() {
-      this.ruleForm.imgurl = '';
-      this.fileList = [];
-      // 你可以在这里处理删除文件后的逻辑，比如更新fileList
+    handleRemove(data) {
+      // 排除
+      let index = this.ruleForm.filelist.findIndex(item => item.uid === data.uid);
+      this.ruleForm.filelist.splice(index, 1);
     },
     async getselectlist(){
       let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
@@ -202,9 +214,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {hotstr,isshow} = this.ruleForm
+          let {hotstr,isshow,filelist} = this.ruleForm
+          filelist = filelist.map(item => item.url).join(',')
           this.ruleForm.hotstr = hotstr.join(',')
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
+          let res = await UpdateArticle({...this.ruleForm,filelist,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
           if(res.status == 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

@@ -1,12 +1,33 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="分类标题" prop="categorytitle">
-        <el-input v-model="ruleForm.categorytitle" placeholder="请输入分类标题"></el-input>
+      <el-form-item label="推荐企业" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入"></el-input>
       </el-form-item>
-      <!-- <el-form-item label="排序ID">
+      <el-form-item label="企业简介">
+        <el-input
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          v-model="ruleForm.remarks">
+        </el-input>
+
+      </el-form-item>
+      <el-form-item label="产业定位" prop="categoryid">
+        <!-- <el-input v-model="ruleForm.categorytitle" placeholder="请输入产业定位标题"></el-input>
+         -->
+          <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.Categorytitle"
+              :value="item.id">
+            </el-option>
+          </el-select>
+      </el-form-item>
+      <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
-      </el-form-item> -->
+      </el-form-item>
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
           <el-switch
@@ -37,7 +58,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">修改</el-button>
+          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -47,7 +68,7 @@
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
-import {allAddCategoryreq,GetCategoryInfo,UpdateCategory} from '@/api/user'
+import {GetArtcileInfo,GetCategoryInfo,UpdateCategory,UpdateArticle} from '@/api/user'
 import { getToken } from '@/utils/auth'
 
 export default {
@@ -66,18 +87,38 @@ export default {
       };
     return {
       fileList: [],
+      options:[
+        {
+          id:1,
+          Categorytitle:'超高清视频产业'
+        },
+        {
+          id:2,
+          Categorytitle:'新能源产业'
+        },
+        {
+          id:3,
+          Categorytitle:'智能终端产业'
+        },
+        {
+          id:4,
+          Categorytitle:'半导体与集成电路产业'
+        }
+      ],
       upheaders:{},
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
       ruleForm: {
-        categorytitle:'',
-        // sortid:'',
+        sortid:'',
+        title:'',
         imgurl:'',
+        categoryid:'',
         isshow:false,
+        remarks:''
       },
       rules: {
-        categorytitle: [
+        categoryid: [
             { required: true, message: '请输入分类标题', trigger: 'blur' },
           ],
           // imgurl: [
@@ -94,8 +135,11 @@ export default {
   },
   methods: {
     async getinfofn(){
-      let {datalist:{Categorytitle:categorytitle,Isshow:isshow,Imgurl:imgurl}} = await GetCategoryInfo({id:this.$route.query.id})
-      this.ruleForm.categorytitle = categorytitle
+      let {datalist:{Remarks:remarks,Title:title,Sortid:sortid,Categoryid:categoryid,Isshow:isshow,Imgurl:imgurl}} = await GetArtcileInfo({id:this.$route.query.id,})
+      this.ruleForm.remarks = remarks
+      this.ruleForm.categoryid = categoryid
+      this.ruleForm.title = title
+      this.ruleForm.sortid = sortid
       this.ruleForm.isshow = isshow?true:false
       this.ruleForm.imgurl = imgurl
       if(imgurl){
@@ -136,7 +180,7 @@ export default {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           let {isshow} = this.ruleForm
-          let res = await UpdateCategory({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
+          let res = await UpdateArticle({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
