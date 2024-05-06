@@ -79,39 +79,39 @@ const compRouter = {
     //   hidden: true,
     // },
     // 空间规格
-    // {
-    //   path: "specification",
-    //   component: () => import("@/views/space/specification/contact"),
-    //   name: "specification",
-    //   meta: {
-    //     title: "空间规格",
-    //     channelname: "guige",
-    //   },
-    // },
-    // {
-    //   path: "specificationadd",
-    //   component: () => import("@/views/space/specification/add"),
-    //   name: "specificationadd",
-    //   meta: {
-    //     title: "新建规格",
-    //     noCache: true,
-    //     activeMenu: "/space/specification",
-    //     channelname: "guige",
-    //   },
-    //   hidden: true,
-    // },
-    // {
-    //   path: "specificationedit",
-    //   component: () => import("@/views/space/specification/edit"),
-    //   name: "specificationedit",
-    //   meta: {
-    //     title: "编辑规格",
-    //     noCache: true,
-    //     activeMenu: "/space/specification",
-    //     channelname: "guige",
-    //   },
-    //   hidden: true,
-    // },
+    {
+      path: "specification",
+      component: () => import("@/views/space/specification/contact"),
+      name: "specification",
+      meta: {
+        title: "空间分类",
+        channelname: "kongjian",
+      },
+    },
+    {
+      path: "specificationadd",
+      component: () => import("@/views/space/specification/add"),
+      name: "specificationadd",
+      meta: {
+        title: "新建分类",
+        noCache: true,
+        activeMenu: "/space/specification",
+        channelname: "kongjian",
+      },
+      hidden: true,
+    },
+    {
+      path: "specificationedit",
+      component: () => import("@/views/space/specification/edit"),
+      name: "specificationedit",
+      meta: {
+        title: "编辑分类",
+        noCache: true,
+        activeMenu: "/space/specification",
+        channelname: "kongjian",
+      },
+      hidden: true,
+    },
   ],
 };
 export default compRouter

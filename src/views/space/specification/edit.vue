@@ -1,32 +1,39 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="分类名称" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入分类名称"></el-input>
+      <el-form-item label="分类标题" prop="categorytitle">
+        <el-input v-model="ruleForm.categorytitle" placeholder="请输入分类标题"></el-input>
       </el-form-item>
-      <el-form-item :label="i.title" v-for="(i,index) in tagarr" :key="i.id">
-              <el-tag
-              :key="index2"
-              class="mytag input-new-tag"
-              v-for="(tag,index2) in i.items"
-              closable
-              :disable-transitions="false"
-              @click.self.stop.prevent="tagclickfn(index,index2)"
-              @close.stop.prevent="handleClose(tag,index2,index)">
-              {{tag}}
-            </el-tag>
-          <el-input
-            class="input-new-tag"
-            v-if="i.inputVisible"
-            v-model="i.inputValue"
-            :ref="i.ref"
-            size="small"
-            @keyup.enter.native="handleInputConfirm(index)"
-            @blur="handleInputConfirm(index)"
-          >
-          </el-input>
-          <el-button v-else class="button-new-tag" size="small" @click="showInput(index,i.ref)" style="font-size: 13px !important;">+ 类型规格</el-button>
+      <!-- <el-form-item label="排序ID">
+        <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
+      </el-form-item> -->
+      <el-form-item label="是否显示">
+        <div style="margin-left: 10px;">
+          <el-switch
+            v-model="ruleForm.isshow"
+            active-text="显示"
+            inactive-text="隐藏">
+          </el-switch>
+        </div>
       </el-form-item>
+      <!-- <el-form-item label="分类封面" prop="imgurl">
+        <el-upload
+          :action="$store.state.user.beseFile"  
+          list-type="picture-card"  
+          :on-success="handleSuccess"  
+          :on-error="handleError"  
+          :before-upload="beforeUpload"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :headers="upheaders"
+          :limit="1"
+        >  
+          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>
+            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+          </div>  
+        </el-upload>
+      </el-form-item> -->
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
@@ -34,28 +41,14 @@
          </div>
       </el-form-item>
     </el-form>
-    <el-dialog
-        title="修改规格"
-        :visible.sync="changedialogVisible"
-        width="30%"
-        class="my-changetag"
-        >
-        <el-input v-model="changetagtext" placeholder="请输入分类名称"></el-input>
-        <span slot="footer" class="dialog-footer">
-          <el-button style="width: 100px;height: 40px !important;" @click="changedialogVisible = false">取 消</el-button>
-          <el-button style="width: 100px;height: 40px !important;" type="primary" @click="confrimchangetagFn">确 定</el-button>
-        </span>
-      </el-dialog>
-
   </div>
 </template>
 
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
-import {allAddreq} from '@/api/user'
+import {allAddCategoryreq,GetCategoryInfo,UpdateCategory} from '@/api/user'
 import { getToken } from '@/utils/auth'
-import {GetSelectCategory} from '@/api/user'
 
 export default {
   components: {
@@ -64,170 +57,77 @@ export default {
   },
   data() {
     // 图片验证规则
-    var validatePhone = (rule, value, callback) => {
-        if (value === '' || value === undefined) {
-          callback(new Error('请输入咨询号码'));
-        } else {
-          let s = /^(?:(?:\+?86)?1\d{10})|(?:(?:\d{3,4}-)?\d{7,8})(?:-\d+)?$/;
-          if(!s.test(value)){
-           return callback(new Error('请输入正确号码'));
-          }
-          callback();
-        }
-      };
-    // 图片验证规则
     var validateImg = (rule, value, callback) => {
         if (value === '' || value === undefined) {
-          callback(new Error('请上传宣传视频'));
+          callback(new Error('请上传封面'));
         } else {
           callback();
         }
       };
     return {
-      options:[],
-      changetagtext:'',
-      tagindex:1,
-      tagindex2:2,
       fileList: [],
       upheaders:{},
       imgdialogVisible:false,
-      changedialogVisible:false,
       validateImg,
-      validatePhone,
       dialogImageUrl:'',
-      tagarr:[{
-        title:'区域',
-        id:1,
-        inputVisible: false,
-        changeinput:false,
-        inputValue: '',
-        ref:'saveTagInput1',
-        items:[]
-      },{
-        title:'价格',
-        id:2,
-        inputVisible: false,
-        changeinput:false,
-        inputValue: '',
-        ref:'saveTagInput2',
-        items:[]
-      },{
-        title:'出租面积',
-        id:3,
-        items:[],
-        inputVisible: false,
-        changeinput:false,
-        ref:'saveTagInput3',
-        inputValue: '',
-      },{
-        title:'电梯',
-        id:4,
-        inputVisible: false,
-        changeinput:false,
-        inputValue: '',
-        ref:'saveTagInput4',
-        items:[]
-      },{
-        title:'付费标准',
-        id:5,
-        inputVisible: false,
-        changeinput:false,
-        ref:'saveTagInput5',
-        inputValue: '',
-        items:[]
-      },],
       ruleForm: {
-        dynamicTags:[],
-        title:'',
-        content:'',
-        communityusermobile:'',
+        categorytitle:'',
+        sortid:'',
         imgurl:'',
+        isshow:false,
       },
       rules: {
-        title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+        categorytitle: [
+            { required: true, message: '请输入分类标题', trigger: 'blur' },
           ],
-          content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
-          ],
-          imgurl: [
-            { required: true, trigger: 'change', validator: validateImg, }
-          ],
-          communityusermobile: [
-            { required: true, trigger: 'blur', validator: validatePhone, }
-          ],
+          // imgurl: [
+          //   { required: true, trigger: 'change', validator: validateImg, }
+          // ],
       },
     };
   },
+  created(){
+    this.getinfofn()
+  },
   mounted() {
     this.upheaders = {'Authorization':getToken()}
-    this.getclasslist()
   },
   methods: {
-    beforeUploadvideo(file) {
-    const isVideo = file.type.startsWith('video/');  
-    if (!isVideo) {
-      this.$message.error('请上传视频文件！');
-      return false;  
-    }  
-    // 如果需要限制文件大小，可以在这里添加逻辑  
-      return true;
+    async getinfofn(){
+      let {datalist:{Categorytitle:categorytitle,Isshow:isshow}} = await GetCategoryInfo({id:this.$route.query.id})
+      this.ruleForm.categorytitle = categorytitle
+      this.ruleForm.isshow = isshow?true:false
     },
-    // 文件上传成功时的钩子
-    handleSuccess(response, file, fileList) {
+    beforeUpload(file) {  
+      const isJPG = file.type === 'image/jpeg';  
+      const isPNG = file.type === 'image/png';  
+      const isLt10M = file.size / 1024 / 1024 < 10;
+      if (!isJPG && !isPNG) {  
+        this.$message.error('上传图片只能是 JPG/PNG 格式!');  
+      }  
+      if (!isLt10M) {
+        this.$message.error('上传图片大小不能超过 10MB!');
+      }  
+      return isJPG || isPNG && isLt10M;
+    },
+    handleSuccess(response) {
       this.ruleForm.imgurl = response.filepath;
-      // 可以在这里处理上传成功后的逻辑，比如更新UI或存储文件信息等  
     },  
-    // 文件上传失败时的钩子  
-    handleError(error, file, fileList) {
-      this.$message.error('视频上传失败，请重试！'+error.msg);  
-      // 可以在这里处理上传失败后的逻辑，比如重试上传或显示更详细的错误信息  
-    },
-    tagclickfn(index,index2){
-      this.changedialogVisible = true
-      this.tagindex = index
-      this.tagindex2 = index2
-     this.changetagtext = this.tagarr[index].items[index2]
-    },
-    confrimchangetagFn(){
-      this.changedialogVisible = false
-      this.$set(this.tagarr[this.tagindex].items,this.tagindex2,this.changetagtext)
-    },
-    // 添加标签
-    handleInputConfirm(index){
-      // this.$set(this.tagarr,index,this.tagarr[index].inputValue)
-      let inputValue = this.tagarr[index].inputValue
-        if (inputValue) {
-          // 去重
-          if(this.tagarr[index].items.length !== 0){
-            !this.tagarr[index].items.includes(inputValue) && this.tagarr[index].items.push(inputValue);
-          }else{
-            this.tagarr[index].items.push(inputValue);
-          }
-        }
-        this.tagarr[index].inputVisible = false;
-        this.tagarr[index].inputValue = '';
-    },
-    handleClose(tag,index2,index){
-      console.log(tag,index2,index2);
-        this.tagarr[index].changeinput = false;
-        this.tagarr[index].items.splice(index2, 1);
-    },
-    showInput(index,ref) {
-      this.tagarr[index].inputVisible = true;
-        this.$nextTick(_ => {
-          this.$refs[ref][0].$refs.input.focus()
-        });
-      },
-    async getclasslist(index) {
-      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
-      this.options = res.datalist
+    handleError(error) {
+      this.$message.error(error.msg);
+      // 你可以在这里处理上传失败后的逻辑
+    },  
+    handleRemove() {
+      this.ruleForm.imgurl = '';
+      this.fileList = [];
+      // 你可以在这里处理删除文件后的逻辑，比如更新fileList
     },
     // 提交表单
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let res = await allAddreq({...this.ruleForm,channelname:this.$route.meta.channelname})
+          let {isshow} = this.ruleForm
+          let res = await UpdateCategory({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
@@ -250,14 +150,5 @@ export default {
   height: auto !important;
   padding: 3.038% 3.038% 1%;
   box-sizing: border-box;
-}
-</style>
-<style>
-.my-changetag .el-dialog__footer{
-  padding: 20px !important;
-}
-.input-new-tag{
-  width: auto;
-  min-width: 90px;
 }
 </style>

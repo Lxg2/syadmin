@@ -157,7 +157,7 @@ export default {
 .container-box {
   min-height: 100%;
   height: auto !important;
-  padding: 3.038% 3.038% 1%;
+  padding: 3.038% 0px 1%;
   box-sizing: border-box;
 }
 </style>

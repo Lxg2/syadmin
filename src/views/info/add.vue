@@ -4,6 +4,27 @@
       <el-form-item label="金融标题" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入金融标题"></el-input>
       </el-form-item>
+      <el-form-item label="标签展示">
+        <el-tag
+          :key="tag"
+          v-for="tag in ruleForm.tags"
+          closable
+          :disable-transitions="false"
+          @close="colseitem(tag)">
+          {{tag}}
+        </el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        >
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
+      </el-form-item>
       <el-form-item label="详情描述" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
@@ -98,10 +119,13 @@ export default {
       fileList: [],
       upheaders:{},
       imgdialogVisible:false,
+      inputVisible: false,
+      inputValue: '',
       validateImg,
       dialogImageUrl:'',
       ruleForm: {
         title:'',
+        tags:[],
         content:'',
         hotstr:[],
         jrCompanyname:'',
@@ -132,6 +156,29 @@ export default {
     this.getclasslist()
   },
   methods: {
+    colseitem(tag){
+        this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
+      },
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+         // 添加标签
+    handleInputConfirm(){
+      let inputValue = this.inputValue;
+        if (inputValue) {
+          // 去重
+          if(this.ruleForm.tags.length !== 0){
+            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
+          }else{
+            this.ruleForm.tags.push(inputValue);
+          }
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+    },
     async getclasslist() {
       let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
       this.options = res.datalist
@@ -164,8 +211,9 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {isshow,hotstr} = this.ruleForm
-          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+          let {isshow,hotstr,tags} = this.ruleForm
+          tags = tags.join(',')
+          let res = await allAddreq({...this.ruleForm,tags,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             // 回退

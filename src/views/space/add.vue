@@ -7,7 +7,7 @@
       <el-form-item label="标签展示">
         <el-tag
           :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
+          v-for="tag in ruleForm.tags"
           closable
           :disable-transitions="false"
           @close="colseitem(tag)">
@@ -38,24 +38,24 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="区域" prop="title">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid2" filterable placeholder="请选择区域">
+      <el-form-item label="区域">
+        <el-select style="width: 100%;" v-model="ruleForm.areaid" filterable placeholder="请选择区域">
           <el-option
             v-for="item in options2"
-            :key="item.id"
+            :key="item.Categorytitle"
             :label="item.Categorytitle"
-            :value="item.id">
+            :value="item.Categorytitle">
           </el-option>
       </el-select>
       </el-form-item>
-      <el-form-item label="楼层/栋" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="例如C栋3层"></el-input>
+      <el-form-item label="楼层/栋">
+        <el-input v-model="ruleForm.floor" placeholder="例如C栋3层"></el-input>
       </el-form-item>
-      <el-form-item label="租金(单位:元/m²)" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入租金"></el-input>
+      <el-form-item label="租金(单位:元/m²)">
+        <el-input v-model="ruleForm.rent" placeholder="请输入租金"></el-input>
       </el-form-item>
-      <el-form-item label="面积(单位:m²)" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入面积"></el-input>
+      <el-form-item label="面积(单位:m²)">
+        <el-input v-model="ruleForm.area" placeholder="请输入面积"></el-input>
       </el-form-item>
 
 
@@ -70,44 +70,47 @@
       <!-- <el-form-item label="月租价格(单位:元/m²)" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item> -->
-      <el-form-item label="层高(单位:m)" prop="title">
-        <el-input type="number" v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
+      <el-form-item label="层高(单位:m)">
+        <el-input v-model="ruleForm.floorheight" placeholder="请输入空间名称"></el-input>
       </el-form-item>
       <el-form-item label="电梯类型">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid3" clearable placeholder="请选择电梯">
+        <el-select style="width: 100%;" v-model="ruleForm.elevatortype" clearable placeholder="请选择电梯">
           <el-option
             v-for="item in options3"
-            :key="item.id"
+            :key="item.Categorytitle"
             :label="item.Categorytitle"
-            :value="item.id">
+            :value="item.Categorytitle">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="荷载(单位:kg/m²)">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入荷载"></el-input>
+        <el-input v-model="ruleForm.loads" placeholder="请输入荷载"></el-input>
       </el-form-item>
       <el-form-item label="在租楼层与户型">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入在租楼层与户型"></el-input>
+        <el-input v-model="ruleForm.rentingfloors" placeholder="请输入在租楼层与户型"></el-input>
       </el-form-item>
       <el-form-item label="交付标准">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid4" clearable placeholder="请选择交付标准">
+        <el-select style="width: 100%;" v-model="ruleForm.deliverystandards" clearable placeholder="请选择交付标准">
           <el-option
             v-for="item in options4"
-            :key="item.id"
+            :key="item.Categorytitle"
             :label="item.Categorytitle"
-            :value="item.id">
+            :value="item.Categorytitle">
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="建成年份">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+        <el-input v-model="ruleForm.recruitmentRegion" placeholder="请输入公司地址"></el-input>
+      </el-form-item>
+      <el-form-item label="详细地址">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入详细地址"></el-input>
       </el-form-item>
       <el-form-item label="联系电话">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
+        <el-input v-model="ruleForm.communityusermobile" placeholder="请输入公司地址"></el-input>
       </el-form-item>
       
       <el-form-item label="空间简介" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="250">
+        <Tinymce ref="editor" v-model="ruleForm.remarks" :height="250">
         </Tinymce>
       </el-form-item>
       <el-form-item label="配套设施" prop="content">
@@ -141,17 +144,17 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="封面" prop="imgurl">
+      <el-form-item label="封面" prop="filelist">
         <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
           :on-success="handleSuccess"
-          :on-error="handleError"  
+          :on-error="handleError"
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
           :headers="upheaders"
-          :limit="1"
+          multiple
         >  
           <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
             <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
@@ -184,7 +187,7 @@ export default {
   data() {
     // 图片验证规则
     var validateImg = (rule, value, callback) => {
-        if (value === '' || value === undefined) {
+        if (value === '' || value === undefined || value.length === 0) {
           callback(new Error('请上传活动封面'));
         } else {
           callback();
@@ -192,50 +195,63 @@ export default {
       };
     return {
       options:[
-        {
-          id:1,
-          Categorytitle:'工业'
-        },
-        {
-          id:2,
-          Categorytitle:'办公'
-        },
-        {
-          id:3,
-          Categorytitle:'商业'
-        }
+       
       ],
       options2:[
         {
-          id:1,
-          Categorytitle:'井田社区'
+          Categorytitle:'石龙社区'
         },
         {
-          id:2,
-          Categorytitle:'金龟社区'
+          Categorytitle:'水田社区'
         },
         {
-          id:3,
-          Categorytitle:'金龙社区'
-        }
+          Categorytitle:'官田社区'
+        },
+        {
+          Categorytitle:'上屋社区'
+        },
+        {
+          Categorytitle:'龙腾社区'
+        },
+        {
+          Categorytitle:'浪心社区'
+        },
+        {
+          Categorytitle:'宝源社区'
+        },
+        {
+          Categorytitle:'罗租社区'
+        },
+        {
+          Categorytitle:'塘头社区'
+        },
+        {
+          Categorytitle:'应人石社区'
+        },
       ],
       options3:[
         {
-          id:1,
+          Categorytitle:'不限'
+        },
+        {
+          id:0,
           Categorytitle:'客梯'
         },
         {
-          id:2,
+          id:1,
           Categorytitle:'货梯'
         },
       ],
       options4:[
         {
-          id:1,
+          Categorytitle:'不限'
+        },
+        {
+          id:0,
           Categorytitle:'毛坯'
         },
         {
-          id:2,
+          id:1,
           Categorytitle:'精装'
         },
       ],
@@ -247,17 +263,27 @@ export default {
       inputVisible: false,
       inputValue: '',
       ruleForm: {
-        dynamicTags:[],
         title:'',
-        content:'',
-        hotstr:[],
-        sortid:'',
-        imgurl:'',
-        isshow:true,
+        tags:[],
         categoryid:'',
-        categoryid2:'',
-        categoryid3:'',
-        categoryid4:''
+        areaid:'',
+        floor:'',
+        rent:'',
+        area:'',
+        floorheight:'',
+        elevatortype:'',
+        loads:'',
+        rentingfloors:'',
+        deliverystandards:'',
+        yearbuilt:'',
+        recruitmentRegion:'',
+        communityusermobile:'',
+        remarks:'',
+        hotstr:[],
+        content:'',
+        sortid:'',
+        filelist:[],
+        hdAddress:'',
       },
       rules: {
         title: [
@@ -269,7 +295,7 @@ export default {
           content: [
             { required: true, message: '请填写政策内容', trigger: 'change' }
           ],
-          imgurl: [
+          filelist: [
             { required: true, trigger: 'change', validator: validateImg, }
           ],
       },
@@ -277,21 +303,21 @@ export default {
   },
   mounted() {
     this.upheaders = {'Authorization':getToken()}
-    // this.getclasslist()
+    this.getclasslist()
   },
   methods: {
     colseitem(tag){
-        this.ruleForm.dynamicTags.splice(this.ruleForm.dynamicTags.indexOf(tag), 1);
+        this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
       },
     // 添加标签
     handleInputConfirm(){
       let inputValue = this.inputValue;
         if (inputValue) {
           // 去重
-          if(this.ruleForm.dynamicTags.length !== 0){
-            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
+          if(this.ruleForm.tags.length !== 0){
+            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
           }else{
-            this.ruleForm.dynamicTags.push(inputValue);
+            this.ruleForm.tags.push(inputValue);
           }
         }
         this.inputVisible = false;
@@ -319,24 +345,25 @@ export default {
       }  
       return isJPG || isPNG && isLt10M;
     },  
-    handleSuccess(response) {
-      this.ruleForm.imgurl = response.filepath;
+    handleSuccess(response,file) {
+      this.ruleForm.filelist.push({filepath:response.filepath,uid:file.uid});
     },  
     handleError(error) {  
       this.$message.error(error.msg);  
       // 你可以在这里处理上传失败后的逻辑  
     },  
     handleRemove() {
-      this.ruleForm.imgurl = '';
-      this.fileList = [];
-      // 你可以在这里处理删除文件后的逻辑，比如更新fileList  
+      let index = this.ruleForm.filelist.findIndex(item => item.uid === data.uid);
+      this.ruleForm.filelist.splice(index, 1);
     },
     // 提交表单
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {isshow,hotstr} = this.ruleForm
-          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+          let {isshow,hotstr,filelist,tags} = this.ruleForm
+          filelist = filelist.map(item => item.filepath).join(',')
+          tags = tags.join(',')
+          let res = await allAddreq({...this.ruleForm,tags,filelist,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
@@ -357,7 +384,7 @@ export default {
 .container-box {
   min-height: 100%;
   height: auto !important;
-  padding: 3.038% 3.038% 1%;
+  padding: 3.038% 0px 1%;
   box-sizing: border-box;
 }
 </style>

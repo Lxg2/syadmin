@@ -5,6 +5,27 @@
       <el-form-item label="政策标题" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
       </el-form-item>
+      <el-form-item label="标签展示">
+        <el-tag
+          :key="tag"
+          v-for="tag in ruleForm.tags"
+          closable
+          :disable-transitions="false"
+          @close="colseitem(tag)">
+          {{tag}}
+        </el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        >
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
+      </el-form-item>
       <el-form-item label="政策内容" prop="content">
         <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
@@ -89,8 +110,11 @@ export default {
       validateImg,
       dialogImageUrl:'',
       containertext:'',
+      inputVisible: false,
+      inputValue: '',
       ruleForm: {
         title:'',
+        tags:[],
         jrCompanyname:'',
         remarks:'',
         content:'',
@@ -124,8 +148,11 @@ export default {
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Remarks:remarks,JrCompanyname:jrCompanyname} = res.datalist
+      let {Title:title,Tags:tags,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Remarks:remarks,JrCompanyname:jrCompanyname} = res.datalist
       this.ruleForm.title = title
+      if(tags){
+        this.ruleForm.tags = tags.split(',')
+      }
       this.ruleForm.remarks = remarks
       this.editflag = true
       this.ruleForm.jrCompanyname = jrCompanyname
@@ -136,13 +163,34 @@ export default {
       this.fileList = [{url:imgurl}]
        this.$nextTick(()=>{
         this.ruleForm.content = content
-        console.log(this.$refs.editor);
-      // 获取富文本内容
       })
     })
    
   },
   methods: {
+    colseitem(tag){
+        this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
+      },
+      showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+         // 添加标签
+    handleInputConfirm(){
+      let inputValue = this.inputValue;
+        if (inputValue) {
+          // 去重
+          if(this.ruleForm.tags.length !== 0){
+            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
+          }else{
+            this.ruleForm.tags.push(inputValue);
+          }
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+    },
     beforeUpload(file) {  
       const isJPG = file.type === 'image/jpeg';  
       const isPNG = file.type === 'image/png';  
@@ -174,9 +222,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {hotstr} = this.ruleForm
+          let {hotstr,tags} = this.ruleForm
           this.ruleForm.hotstr = hotstr.join(',')
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname})
+          tags = tags.join(',')
+          let res = await UpdateArticle({...this.ruleForm,tags,id:this.$route.query.id,channelname:this.$route.meta.channelname})
           if(res.status == 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

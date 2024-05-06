@@ -7,11 +7,11 @@
       <el-form-item label="标签展示">
         <el-tag
           :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
+          v-for="tag in ruleForm.tags"
           closable
           :disable-transitions="false"
           @close="(tag)=>{
-            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
+            ruleForm.tags.splice(ruleForm.tags.indexOf(tag), 1);
           }">
           {{tag}}
         </el-tag>
@@ -27,7 +27,7 @@
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
       </el-form-item>
-      <el-form-item label="所属企业" prop="categoryid">
+      <!-- <el-form-item label="所属企业" prop="categoryid">
         <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
           <el-option
             v-for="item in options"
@@ -36,6 +36,11 @@
             :value="item.id">
           </el-option>
         </el-select>
+      </el-form-item> -->
+      <el-form-item label="服务简介" prop="remarks">
+        <!-- <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce> -->
+        <el-input type="textarea" v-model="ruleForm.remarks" placeholder="请输入简介"></el-input>
       </el-form-item>
       <el-form-item label="服务类型" prop="categoryid">
         <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
@@ -128,8 +133,29 @@ export default {
         }
       };
     return {
-      options:[],
-      options2:[],
+      // options:[],
+      options2:[
+        // {
+        //   id:0,
+        //   Categorytitle:'科技社会法律服务'
+        // },
+        // {
+        //   id:1,
+        //   Categorytitle:'维修、养护、保养服务'
+        // },
+        // {
+        //   id:2,
+        //   Categorytitle:'人才、培训服务'
+        // },
+        // {
+        //   id:3,
+        //   Categorytitle:'集成电路测试服务'
+        // },
+        // {
+        //   id:4,
+        //   Categorytitle:'其他服务'
+        // },
+      ],
       fileList: [],
       upheaders:{},
       imgdialogVisible:false,
@@ -138,7 +164,8 @@ export default {
       inputVisible: false,
       inputValue: '',
       ruleForm: {
-        dynamicTags:[],
+        remarks:'',
+        tags:[],
         title:'',
         content:'',
         hotstr:[],
@@ -148,17 +175,16 @@ export default {
         communityusername:'',
         isshow:true,
         categoryid:'',
-        categoryid2:''
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
           categoryid: [
             { required: true, message: '请选择分类', trigger: 'blur' },
           ],
           content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+            { required: true, message: '请填写内容', trigger: 'change' }
           ],
           imgurl: [
             { required: true, trigger: 'change', validator: validateImg, }
@@ -166,20 +192,27 @@ export default {
       },
     };
   },
+  created() {
+    this.getclasstypelist()
+  },
   mounted() {
     this.upheaders = {'Authorization':getToken()}
     this.getclasslist()
   },
   methods: {
+    async getclasstypelist() {
+      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
+      this.options2 = res.datalist
+    },
     // 添加标签
     handleInputConfirm(){
       let inputValue = this.inputValue;
         if (inputValue) {
           // 去重
-          if(this.ruleForm.dynamicTags.length !== 0){
-            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
+          if(this.ruleForm.tags.length !== 0){
+            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
           }else{
-            this.ruleForm.dynamicTags.push(inputValue);
+            this.ruleForm.tags.push(inputValue);
           }
         }
         this.inputVisible = false;
@@ -212,7 +245,7 @@ export default {
     },  
     handleError(error) {  
       this.$message.error(error.msg);  
-      // 你可以在这里处理上传失败后的逻辑  
+      // 你可以在这里处理上传失败后的逻辑
     },  
     handleRemove() {
       this.ruleForm.imgurl = '';
@@ -223,8 +256,9 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {isshow,hotstr} = this.ruleForm
-          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+          let {isshow,hotstr,tags} = this.ruleForm
+          tags = tags.join(',')
+          let res = await allAddreq({...this.ruleForm,tags,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

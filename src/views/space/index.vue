@@ -29,40 +29,34 @@
       class="ranking_table"
     >
       <el-table-column width="10" align="center" />
-      <el-table-column width="237px" label="标题" prop="Title">
+      <el-table-column width="237px" label="空间" prop="Title">
       </el-table-column>
-      <el-table-column width="208px" label="封面">
+      <el-table-column width="180px" label="封面">
         <template slot-scope="scope">
           <el-image 
             style="width: 100px; height: 100px;margin: 10px 0px !important;"
-            :src="scope.row.Imgurl" 
-            :preview-src-list="[scope.row.Imgurl]">
+            :src="scope.row.Fileslist[0]"
+            :preview-src-list="scope.row.Fileslist">
           </el-image>
         </template>
       </el-table-column>
 
-      <el-table-column label="类别" width="150">
+      <el-table-column label="类别" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.CategoryName }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="排序" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.Sortid }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column min-width="153px" label="状态" align="center">
+      <el-table-column min-width="223px" show-overflow-tooltip="true" label="简介" align="center">
         <template slot-scope="{ row }">
-          <span>{{row.Isshow?'显示':'隐藏'}}</span>
+          <span v-html="row.Remarks"></span>
         </template>
       </el-table-column>
 
-      <el-table-column width="135px" label="创建时间">
+      <el-table-column width="135px" label="详细地址">
         <template slot-scope="scope">
           <span>{{
-            scope.row.Createtime
+            scope.row.HdAddress
           }}</span>
         </template>
       </el-table-column>
@@ -167,8 +161,11 @@ export default {
 };
 </script>
 
+<style>
+.el-tooltip__popper{
+  max-width:50% !important;
+}</style>
 <style lang="scss" scoped>
-
 .comp-container {
   padding: 40px 40px 55px;
   background: #FFFFFF;

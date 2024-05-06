@@ -1,18 +1,16 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="200px">
-      <el-form-item label="招聘岗位" prop="title">
+      <el-form-item label="岗位" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入招聘岗位"></el-input>
       </el-form-item>
-      <el-form-item label="福利标签展示">
+      <el-form-item label="职务福利">
         <el-tag
           :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
+          v-for="tag in ruleForm.tags"
           closable
           :disable-transitions="false"
-          @close="(tag)=>{
-            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
-          }">
+          @close="colseitem(tag)">
           {{tag}}
         </el-tag>
         <el-input
@@ -27,7 +25,7 @@
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
       </el-form-item>
-      <el-form-item label="发布单位" prop="categoryid">
+      <!-- <el-form-item label="发布单位" prop="categoryid">
         <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
           <el-option
             v-for="item in options"
@@ -36,25 +34,35 @@
             :value="item.id">
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="招聘简介" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
       <el-form-item label="地区">
-        <el-input v-model="ruleForm.title" placeholder="请输入地区（例:广州-深圳）"></el-input>
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入地区（例:广州-深圳）"></el-input>
       </el-form-item>
       <el-form-item label="学历">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid2" clearable placeholder="请选择分类">
+        <el-select style="width: 100%;" v-model="ruleForm.educational" clearable placeholder="请选择分类">
           <el-option
             v-for="item in options2"
-            :key="item.id"
+            :key="item.Categorytitle"
             :label="item.Categorytitle"
-            :value="item.id">
+            :value="item.Categorytitle">
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="工作年限(单位：年)">
+      <el-form-item label="经验要求">
+        <el-select style="width: 100%;" v-model="ruleForm.workexperience" clearable placeholder="请选择经验">
+          <el-option
+            v-for="item in options3"
+            :key="item.Categorytitle"
+            :label="item.Categorytitle"
+            :value="item.Categorytitle">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <!-- <el-form-item label="工作年限(单位：年)">
        <div>
         <el-slider
           v-model="ruleForm.salary2"
@@ -66,17 +74,17 @@
           {{ ruleForm.salary2.join('-') }}年&nbsp;<span style="color: red;font-size: 14px;">(注:默认为不限)</span>
         </span>
        </div>
-      </el-form-item>
-      <el-form-item label="薪资范围(单位：元/月)">
+      </el-form-item> -->
+      <el-form-item label="薪资范围(单位：K/月)">
        <div>
         <el-slider
-          v-model="ruleForm.salary"
+          v-model="salary"
           range
           show-stops
           >
         </el-slider>
         <span style="font-size: 18px;">
-          {{ ruleForm.salary.join('-') }}k&nbsp;<span style="color: red;font-size: 14px;">(注:默认为面议)</span>
+          {{ salary.join('-') }}k&nbsp;<span style="color: red;font-size: 14px;">(注:默认为面议)</span>
         </span>
        </div>
       </el-form-item>
@@ -160,11 +168,42 @@ export default {
         }
       };
     return {
-      options:[],
+      options3:[{
+        id:1,
+        Categorytitle:'不限'
+      },
+      {
+        id:2,
+        Categorytitle:'1年以下'
+      },
+      {
+        id:3,
+        Categorytitle:'1-3年'
+      },
+      {
+        id:4,
+        Categorytitle:'3-5年'
+      },
+      {
+        id:5,
+        Categorytitle:'5-10年'
+      },
+      {
+        id:6,
+        Categorytitle:'10年以上'
+      }],
       options2:[
       {
           id:1,
           Categorytitle:'不限'
+        },
+        {
+          id:7,
+          Categorytitle:'初中及以下'
+        },
+        {
+          id:8,
+          Categorytitle:'中专/中技'
         },
         {
           id:2,
@@ -199,18 +238,19 @@ export default {
       inputValue: '',
       validateImg,
       dialogImageUrl:'',
+      salary: [0,0],
       ruleForm: {
         title:'',
-        author:'',
+        tags:[],
         content:'',
-        salary: [0,0],
-        salary2: [0,0],
+        hdAddress:'',
+        workexperience:'',
+        educational:'',
+        // tellphone:'',
         hotstr:[],
-        dynamicTags:[],
         sortid:'',
-        // imgurl:'',
         isshow:true,
-        categoryid:''
+        // categoryid:''
       },
       rules: {
         title: [
@@ -233,15 +273,18 @@ export default {
     this.getclasslist()
   },
   methods: {
+    colseitem(tag){
+        this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
+      },
      // 添加标签
      handleInputConfirm(){
       let inputValue = this.inputValue;
         if (inputValue) {
           // 去重
-          if(this.ruleForm.dynamicTags.length !== 0){
-            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
+          if(this.ruleForm.tags.length !== 0){
+            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
           }else{
-            this.ruleForm.dynamicTags.push(inputValue);
+            this.ruleForm.tags.push(inputValue);
           }
         }
         this.inputVisible = false;
@@ -285,8 +328,9 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {isshow,hotstr} = this.ruleForm
-          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+          let {isshow,hotstr,tags} = this.ruleForm
+          tags = tags.join(',')
+          let res = await allAddreq({...this.ruleForm,salarybegin:this.salary[0],salaryend:this.salary[1],tags,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
@@ -307,7 +351,7 @@ export default {
 .container-box {
   min-height: 100%;
   height: auto !important;
-  padding: 3.038% 3.038% 1%;
+  padding: 3.038% 20px 1%;
   box-sizing: border-box;
 }
 </style>

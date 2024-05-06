@@ -76,8 +76,7 @@ service.interceptors.response.use(
       if(res.datalist?.Hotstr){
         let hotstr = res.datalist.Hotstr
         if(!Array.isArray(hotstr)){
-          hotstr = []
-          hotstr.push(res.datalist.Hotstr)
+          hotstr = res.datalist.Hotstr.split(',')
         }
         hotstr.forEach((item,index) => {
           switch(item){
@@ -91,6 +90,7 @@ service.interceptors.response.use(
               break;
           }
       })
+      console.log('hotstr',hotstr);
       res.datalist.Hotstr = hotstr.join(',')
     }
       // if the custom code is not 20000, it is judged as an error.

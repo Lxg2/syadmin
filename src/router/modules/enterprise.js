@@ -9,50 +9,17 @@ const compRouter = {
   redirect: "/enterprise/enterpriseadmin",
   name: "enterprise",
   meta: {
-    title: "服务管理",
+    title: "人才服务管理",
     icon: "qiye",
   },
   children: [
-    // {
-    //   path: "enterpriseadmin",
-    //   component: () => import("@/views/enterprise"),
-    //   name: "enterpriseadmin",
-    //   meta: {
-    //     title: "企业管理",
-    //     channelname: "qiye",
-    //   },
-    // },
-    // {
-    //   path: "enterpriseadminadd",
-    //   component: () => import("@/views/enterprise/add"),
-    //   name: "enterpriseadminadd",
-    //   meta: {
-    //     title: "新建企业",
-    //     noCache: true,
-    //     activeMenu: "/enterprise/enterpriseadmin",
-    //     channelname: "qiye",
-    //   },
-    //   hidden: true,
-    // },
-    // {
-    //   path: "enterpriseadminedit",
-    //   component: () => import("@/views/enterprise/edit"),
-    //   name: "enterpriseadminedit",
-    //   meta: {
-    //     title: "编辑企业",
-    //     noCache: true,
-    //     activeMenu: "/enterprise/enterpriseadmin",
-    //     channelname: "qiye",
-    //   },
-    //   hidden: true,
-    // },
     {
       path: "enterpriseclass",
       component: () => import("@/views/enterprise/policyClass/contact"),
       name: "enterpriseclass",
       meta: {
         title: "服务管理",
-        channelname: "qiye",
+        channelname: "fuwu",
       },
     },
     {
@@ -63,7 +30,7 @@ const compRouter = {
         title: "新建服务",
         noCache: true,
         activeMenu: "/enterprise/enterpriseclass",
-        channelname: "qiye",
+        channelname: "fuwu",
       },
       hidden: true,
     },
@@ -75,11 +42,44 @@ const compRouter = {
         title: "编辑服务",
         noCache: true,
         activeMenu: "/enterprise/enterpriseclass",
-        channelname: "qiye",
+        channelname: "fuwu",
       },
       hidden: true,
     },
-
+    // 服务分类
+    {
+      path: "enterpriseadmin",
+      component: () => import("@/views/enterprise"),
+      name: "enterpriseadmin",
+      meta: {
+        title: "服务分类",
+        channelname: "fuwu",
+      },
+    },
+    {
+      path: "enterpriseadminadd",
+      component: () => import("@/views/enterprise/add"),
+      name: "enterpriseadminadd",
+      meta: {
+        title: "新建服务分类",
+        noCache: true,
+        activeMenu: "/enterprise/enterpriseadmin",
+        channelname: "fuwu",
+      },
+      hidden: true,
+    },
+    {
+      path: "enterpriseadminedit",
+      component: () => import("@/views/enterprise/edit"),
+      name: "enterpriseadminedit",
+      meta: {
+        title: "编辑服务分类",
+        noCache: true,
+        activeMenu: "/enterprise/enterpriseadmin",
+        channelname: "fuwu",
+      },
+      hidden: true,
+    },
     // 服务分类
     {
       path: "classification",
@@ -87,7 +87,7 @@ const compRouter = {
       name: "classification",
       meta: {
         title: "人才管理",
-        channelname: "fuwu",
+        channelname: "rencai",
       },
     },
     {
@@ -98,7 +98,7 @@ const compRouter = {
         title: "新建招聘",
         noCache: true,
         activeMenu: "/enterprise/classification",
-        channelname: "fuwu",
+        channelname: "rencai",
       },
       hidden: true,
     },
@@ -111,7 +111,7 @@ const compRouter = {
         title: "编辑招聘",
         noCache: true,
         activeMenu: "/enterprise/classification",
-        channelname: "fuwu",
+        channelname: "rencai",
       },
       hidden: true,
     },

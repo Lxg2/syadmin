@@ -69,7 +69,26 @@ service.interceptors.response.use(
     //   alert(9)
     // }
     // console.log(res);
-    // if the custom code is not 20000, it is judged as an error.
+    // if the custom code is not 20000, it is judged as an error
+      if(res.datalist?.Hotstr){
+        let hotstr = res.datalist.Hotstr
+        if(!Array.isArray(hotstr)){
+          hotstr = res.datalist.Hotstr.split(',')
+        }
+        hotstr.forEach((item,index) => {
+          switch(item){
+            case '1':
+              hotstr[index] = '置顶';
+              break;
+            case '2':
+              hotstr[index] = '热门';
+              break;
+            default:
+              break;
+          }
+      })
+      res.datalist.Hotstr = hotstr.join(',')
+    }
     if (res.status !== 200) {
       Message({
         message: res.msg || 'Error',

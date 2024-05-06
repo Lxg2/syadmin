@@ -7,11 +7,11 @@
       <el-form-item label="标签展示">
         <el-tag
           :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
+          v-for="tag in ruleForm.tags"
           closable
           :disable-transitions="false"
           @close="(tag)=>{
-            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
+            ruleForm.tags.splice(ruleForm.tags.indexOf(tag), 1);
           }">
           {{tag}}
         </el-tag>
@@ -27,12 +27,34 @@
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
       </el-form-item>
-      <el-form-item label="服务详情描述" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="250">
-        </Tinymce>
+      <!-- <el-form-item label="所属企业" prop="categoryid">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item> -->
+      <el-form-item label="服务简介" prop="remarks">
+        <!-- <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce> -->
+        <el-input type="textarea" v-model="ruleForm.remarks" placeholder="请输入简介"></el-input>
       </el-form-item>
-      <el-form-item label="服务类型" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入服务类型"></el-input>
+      <el-form-item label="服务类型" prop="categoryid">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+          <el-option
+            v-for="item in options2"
+            :key="item.id"
+            :label="item.Categorytitle"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="服务详情描述" prop="content">
+        <Tinymce ref="editor" v-if="editflag" v-model="ruleForm.content" :height="250">
+        </Tinymce>
       </el-form-item>
       <el-form-item label="联系人">
         <el-input v-model="ruleForm.communityusername" placeholder="请输入联系人"></el-input>
@@ -48,16 +70,7 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属企业" prop="categoryid">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item>
+     
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
@@ -72,7 +85,7 @@
       </el-form-item>
       <el-form-item label="封面" prop="imgurl">
         <el-upload
-          :action="$store.state.user.beseFile"  
+          :action="$store.state.user.beseFile"
           list-type="picture-card"  
           :on-success="handleSuccess"
           :on-error="handleError"  
@@ -101,7 +114,7 @@
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
-import {allAddreq} from '@/api/user'
+import {allAddreq,GetArtcileInfo,UpdateArticle} from '@/api/user'
 import { getToken } from '@/utils/auth'
 import {GetSelectCategory} from '@/api/user'
 
@@ -120,8 +133,30 @@ export default {
         }
       };
     return {
-      options:[],
+      options2:[
+        // {
+        //   id:0,
+        //   Categorytitle:'科技社会法律服务'
+        // },
+        // {
+        //   id:1,
+        //   Categorytitle:'维修、养护、保养服务'
+        // },
+        // {
+        //   id:2,
+        //   Categorytitle:'人才、培训服务'
+        // },
+        // {
+        //   id:3,
+        //   Categorytitle:'集成电路测试服务'
+        // },
+        // {
+        //   id:4,
+        //   Categorytitle:'其他服务'
+        // },
+      ],
       fileList: [],
+      editflag:false,
       upheaders:{},
       imgdialogVisible:false,
       validateImg,
@@ -129,7 +164,8 @@ export default {
       inputVisible: false,
       inputValue: '',
       ruleForm: {
-        dynamicTags:[],
+        remarks:'',
+        tags:[],
         title:'',
         content:'',
         hotstr:[],
@@ -138,17 +174,18 @@ export default {
         communityusermobile:'',
         communityusername:'',
         isshow:true,
-        categoryid:''
+        categoryid:'',
+        categoryid2:''
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
           categoryid: [
             { required: true, message: '请选择分类', trigger: 'blur' },
           ],
           content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+            { required: true, message: '请填写内容', trigger: 'change' }
           ],
           imgurl: [
             { required: true, trigger: 'change', validator: validateImg, }
@@ -156,14 +193,47 @@ export default {
       },
     };
   },
+  created(){
+    this.getclasstypelist()
+    this.getinfofn()
+  },
   mounted() {
     this.upheaders = {'Authorization':getToken()}
-    this.getclasslist()
+    // this.getclasslist()
   },
   methods: {
+    async getclasstypelist() {
+      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
+      this.options2 = res.datalist
+    },
     async getinfofn(){
-      let {datalist:{Categorytitle:categorytitle,Isshow:isshow,Imgurl:imgurl}} = await GetCategoryInfo({id:this.$route.query.id})
-      this.ruleForm.categorytitle = categorytitle
+      let {datalist:{
+        Title:title,
+        Categoryid:categoryid,
+        Tags:tags,
+        Remarks:remarks,
+        Content:content,
+        Hotstr:hotstr,
+        Sortid:sortid,
+        Imgurl:imgurl,
+        Communityusermobile:communityusermobile,
+        Communityusername:communityusername,
+        Isshow:isshow}} = await GetArtcileInfo({id:this.$route.query.id})
+      this.ruleForm.title = title
+      if(tags){
+        this.ruleForm.tags = tags.split(',')
+      }
+      this.ruleForm.remarks = remarks
+      this.ruleForm.categoryid = categoryid
+      this.editflag = true
+      this.ruleForm.hotstr = hotstr.split(',')
+      this.ruleForm.sortid = sortid
+      this.ruleForm.communityusermobile = communityusermobile
+      this.ruleForm.communityusername = communityusername
+
+      this.$nextTick(()=>{
+        this.ruleForm.content = content
+      })
       this.ruleForm.isshow = isshow?true:false
       this.ruleForm.imgurl = imgurl
       if(imgurl){
@@ -222,8 +292,10 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {isshow} = this.ruleForm
-          let res = await UpdateCategory({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
+          let {isshow,hotstr,tags} = this.ruleForm
+          hotstr = hotstr.join(',')
+          tags = tags.join(',')
+          let res = await UpdateArticle({...this.ruleForm,hotstr,tags,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

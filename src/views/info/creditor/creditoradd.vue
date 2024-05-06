@@ -4,16 +4,6 @@
       <el-form-item label="债权融资标题" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入债权融资"></el-input>
       </el-form-item>
-      <el-form-item label="详情描述" prop="content">
-        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
-        </Tinymce>
-      </el-form-item>
-      <el-form-item label="企业">
-        <el-input v-model="ruleForm.jrCompanyname" placeholder="请输入企业"></el-input>
-      </el-form-item>
-      <el-form-item label="内容描述">
-        <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
-      </el-form-item>
       <el-form-item label="标签展示">
         <el-tag
           :key="tag"
@@ -36,6 +26,16 @@
         >
         </el-input>
         <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
+      </el-form-item>
+      <el-form-item label="详情描述" prop="content">
+        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce>
+      </el-form-item>
+      <el-form-item label="企业">
+        <el-input v-model="ruleForm.jrCompanyname" placeholder="请输入企业"></el-input>
+      </el-form-item>
+      <el-form-item label="内容描述">
+        <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
       </el-form-item>
       <el-form-item label="服务类型" prop="servicetype">
         <el-input v-model="ruleForm.servicetype" placeholder="请输入服务类型"></el-input>
