@@ -12,12 +12,12 @@
           placeholder="标题"
           style="width: 200px"
           class="mr20"
-          @keyup.enter.native="handleFilter"
+          @keyup.enter.native="getList"
         />
-        <el-button size="small" type="primary">
+        <el-button size="small" @click="getList" type="primary">
           搜索
         </el-button>
-        <el-button size="small">重置</el-button>
+        <el-button size="small" @click="resetListdata">重置</el-button>
       </div>
     </div>
     <el-table
@@ -129,6 +129,12 @@ export default {
     this.getList();
   },
   methods: {
+    resetListdata(){
+      this.listQuery.keywords = ''
+      this.listQuery.page = 1
+      this.listQuery.pageSize = 10
+      this.getList()
+    },
     async deletaFn(id){
       let res = await DeleteCategory({id})
       if(res.status === 200){

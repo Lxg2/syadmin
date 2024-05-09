@@ -17,7 +17,7 @@
         <el-button @click="handleFilter" size="small" type="primary">
           搜索
         </el-button>
-        <el-button size="small">重置</el-button>
+        <el-button size="small" @click="resetListdata">重置</el-button>
       </div>
     </div>
     <el-table
@@ -31,17 +31,19 @@
       <el-table-column width="10" align="center" />
       <el-table-column width="237px" label="标题" prop="Title">
       </el-table-column>
-      <el-table-column width="208px" label="封面">
+      <!-- <el-table-column width="208px" label="封面">
         <template slot-scope="scope">
-          <el-image 
+          <el-image
+            v-if="scope.row.Imgurl"
             style="width: 100px; height: 100px;margin: 10px 0px !important;"
-            :src="scope.row.Imgurl" 
+            :src="scope.row.Imgurl"
             :preview-src-list="[scope.row.Imgurl]">
           </el-image>
+          <div v-else style="color: #909399;">暂无上传封面</div>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column label="类别" width="150">
+      <el-table-column label="类别" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.CategoryName }}</span>
         </template>
@@ -59,7 +61,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="135px" label="创建时间">
+      <el-table-column width="185px" label="创建时间">
         <template slot-scope="scope">
           <span>{{
             scope.row.Createtime
@@ -142,6 +144,12 @@ export default {
     this.getList();
   },
   methods: {
+    resetListdata(){
+      this.listQuery.keywords = ''
+      this.listQuery.page = 1
+      this.listQuery.pageSize = 10
+      this.getList()
+    },
     async deletaFn(id){
       let res = await DeleteArticle({id})
       if(res.status === 200){

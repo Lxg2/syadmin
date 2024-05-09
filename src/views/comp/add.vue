@@ -38,7 +38,7 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="政策封面" prop="imgurl">
+      <el-form-item label="政策封面">
         <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  

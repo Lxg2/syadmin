@@ -8,7 +8,7 @@ const compRouter = {
   redirect: '/directseeding/directseedingadminedit',
   name: 'directseeding',
   meta: {
-    title: '直播管理',
+    title: '影视直播管理',
     icon: 'zhibo',
   },
   children: [
@@ -32,51 +32,50 @@ const compRouter = {
   //     channelname:'zhibo'
   //   },
   //   hidden: true
-  // }, 
-  {
-    path: 'directseedingadminedit',
-    component: () => import('@/views/directseeding/edit'),
-    name: 'directseedingadminedit',
-    meta: {
-      noCache: true,
-      activeMenu: '/directseeding',
-      channelname:'zhibo',
-      queryid:'8ee90c33-3dcd-4c24-8c3f-0b81a10bd52b'
-    },
-    hidden: true
-  },
-  // {
-  //   path: 'spaceclass',
-  //   component: () => import('@/views/market/policyClass/contact'),
-  //   name: 'spaceclass',
-  //   meta: {
-  //     title: '空间分类',
-  //     channelname:'shichang'
-  //   },
   // },
-  //   {
-  //     path: 'spaceclassadd',
-  //     component: () => import('@/views/market/policyClass/add'),
-  //     name: 'spaceclassadd',
-  //     meta: {
-  //       title: '新建空间类',
-  //       noCache: true,
-  //       activeMenu: '/space/spaceclass',
-  //       channelname:'shichang'
-  //     },
-  //     hidden: true
-  //   }, {
-  //     path: 'spaceclassedit',
-  //     component: () => import('@/views/market/policyClass/edit'),
-  //     name: 'spaceclassedit',
-  //     meta: {
-  //       title: '编辑空间类',
-  //       noCache: true,
-  //       activeMenu: '/space/spaceclass',
-  //       channelname:'shichang'
-  //     },
-  //     hidden: true
-  //   },
+  {
+    path: 'videosadmin',
+    component: () => import('@/views/yingshi'),
+    name: 'videosadmin',
+    meta: {
+      title: '影视管理',
+      channelname:'video'
+    },
+  },
+    {
+      path: 'videosadminadd',
+      component: () => import('@/views/yingshi/add'),
+      name: 'videosadminadd',
+      meta: {
+        title: '新建影视',
+        noCache: true,
+        activeMenu: '/directseeding/videosadmin',
+        channelname:'video'
+      },
+      hidden: true
+    }, {
+      path: 'videosadminedit',
+      component: () => import('@/views/yingshi/edit'),
+      name: 'videosadminedit',
+      meta: {
+        title: '编辑影视',
+        noCache: true,
+        activeMenu: '/directseeding/videosadmin',
+        channelname:'video'
+      },
+      hidden: true
+    },
+    {
+      path: 'directseedingadminedit',
+      component: () => import('@/views/directseeding/edit'),
+      name: 'directseedingadminedit',
+      meta: {
+        title: '直播管理',
+        activeMenu: '/directseeding/directseedingadminedit',
+        channelname:'zhibo',
+        queryid:'8ee90c33-3dcd-4c24-8c3f-0b81a10bd52b'
+      },
+    },
   ]
 }
 export default compRouter

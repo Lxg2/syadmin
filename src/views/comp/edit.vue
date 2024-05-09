@@ -39,8 +39,8 @@
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
-      <el-form-item label="活动封面" prop="imgurl">
-        <el-upload  
+      <el-form-item label="活动封面">
+        <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
           :on-success="handleSuccess"  
@@ -133,8 +133,10 @@ export default {
       this.editflag = true
       this.ruleForm.sortid = sortid
       this.ruleForm.isshow = isshow? true : false
-      this.ruleForm.imgurl = imgurl
+      if(imgurl){
+        this.ruleForm.imgurl = imgurl
       this.fileList = [{url:imgurl}]
+      }
        this.$nextTick(()=>{
         this.ruleForm.content = content
         console.log(this.$refs.editor);

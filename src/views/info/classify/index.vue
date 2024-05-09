@@ -14,10 +14,10 @@
           class="mr20"
           @keyup.enter.native="handleFilter"
         />
-        <el-button size="small" type="primary">
+        <el-button size="small" @click="getList" type="primary">
           搜索
         </el-button>
-        <el-button size="small">重置</el-button>
+        <el-button size="small" @click="resetListdata">重置</el-button>
       </div>
     </div>
     <el-table
@@ -80,7 +80,7 @@
       <pagination
         :total="total"
         :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
+        :limit.sync="listQuery.pageSize"
         @pagination="getList"
       />
     </div>
@@ -118,7 +118,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10,
+        pageSize: 10,
         keywords:'',
         channelname:''
       },
@@ -128,6 +128,12 @@ export default {
     this.getList();
   },
   methods: {
+    resetListdata(){
+      this.listQuery.keywords = ''
+      this.listQuery.page = 1
+      this.listQuery.pageSize = 10
+      this.getList()
+    },
     async deletaFn(id){
       let res = await DeleteCategory({id})
       if(res.status === 200){

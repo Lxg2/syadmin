@@ -17,7 +17,7 @@
         <el-button @click="handleFilter" size="small" type="primary">
           搜索
         </el-button>
-        <el-button size="small">重置</el-button>
+        <el-button size="small" @click="resetListdata">重置</el-button>
       </div>
     </div>
     <el-table
@@ -29,48 +29,51 @@
       class="ranking_table"
     >
       <el-table-column width="10" align="center" />
-      <el-table-column width="237px" label="标题" prop="Title">
+      <el-table-column width="200px" label="企业" prop="Companyname">
       </el-table-column>
-      <el-table-column width="208px" label="封面">
+      <el-table-column width="150px" label="岗位" prop="Title">
+      </el-table-column>
+
+      <el-table-column label="经验" width="150">
         <template slot-scope="scope">
-          <el-image 
-            style="width: 100px; height: 100px;margin: 10px 0px !important;"
-            :src="scope.row.Imgurl" 
-            :preview-src-list="[scope.row.Imgurl]">
-          </el-image>
+          <span>{{ scope.row.Workexperience }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="学历" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Educational }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="类别" width="150">
-        <template slot-scope="scope">
-          <span>{{ scope.row.CategoryName }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="排序" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.Sortid }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column min-width="153px" label="状态" align="center">
+      <el-table-column min-width="153px" label="薪资" align="center">
         <template slot-scope="{ row }">
-          <span>{{row.Isshow?'显示':'隐藏'}}</span>
+          <span>{{row.Salary}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="135px" label="创建时间">
+      <el-table-column width="208px" label="福利待遇">
+        <template slot-scope="scope">
+          <div>{{ scope.row.Tags }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column width="208px" label="工作地点">
+        <template slot-scope="scope">
+          <div>{{ scope.row.HdAddress }}</div>
+        </template>
+      </el-table-column>
+
+      <el-table-column width="135px" label="联系方式">
         <template slot-scope="scope">
           <span>{{
-            scope.row.Createtime
+            scope.row.Tellphone
           }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" width="200">
+      <el-table-column align="center" label="操作" width="200" fixed="right">
         <template slot-scope="scope">
           <div class="operate">
-            <el-button type="text" @click="$router.push({path:'/enterprise/enterpriseclassedit',query:{id:scope.row.id}}
+            <el-button type="text" @click="$router.push({path:'/enterprise/classificationedit',query:{id:scope.row.id}}
             )">
               编辑
             </el-button>
@@ -142,6 +145,12 @@ export default {
     this.getList();
   },
   methods: {
+    resetListdata(){
+      this.listQuery.keywords = ''
+      this.listQuery.page = 1
+      this.listQuery.pageSize = 10
+      this.getList()
+    },
     async deletaFn(id){
       let res = await DeleteArticle({id})
       if(res.status === 200){
@@ -168,7 +177,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
+.desc{
+  overflow: hidden;
+  width: 100%;
+  height: 100px;
+}
 .comp-container {
   padding: 40px 40px 55px;
   background: #FFFFFF;

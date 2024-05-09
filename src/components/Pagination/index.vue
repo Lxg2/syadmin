@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination-container" v-if="total>limit">
+  <div class="pagination-container">
     <el-pagination
       :background="background"
       :current-page.sync="currentPage"

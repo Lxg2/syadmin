@@ -17,7 +17,7 @@
         <el-button @click="handleFilter" size="small" type="primary">
           搜索
         </el-button>
-        <el-button size="small">重置</el-button>
+        <el-button size="small" @click="resetListdata">重置</el-button>
       </div>
     </div>
     <el-table
@@ -127,6 +127,14 @@ export default {
     this.getList();
   },
   methods: {
+     // 重置
+    //  @click="resetListdata"
+     resetListdata(){
+      this.listQuery.keywords = ''
+      this.listQuery.page = 1
+      this.listQuery.pageSize = 10
+      this.getList()
+    },
     async deletaFn(id){
       let res = await DeleteArticle({id})
       if(res.status === 200){

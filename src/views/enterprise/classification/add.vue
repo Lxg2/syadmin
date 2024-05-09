@@ -4,6 +4,12 @@
       <el-form-item label="岗位" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入招聘岗位"></el-input>
       </el-form-item>
+      <el-form-item label="招聘人数">
+        <el-input type="number" v-model="ruleForm.jobpersoncount" placeholder="请输入招聘人数"></el-input>
+      </el-form-item>
+      <el-form-item label="企业">
+        <el-input v-model="ruleForm.companyname" placeholder="请输入企业"></el-input>
+      </el-form-item>
       <el-form-item label="职务福利">
         <el-tag
           :key="tag"
@@ -75,18 +81,30 @@
         </span>
        </div>
       </el-form-item> -->
-      <el-form-item label="薪资范围(单位：K/月)">
-       <div>
+      <el-form-item label="薪资(单位：K/月)">
+        <!-- <el-input type="number" v-model="ruleForm.salary" placeholder="请输入薪资"></el-input> -->
+       <!-- <div>
         <el-slider
           v-model="salary"
           range
           show-stops
           >
         </el-slider>
-        <span style="font-size: 18px;">
-          {{ salary.join('-') }}k&nbsp;<span style="color: red;font-size: 14px;">(注:默认为面议)</span>
-        </span>
-       </div>
+       </div> -->
+       <!-- <span style="font-size: 18px;">
+        <span style="color: red;font-size: 14px;">(注:默认不填为面议)</span>
+        </span> -->
+        <el-select style="width: 100%;" v-model="ruleForm.salary" clearable placeholder="请选择薪资">
+          <el-option
+            v-for="item in options4"
+            :key="item.Categorytitle"
+            :label="item.Categorytitle"
+            :value="item.Categorytitle">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="联系方式">
+        <el-input v-model="ruleForm.tellphone" placeholder="请输入联系方式"></el-input>
       </el-form-item>
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
@@ -173,6 +191,10 @@ export default {
         Categorytitle:'不限'
       },
       {
+        id:88,
+        Categorytitle:'应届毕业生'
+      },
+      {
         id:2,
         Categorytitle:'1年以下'
       },
@@ -210,10 +232,6 @@ export default {
           Categorytitle:'高中'
         },
         {
-          id:3,
-          Categorytitle:'中专'
-        },
-        {
           id:4,
           Categorytitle:'大专'
         },
@@ -231,6 +249,35 @@ export default {
         },
         
       ],
+      options4:[
+        {
+          Categorytitle:'面议'
+        },
+        {
+          Categorytitle:'1-3k'
+        },
+        {
+          Categorytitle:'3-5k'
+        },
+        {
+          Categorytitle:'5-8k'
+        },
+        {
+          Categorytitle:'8-12k'
+        },
+        {
+          Categorytitle:'12-16k'
+        },
+        {
+          Categorytitle:'16-25k'
+        },
+        {
+          Categorytitle:'25-50k'
+        },
+        {
+          Categorytitle:'50k以上'
+        },
+      ],
       fileList: [],
       upheaders:{},
       imgdialogVisible:false,
@@ -241,11 +288,15 @@ export default {
       salary: [0,0],
       ruleForm: {
         title:'',
+        tellphone:'',
+        jobpersoncount:'',
+        companyname:'',
         tags:[],
         content:'',
         hdAddress:'',
         workexperience:'',
         educational:'',
+        salary:'',
         // tellphone:'',
         hotstr:[],
         sortid:'',
@@ -330,7 +381,8 @@ export default {
         if (valid) {
           let {isshow,hotstr,tags} = this.ruleForm
           tags = tags.join(',')
-          let res = await allAddreq({...this.ruleForm,salarybegin:this.salary[0],salaryend:this.salary[1],tags,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+          // salarybegin:this.salary[0],salaryend:this.salary[1]
+          let res = await allAddreq({...this.ruleForm,tags,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

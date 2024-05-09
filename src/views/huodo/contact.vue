@@ -14,10 +14,10 @@
           class="mr20"
           @keyup.enter.native="handleFilter"
         />
-        <el-button size="small" type="primary">
+        <el-button size="small" @click="getList" type="primary">
           搜索
         </el-button>
-        <el-button size="small">重置</el-button>
+        <el-button size="small" @click="resetListdata">重置</el-button>
       </div>
     </div>
     <el-table
@@ -118,6 +118,12 @@ export default {
     this.getList();
   },
   methods: {
+    resetListdata(){
+      this.listQuery.keywords = ''
+      this.listQuery.page = 1
+      this.listQuery.pageSize = 10
+      this.getList()
+    },
     getList() {
       this.listLoading = true;
       getClasslistreq({...this.listQuery,channelname:this.$route.meta.channelname}).then((response) => {

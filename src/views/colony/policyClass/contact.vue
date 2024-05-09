@@ -7,14 +7,22 @@
         </el-button>
     </router-link>
       <div class="search-right" style="align-items: center;display: flex;">
+        <!-- <el-select style="width: 200px;margin-right: 20px;" v-model="listQuery.categoryid" clearable placeholder="请选择分类">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.Categorytitle"
+              :value="item.id">
+            </el-option>
+          </el-select> -->
         <el-input
           v-model="listQuery.keywords"
           placeholder="标题"
           style="width: 200px"
           class="mr20"
-          @keyup.enter.native="handleFilter"
+          @keyup.enter.native="getList"
         />
-        <el-button size="small" type="primary">
+        <el-button size="small" @click="getList" type="primary">
           搜索
         </el-button>
         <el-button size="small">重置</el-button>
@@ -94,7 +102,7 @@
       <pagination
         :total="total"
         :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
+        :limit.sync="listQuery.pageSize"
         @pagination="getList"
       />
     </div>
@@ -127,14 +135,32 @@ export default {
   data() {
     return {
       list: [],
+      options:[
+        {
+          id:1,
+          Categorytitle:'超高清视频产业'
+        },
+        {
+          id:2,
+          Categorytitle:'新能源产业'
+        },
+        {
+          id:3,
+          Categorytitle:'智能终端产业'
+        },
+        {
+          id:4,
+          Categorytitle:'半导体与集成电路产业'
+        }
+      ],
       total: 0,
       calendarTypeOptions,
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 10,
+        pageSize: 10,
         keywords:'',
-        channelname:''
+        channelname:'',
       },
     };
   },

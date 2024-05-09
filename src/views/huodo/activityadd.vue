@@ -31,8 +31,8 @@
         <el-date-picker
         style="width: 100%;"
         v-model="ruleForm.begintime"
-        format="yyyy-MM-dd"
-        type="date"
+        format="yyyy-MM-dd HH:mm:ss"
+        type="datetime"
         placeholder="选择日期">
       </el-date-picker>
       </el-form-item>
@@ -116,7 +116,7 @@ export default {
         title:'',
         categoryid:'',
         author:'',
-        isshow:false,
+        isshow:true,
         hdAddress:'',
         limitusercount:'',
         content:'',

@@ -288,6 +288,7 @@ export default {
         recruitmentRegion:'',
         communityusermobile:'',
         remarks:'',
+        isshow:true,
         hotstr:[],
         content:'',
         sortid:'',

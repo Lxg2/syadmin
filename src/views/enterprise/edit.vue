@@ -1,78 +1,12 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="企业名称" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入企业名称"></el-input>
+      <el-form-item label="分类标题" prop="categorytitle">
+        <el-input v-model="ruleForm.categorytitle" placeholder="请输入分类标题"></el-input>
       </el-form-item>
-      <el-form-item label="标签展示">
-        <el-tag
-          :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
-          closable
-          :disable-transitions="false"
-          @close="(tag)=>{
-            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
-          }">
-          {{tag}}
-        </el-tag>
-        <el-input
-          class="input-new-tag"
-          v-if="inputVisible"
-          v-model="inputValue"
-          ref="saveTagInput"
-          size="small"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        >
-        </el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
-      </el-form-item>
-      <el-form-item label="企业简介" prop="content">
-        <Tinymce ref="editor" v-if="editflag" v-model="ruleForm.content" :height="300">
-        </Tinymce>
-      </el-form-item>
-      <el-form-item label="产业集群定位">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid" placeholder="请选择服务产品">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="成立时间">
-        <el-date-picker
-          style="width: 100%;"
-          v-model="ruleForm.begintime"
-          format="yyyy-MM-dd"
-          type="date"
-          placeholder="选择日期">
-        </el-date-picker>
-      </el-form-item>
-      
-      <el-form-item label="企业地址">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入企业地址"></el-input>
-      </el-form-item>
-      <el-form-item label="联系人">
-        <el-input v-model="ruleForm.communityusername" placeholder="请输入联系人"></el-input>
-      </el-form-item>
-      <el-form-item label="联系电话">
-        <el-input type="number" v-model="ruleForm.communityusermobile" placeholder="请输入联系方式"></el-input>
-      </el-form-item>
-      
-
-      <el-form-item label="置顶/热门">
-        <div style="margin-left: 10px;">
-          <el-checkbox-group v-model="ruleForm.hotstr">
-            <el-checkbox label="置顶" :value="1"></el-checkbox>
-            <el-checkbox label="热门" :value="2"></el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </el-form-item>
-      <el-form-item label="排序ID">
+      <!-- <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
           <el-switch
@@ -82,32 +16,23 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="企业封面" prop="imgurl">
+      <!-- <el-form-item label="分类封面" prop="imgurl">
         <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
-          :on-success="handleSuccess"
+          :on-success="handleSuccess"  
           :on-error="handleError"  
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
+          :headers="upheaders"
           :limit="1"
         >  
           <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
-            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
+            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>
             <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
           </div>  
         </el-upload>
-      </el-form-item>
-<!-- <el-form-item label="所属分类" prop="categoryid">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
       </el-form-item> -->
       <el-form-item>
         <div class="but-b">
@@ -122,7 +47,9 @@
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
-import {GetArtcileInfo,GetSelectCategory,UpdateArticle} from '@/api/user'
+import {allAddCategoryreq,GetCategoryInfo,UpdateCategory} from '@/api/user'
+import { getToken } from '@/utils/auth'
+
 export default {
   components: {
     ImageUpload,
@@ -138,143 +65,55 @@ export default {
         }
       };
     return {
-      form:{},
-      fileList:[],
+      fileList: [],
+      upheaders:{},
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
-      editflag:false,
-      containertext:'',
-      inputVisible: false,
-      inputValue: '',
       ruleForm: {
-        title:'',
-        dynamicTags: [],
-        Begintime:'',
-        communityusername:'',
-        communityusermobile:'',
-        hdAddress:'',
-        content:'',
-        hotstr:[],
-        categoryid:'',
+        categorytitle:'',
         sortid:'',
-        isshow:true,
         imgurl:'',
+        isshow:false,
       },
       rules: {
-        title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+        categorytitle: [
+            { required: true, message: '请输入分类标题', trigger: 'blur' },
           ],
-          content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
-          ],
-          categoryid: [
-            {  required: true, message: '请选择所属类别', trigger: 'change' }
-          ],
-          imgurl: [
-            { required: true, trigger: 'change', validator: validateImg, }
-          ],
+          // imgurl: [
+          //   { required: true, trigger: 'change', validator: validateImg, }
+          // ],
       },
-    options:[
-      {
-          id:1,
-          Categorytitle:'超高清视频产业'
-        },
-        {
-          id:2,
-          Categorytitle:'新能源产业'
-        },
-        {
-          id:3,
-          Categorytitle:'智能终端产业'
-        },
-        {
-          id:4,
-          Categorytitle:'半导体与集成电路产业'
-        },
-        {
-          id:5,
-          Categorytitle:'其他产业'
-        }
-    ]
-    }
+    };
   },
   created(){
-    // 获取分类无分页
-    // this.getselectlist()
+    this.getinfofn()
   },
-  mounted(){
-    // 获取文章详情
-    GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {
-        Title:title,
-        Content:content,
-        Hotstr:hotstr,
-        Categoryid:categoryid,
-        Sortid:sortid,
-        Imgurl:imgurl,
-        Isshow:isshow,
-        Communityusername:communityusername,
-        HdAddress:hdAddress,
-        Begintime:begintime,
-        Communityusermobile:communityusermobile,
-      } = res.datalist
-      this.ruleForm.title = title
-      this.ruleForm.begintime = begintime 
-      this.ruleForm.communityusername = communityusername
-      this.ruleForm.communityusermobile = communityusermobile
-      this.ruleForm.hdAddress = hdAddress
-      this.ruleForm.hotstr = hotstr.split(',')
-      this.ruleForm.categoryid = categoryid
-      this.editflag = true
-      this.ruleForm.sortid = sortid
-      this.ruleForm.isshow = isshow? true : false
-      this.ruleForm.imgurl = imgurl
-      this.fileList = [{url:imgurl}]
-       this.$nextTick(()=>{
-        this.ruleForm.content = content
-        console.log(this.$refs.editor);
-      // 获取富文本内容
-      })
-    })
+  mounted() {
+    this.upheaders = {'Authorization':getToken()}
   },
   methods: {
-     // 添加标签
-     handleInputConfirm(){
-      let inputValue = this.inputValue;
-        if (inputValue) {
-          // 去重
-          if(this.ruleForm.dynamicTags.length !== 0){
-            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
-          }else{
-            this.ruleForm.dynamicTags.push(inputValue);
-          }
-        }
-        this.inputVisible = false;
-        this.inputValue = '';
+    async getinfofn(){
+      let {datalist:{Categorytitle:categorytitle,Isshow:isshow}} = await GetCategoryInfo({id:this.$route.query.id})
+      this.ruleForm.categorytitle = categorytitle
+      this.ruleForm.isshow = isshow?true:false
     },
-    showInput() {
-        this.inputVisible = true;
-        this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
-      },
     beforeUpload(file) {  
       const isJPG = file.type === 'image/jpeg';  
       const isPNG = file.type === 'image/png';  
-      const isLt10M = file.size / 1024 / 1024 < 10;  
+      const isLt10M = file.size / 1024 / 1024 < 10;
       if (!isJPG && !isPNG) {  
         this.$message.error('上传图片只能是 JPG/PNG 格式!');  
       }  
-      if (!isLt10M) {  
-        this.$message.error('上传图片大小不能超过 10MB!');  
+      if (!isLt10M) {
+        this.$message.error('上传图片大小不能超过 10MB!');
       }  
-      return isJPG || isPNG && isLt10M;  
-    },  
+      return isJPG || isPNG && isLt10M;
+    },
     handleSuccess(response) {
       this.ruleForm.imgurl = response.filepath;
     },  
-    handleError(error) {  
+    handleError(error) {
       this.$message.error(error.msg);
       // 你可以在这里处理上传失败后的逻辑
     },  
@@ -283,17 +122,13 @@ export default {
       this.fileList = [];
       // 你可以在这里处理删除文件后的逻辑，比如更新fileList
     },
-    async getselectlist(){
-      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
-      this.options = res.datalist
-    },
-    submitForm(formName) {
+    // 提交表单
+    async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {hotstr,isshow} = this.ruleForm
-          this.ruleForm.hotstr = hotstr.join(',')
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
-          if(res.status == 200){
+          let {isshow} = this.ruleForm
+          let res = await UpdateCategory({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
+          if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
           }

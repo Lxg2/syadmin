@@ -125,7 +125,9 @@ export default {
         height: this.height,
         body_class: 'panel-body ',
         object_resizing: false,
+        fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px',  // 字体大小
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
+        lineheight_formats: '1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 4.0',  // 行高
         menubar: this.menubar,
         plugins: plugins,
         end_container_on_empty_block: true,
@@ -147,6 +149,11 @@ export default {
             this.hasChange = true
             this.$emit('input', editor.getContent())
           })
+        },
+        setup: function(editor) {
+          editor.on('init', function(ed) {
+            ed.target.editorCommands.execCommand("fontSize", false, "16px");
+          });                      
         },
         setup(editor) {
           editor.on('FullscreenStateChanged', (e) => {
@@ -182,7 +189,6 @@ export default {
                 'Authorization': 'Bearer ' + token
               }
             }).then((res) => {
-              console.log(res,999999);
               res.json().then((data) => {
                 if (data.status === 200){
                   success(data.filepath);
