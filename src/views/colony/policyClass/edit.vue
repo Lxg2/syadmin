@@ -114,7 +114,7 @@ export default {
         title:'',
         imgurl:'',
         categoryid:'',
-        isshow:false,
+        isshow:true,
         remarks:''
       },
       rules: {

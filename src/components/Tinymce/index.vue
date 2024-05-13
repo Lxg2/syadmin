@@ -15,7 +15,10 @@
 import editorImage from './components/EditorImage'
 import plugins from './plugins'
 import toolbar from './toolbar'
+import fontFamily from './fontfamily'
 import load from './dynamicLoadScript'
+import PluginManagerLetterspacing from "./fonsize";
+
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
 const tinymceCDN = '/tinymce/tinymce.min.js'
@@ -114,6 +117,7 @@ export default {
           this.$message.error(err.message)
           return
         }
+        PluginManagerLetterspacing()
         this.initTinymce()
       })
     },
@@ -127,6 +131,22 @@ export default {
         object_resizing: false,
         fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px',  // 字体大小
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
+        font_formats: fontFamily,//字然
+        style_formats:[
+          {
+            title:'行高',
+          items:[
+          { title:"1",block:"p", styles: { "line-height":'1.0'} },
+          { title:"1.5",block:"p", styles: { "line-height":"1.5" } },
+          { title:"1.75",block:"p",styles:{ "line-height":"1.75"} },
+          { title:"2",block: "p",styles: { "line-height":"2"} },
+          { title:"3",block:"p", styles: { "line-height": "3" } },
+          { title:"4",block:"p",styles: { "line-height":"4" } },
+          { title:"5",block:"p",styles:{ "line-height":"5"} },
+        ]
+          }
+        ],
+style_formats_merge:false,//走否将style_formats设置中的样式附加到默认祥式格武还无完全芒style_formats_autohide:true,/
         lineheight_formats: '1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 4.0',  // 行高
         menubar: this.menubar,
         plugins: plugins,
@@ -150,12 +170,11 @@ export default {
             this.$emit('input', editor.getContent())
           })
         },
-        setup: function(editor) {
+        setup(editor) {
           editor.on('init', function(ed) {
             ed.target.editorCommands.execCommand("fontSize", false, "16px");
-          });                      
-        },
-        setup(editor) {
+            ed.target.editorCommands.execCommand("fontName", false, "微软雅黑");
+          });
           editor.on('FullscreenStateChanged', (e) => {
             _this.fullscreen = e.state
           })

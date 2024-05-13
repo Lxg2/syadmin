@@ -2,7 +2,8 @@
   <div class="sidebar-logo-container" :class="{ collapse: collapse }">
     <transition name="sidebarLogoFade">
       <router-link key="collapse" class="sidebar-logo-link" to="/">
-        <img src="@/assets/logo.png" class="sidebar-logo" />
+        <img style="border-radius: 10px;" src="@/assets/logo.png" class="sidebar-logo" />
+        <!-- <h1 style="font-size: 18px;color: red;">石岩街道</h1> -->
       </router-link>
     </transition>
   </div>

@@ -53,17 +53,18 @@ export const constantRoutes = [{
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index'),
-      name: 'Dashboard',
-      meta: {
-        title: '主页',
-        icon: 'home',
-        affix: true,
-      }
-    }]
+    // redirect: '/dashboard',
+    redirect: '/case/list',
+    // children: [{
+    //   path: 'dashboard',
+    //   component: () => import('@/views/dashboard/index'),
+    //   name: 'Dashboard',
+    //   meta: {
+    //     title: '主页',
+    //     icon: 'home',
+    //     affix: true,
+    //   }
+    // }]
   },
   {
     path: '/404',
@@ -97,8 +98,8 @@ export const asyncRoutes = [
   spaceRouter,// 找空间
   directSeedingRouter,//直播
   IndustrialClusterRouter,// 产业集群
-  proRouter,//角色用户
-  userinfoRouter
+  // proRouter,//角色用户
+  // userinfoRouter
 ]
 
 const createRouter = () => new Router({

@@ -157,7 +157,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="loading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -283,6 +283,7 @@ export default {
       imgdialogVisible:false,
       inputVisible: false,
       inputValue: '',
+      loading: false,
       validateImg,
       dialogImageUrl:'',
       salary: [0,0],
@@ -379,6 +380,7 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
+          this.loading = true;
           let {isshow,hotstr,tags} = this.ruleForm
           tags = tags.join(',')
           // salarybegin:this.salary[0],salaryend:this.salary[1]
@@ -387,6 +389,7 @@ export default {
             this.$message.success(res.msg)
             this.$router.go(-1)
           }
+          this.loading = false;
         }
       });
     }

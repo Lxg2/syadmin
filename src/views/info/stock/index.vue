@@ -43,7 +43,7 @@
 
       <el-table-column label="类别" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.CategoryName }}</span>
+          <span>{{ scope.row.Servicetype }}</span>
         </template>
       </el-table-column>
 
@@ -178,6 +178,8 @@ export default {
 .comp-container {
   padding: 40px 40px 55px;
   background: #FFFFFF;
+  min-height: 100%;
+
   .row-center {
     margin-top: 52px;
   }

@@ -37,7 +37,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="loading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -66,6 +66,7 @@ export default {
       };
     return {
       fileList: [],
+      loading: false,
       upheaders:{},
       imgdialogVisible:false,
       validateImg,
@@ -118,12 +119,14 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
+          this.loading = true;
           let {isshow} = this.ruleForm
           let res = await allAddCategoryreq({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
           }
+          this.loading = false;
         }
       });
     }

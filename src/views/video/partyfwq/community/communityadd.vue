@@ -1,7 +1,7 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="服务名称" prop="title">
+      <el-form-item label="服务站名称" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入服务名称"></el-input>
       </el-form-item>
       <!-- <el-form-item label="服务简介" prop="content">
@@ -78,7 +78,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="loading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -113,6 +113,7 @@ export default {
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
+      loading:false,
       ruleForm: {
         title:'',
         // content:'',
@@ -181,12 +182,14 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
+          this.loading = true
           let {isshow,hotstr} = this.ruleForm
           let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
           }
+          this.loading = false
         }
       });
     }

@@ -1,6 +1,23 @@
 <template>
   <div class="comp-container">
     <div class="search-box row-between">
+      <!-- <el-upload
+        class="upload-demo"
+        :on-remove="handleRemove"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        :auto-upload="false"
+        :on-change="readExcel"
+        multiple
+        :limit="1"
+        :on-exceed="handleExceed"
+        :file-list="fileList">
+        <el-button size="small" type="primary">点击上传</el-button>
+      </el-upload> -->
+      <!-- <el-upload action="" :auto-upload="false" :show-file-list="false" :on-change="readExcel">
+  <el-button slot="trigger" type="primary">批量导入</el-button>
+</el-upload> -->
+
+
       <router-link :to="'/colony/colonyclassadd'">
         <el-button type="primary" size="small" icon="el-icon-plus">
         新增
@@ -116,8 +133,9 @@ const calendarTypeOptions = [
   { key: "JP", display_name: "Japan" },
   { key: "EU", display_name: "Eurozone" },
 ];
-import {DeleteCategory,DeleteArticle,GetCategoryList,GetArtcileList} from "@/api/user";
+import {DeleteCategory,DeleteArticle,GetCategoryList,GetArtcileList,allAddreq} from "@/api/user";
 import Pagination from "@/components/Pagination";
+import * as XLSX from 'xlsx'
 
 export default {
   name: "ArticleList",
@@ -135,6 +153,7 @@ export default {
   data() {
     return {
       list: [],
+      fileList: [],
       options:[
         {
           id:1,
@@ -168,6 +187,60 @@ export default {
     this.getList();
   },
   methods: {
+    readExcel(file) {
+    const fileReader = new FileReader();
+    fileReader.onload = async(e) => {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const wsname = workbook.SheetNames[3]; // 取第一张表
+        console.log(wsname);
+        const ws = XLSX.utils.sheet_to_json(workbook.Sheets[wsname]); // 生成 JSON 格式的表格内容
+        // console.log(ws, '表格数据（JSON格式）');
+        if(ws && ws.length > 0){
+          for(const item of ws) {
+            let datas = {
+              sortid:2,
+              title:item['单位名称'],
+              categoryid:'1',
+              isshow:1,
+              channelname:this.$route.meta.channelname
+            }
+            try {
+             await this.tems(datas)
+            } catch (error) {
+              return
+            }
+          }
+        }
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+    };
+    fileReader.readAsArrayBuffer(file.raw);
+  },
+  tems(datas) {
+  return new Promise(resolve => {
+    setTimeout(async () => {
+      let res = await allAddreq(datas)
+    if(res.status === 200){
+      this.$message.success('上传一条成功')
+      resolve('ok')
+    }
+    // console.log(datas);
+    }, 4000);
+  });  
+},
+    handleUpload(file, fileList){
+      console.log(file, fileList);
+    },
+    handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件`);
+      },
     async deletaFn(id){
       let res = await DeleteArticle({id})
       if(res.status === 200){

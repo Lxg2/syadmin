@@ -63,7 +63,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="loading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -95,6 +95,7 @@ export default {
       options:[],
       fileList: [],
       upheaders:{},
+      loading: false,
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
@@ -172,18 +173,20 @@ export default {
     handleRemove() {
       this.ruleForm.imgurl = '';
       this.fileList = [];
-      // 你可以在这里处理删除文件后的逻辑，比如更新fileList  
+      // 你可以在这里处理删除文件后的逻辑，比如更新fileList
     },
     // 提交表单
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
+          this.loading = true;
           let {isshow,hotstr} = this.ruleForm
           let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
           }
+          this.loading = false;
         }
       });
     }

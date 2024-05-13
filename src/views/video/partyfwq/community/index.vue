@@ -74,10 +74,10 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="135px" label="创建时间">
+      <el-table-column width="135px" label="工作时间">
         <template slot-scope="scope">
           <span>{{
-            scope.row.Createtime
+            scope.row.Worktime
           }}</span>
         </template>
       </el-table-column>
@@ -193,6 +193,7 @@ export default {
 .comp-container {
   padding: 40px 40px 55px;
   background: #FFFFFF;
+  min-height: 100%;
   .row-center {
     margin-top: 52px;
   }

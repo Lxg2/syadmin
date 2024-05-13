@@ -10,7 +10,7 @@
         </Tinymce>
       </el-form-item>
       <el-form-item label="企业">
-        <el-input v-model="ruleForm.jrCompanyname" placeholder="请输入企业"></el-input>
+        <el-input v-model="ruleForm.companyname" placeholder="请输入企业"></el-input>
       </el-form-item>
       <el-form-item label="内容描述">
         <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
@@ -162,15 +162,15 @@ export default {
         jijinguanliren:'',
         guanlirenjieshao:'',
         guanlirentouzianli:'',
-        jrCompanyname:'',
+        companyname:'',
         remarks:'',
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
           content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+            { required: true, message: '请填写内容', trigger: 'change' }
           ],
           // categoryId: [
           //   {  required: true, message: '请选择所属类别', trigger: 'change' }
@@ -191,10 +191,10 @@ export default {
     
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {JrCompanyname:jrCompanyname,Remarks:remarks,Touzilingyu:touzilingyu,Jijinguimo:jijinguimo,Jijinguanliren:jijinguanliren,Guanlirenjieshao:guanlirenjieshao,
+      let {Companyname:companyname,Remarks:remarks,Touzilingyu:touzilingyu,Jijinguimo:jijinguimo,Jijinguanliren:jijinguanliren,Guanlirenjieshao:guanlirenjieshao,
         Guanlirentouzianli:guanlirentouzianli,Title:title,Content:content,Hotstr:hotstr,Sortid:sortid,Imgurl:imgurl,Isshow:isshow,Servicetype:servicetype} = res.datalist
       this.ruleForm.title = title
-      this.ruleForm.jrCompanyname =jrCompanyname
+      this.ruleForm.companyname =companyname
       this.editflag = true
       this.ruleForm.remarks = remarks
       this.ruleForm.hotstr = hotstr.split(',')

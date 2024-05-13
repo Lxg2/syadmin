@@ -12,11 +12,12 @@
           <hot-news />
         </el-col>
       </el-row>
-    <!-- <survey-chart /> -->
     <panel :panelData="panelData2" :customStyle="{ padding: '0 40px' }" />
     <div class="shop-overview">
       <overview :overviewObj="overviewObj2" />
     </div>
+    <!-- <survey-chart /> -->
+
   </div>
 </template>
 

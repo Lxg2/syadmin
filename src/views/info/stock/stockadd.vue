@@ -9,7 +9,7 @@
         </Tinymce>
       </el-form-item>
       <el-form-item label="企业">
-        <el-input v-model="ruleForm.jrCompanyname" placeholder="请输入企业"></el-input>
+        <el-input v-model="ruleForm.companyname" placeholder="请输入企业"></el-input>
       </el-form-item>
       <el-form-item label="内容描述">
         <el-input v-model="ruleForm.remarks" placeholder="请输入内容描述"></el-input>
@@ -110,7 +110,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="loading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -145,6 +145,7 @@ export default {
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
+      loading: false,
       inputVisible: false,
       inputValue: '',
       ruleForm: {
@@ -152,6 +153,7 @@ export default {
         content:'',
         hotstr:[],
         dynamicTags:[],
+        companyname:'',
         sortid:'',
         imgurl:'',
         isshow:true,
@@ -236,6 +238,7 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
+          this.loading = true;
           let {isshow,hotstr} = this.ruleForm
           let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
@@ -243,6 +246,7 @@ export default {
             // 回退
             this.$router.go(-1)
           }
+          this.loading = false;
         }
       });
     }

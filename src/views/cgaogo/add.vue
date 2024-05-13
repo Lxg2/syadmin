@@ -62,7 +62,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="loading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -96,6 +96,7 @@ export default {
       upheaders:{},
       imgdialogVisible:false,
       validateImg,
+      loading: false,
       dialogImageUrl:'',
       ruleForm: {
         title:'',
@@ -159,12 +160,14 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
+          this.loading = true
           let {isshow,hotstr} = this.ruleForm
           let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
           }
+          this.loading = false
         }
       });
     }

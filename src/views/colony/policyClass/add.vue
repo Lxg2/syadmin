@@ -58,7 +58,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="loading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -106,6 +106,7 @@ export default {
         }
       ],
       upheaders:{},
+      loading: false,
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
@@ -114,7 +115,7 @@ export default {
         sortid:'',
         imgurl:'',
         categoryid:'',
-        isshow:false,
+        isshow:true,
         remarks:''
       },
       rules: {
@@ -132,8 +133,8 @@ export default {
   },
   methods: {
     beforeUpload(file) {  
-      const isJPG = file.type === 'image/jpeg';  
-      const isPNG = file.type === 'image/png';  
+      const isJPG = file.type === 'image/jpeg';
+      const isPNG = file.type === 'image/png';
       const isLt10M = file.size / 1024 / 1024 < 10;
       if (!isJPG && !isPNG) {  
         this.$message.error('上传图片只能是 JPG/PNG 格式!');  
@@ -159,12 +160,14 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
+          this.loading = true;
           let {isshow} = this.ruleForm
           let res = await allAddreq({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
           }
+          this.loading = false;
         }
       });
     }
