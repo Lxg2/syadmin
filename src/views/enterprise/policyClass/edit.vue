@@ -245,10 +245,10 @@ export default {
       let inputValue = this.inputValue;
         if (inputValue) {
           // 去重
-          if(this.ruleForm.dynamicTags.length !== 0){
-            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
+          if(this.ruleForm.tags.length !== 0){
+            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
           }else{
-            this.ruleForm.dynamicTags.push(inputValue);
+            this.ruleForm.tags.push(inputValue);
           }
         }
         this.inputVisible = false;
@@ -293,9 +293,8 @@ export default {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           let {isshow,hotstr,tags} = this.ruleForm
-          hotstr = hotstr.join(',')
           tags = tags.join(',')
-          let res = await UpdateArticle({...this.ruleForm,hotstr,tags,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
+          let res = await UpdateArticle({...this.ruleForm,tags,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
