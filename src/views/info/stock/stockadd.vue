@@ -91,10 +91,10 @@
       </el-form-item>
       <el-form-item label="股权封面" prop="imgurl">
         <el-upload
-          :action="$store.state.user.beseFile"  
-          list-type="picture-card"  
+          :action="$store.state.user.beseFile"
+          list-type="picture-card"
           :on-success="handleSuccess"
-          :on-error="handleError"  
+          :on-error="handleError"
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
