@@ -8,12 +8,10 @@
       <el-form-item label="标签展示">
         <el-tag
           :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
+          v-for="tag in ruleForm.tags"
           closable
           :disable-transitions="false"
-          @close="(tag)=>{
-            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
-          }">
+          @close="colseitem(tag)">
           {{tag}}
         </el-tag>
         <el-input
@@ -130,7 +128,7 @@ export default {
         title:'',
         content:'',
         hotstr:[],
-        dynamicTags:[],
+        tags:[],
        // categoryid:'',
         remarks:'',
         companyname:'',
@@ -165,8 +163,13 @@ export default {
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Companyname:companyname,Remarks:remarks,Title:title,Content:content,Hotstr:hotstr,Sortid:sortid,Imgurl:imgurl,Isshow:isshow,Servicetype:servicetype} = res.datalist
+      let {Tags:tags,Companyname:companyname,Remarks:remarks,Title:title,Content:content,Hotstr:hotstr,Sortid:sortid,Imgurl:imgurl,Isshow:isshow,Servicetype:servicetype} = res.datalist
       this.ruleForm.title = title
+      if(tags && tags.length !== 0){
+        this.ruleForm.tags = tags.split(',')
+      }else{
+        this.ruleForm.tags = []
+      }
       this.ruleForm.companyname = companyname
       this.ruleForm.remarks = remarks
       this.editflag = true
@@ -185,15 +188,19 @@ export default {
     })
   },
   methods: {
+    colseitem(tag){
+        this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
+      },
     // 添加标签
     handleInputConfirm(){
       let inputValue = this.inputValue;
         if (inputValue) {
           // 去重
-          if(this.ruleForm.dynamicTags.length !== 0){
-            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
+          console.log(this.ruleForm.tags);
+          if(this.ruleForm.tags && this.ruleForm.tags.length !== 0){
+            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
           }else{
-            this.ruleForm.dynamicTags.push(inputValue);
+            this.ruleForm.tags.push(inputValue);
           }
         }
         this.inputVisible = false;
@@ -236,9 +243,12 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {hotstr,isshow} = this.ruleForm
+          let {hotstr,isshow,tags} = this.ruleForm
           this.ruleForm.hotstr = hotstr.join(',')
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
+          if(tags && tags.length !== 0){
+            tags = tags.join(',')
+          }
+          let res = await UpdateArticle({...this.ruleForm,tags,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
           if(res.status == 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

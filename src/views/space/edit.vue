@@ -297,13 +297,13 @@ export default {
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
           categoryid: [
             { required: true, message: '请选择分类', trigger: 'blur' },
           ],
           content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+            { required: true, message: '请填写内容', trigger: 'change' }
           ],
           filelist: [
             { required: true, trigger: 'change', validator: validateImg, }

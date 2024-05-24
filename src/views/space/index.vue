@@ -47,7 +47,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column min-width="223px" show-overflow-tooltip="true" label="简介" align="center">
+      <el-table-column min-width="223px" :show-overflow-tooltip="true" label="简介" align="center">
         <template slot-scope="{ row }">
           <span v-html="row.Remarks"></span>
         </template>

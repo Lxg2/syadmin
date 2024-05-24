@@ -20,7 +20,7 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属分类" prop="categoryid">
+      <!-- <el-form-item label="所属分类" prop="categoryid">
         <el-select v-model="ruleForm.categoryid" clearable placeholder="请选择分类" style="width: 100%;">
           <el-option
             v-for="item in options"
@@ -29,7 +29,7 @@
             :value="item.id">
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
           <el-switch

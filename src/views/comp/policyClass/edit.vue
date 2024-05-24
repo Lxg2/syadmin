@@ -47,7 +47,7 @@
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
-import {allAddCategoryreq,GetCategoryInfo,UpdateCategory} from '@/api/user'
+import {GetCategoryInfo,UpdateCategory} from '@/api/user'
 import { getToken } from '@/utils/auth'
 
 export default {
@@ -74,7 +74,7 @@ export default {
         categorytitle:'',
         // sortid:'',
         imgurl:'',
-        isshow:false,
+        isshow:true,
       },
       rules: {
         categorytitle: [

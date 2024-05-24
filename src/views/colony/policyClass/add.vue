@@ -4,6 +4,27 @@
       <el-form-item label="推荐企业" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入"></el-input>
       </el-form-item>
+      <el-form-item label="企业标签">
+        <el-tag
+          :key="tag"
+          v-for="tag in ruleForm.tags"
+          closable
+          :disable-transitions="false"
+          @close="colseitem(tag)">
+          {{tag}}
+        </el-tag>
+        <el-input
+          class="input-new-tag"
+          v-if="inputVisible"
+          v-model="inputValue"
+          ref="saveTagInput"
+          size="small"
+          @keyup.enter.native="handleInputConfirm"
+          @blur="handleInputConfirm"
+        >
+        </el-input>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
+      </el-form-item>
       <el-form-item label="企业简介">
         <el-input
           type="textarea"
@@ -12,6 +33,25 @@
           v-model="ruleForm.remarks">
         </el-input>
 
+      </el-form-item>
+      <el-form-item label="直播宣传片">
+        <el-upload
+          class="upload-demo"
+          v-if="!ruleForm.companyname"
+          drag
+          :action="$store.state.user.beseFile"
+          :before-upload="beforeUploadvideo"
+          :on-success="handleSuccessvideo"
+          :limit="1"
+          :on-error="handleErrorvideo"
+          multiple>
+          <i class="el-icon-upload"></i>
+          <div class="el-upload__text">将视频拖到此处，或<em>点击上传</em></div>
+        </el-upload>
+        <div v-else style="position: relative;">
+          <video width="500"  controls :src="ruleForm.companyname"></video>
+          <i @click="ruleForm.companyname = ''" class="el-icon-circle-close" style="font-size: 30px;position: absolute;top: -10px;left: 505px;cursor: pointer;"></i>
+        </div>
       </el-form-item>
       <el-form-item label="产业定位" prop="categoryid">
         <!-- <el-input v-model="ruleForm.categorytitle" placeholder="请输入产业定位标题"></el-input>
@@ -25,6 +65,15 @@
             </el-option>
           </el-select>
       </el-form-item>
+      <el-form-item label="成立时间">
+        <el-input v-model="ruleForm.worktime" placeholder="请输入成立时间"></el-input>
+      </el-form-item>
+      <el-form-item label="企业地址">
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入企业地址"></el-input>
+      </el-form-item>
+      <el-form-item label="联系电话">
+        <el-input v-model="ruleForm.tellphone" placeholder="请输入联系电话"></el-input>
+      </el-form-item>
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
@@ -37,7 +86,7 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="分类封面" prop="imgurl">
+      <el-form-item label="封面" prop="imgurl">
         <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
@@ -110,12 +159,19 @@ export default {
       imgdialogVisible:false,
       validateImg,
       dialogImageUrl:'',
+      inputVisible: false,
+      inputValue: '',
       ruleForm: {
         // categorytitle:'',
         sortid:'',
         imgurl:'',
         categoryid:'',
+        companyname:'',
         isshow:true,
+        tags:[],
+        tellphone:'',
+        hdAddress:'',
+        worktime:'',
         remarks:''
       },
       rules: {
@@ -132,6 +188,48 @@ export default {
     this.upheaders = {'Authorization':getToken()}
   },
   methods: {
+    beforeUploadvideo(file) {
+    const isVideo = file.type.startsWith('video/');  
+    if (!isVideo) {  
+      this.$message.error('请上传视频文件！');  
+      return false;  
+    }  
+    // 如果需要限制文件大小，可以在这里添加逻辑  
+      return true;
+    },
+    // 文件上传成功时的钩子
+    handleSuccessvideo(response, file, fileList) {
+      this.ruleForm.companyname = response.filepath;
+      // 可以在这里处理上传成功后的逻辑，比如更新UI或存储文件信息等  
+    },  
+    // 文件上传失败时的钩子  
+    handleErrorvideo(error, file, fileList) {
+      this.$message.error('视频上传失败，请重试！'+error.msg);  
+      // 可以在这里处理上传失败后的逻辑，比如重试上传或显示更详细的错误信息  
+    },
+    showInput() {
+        this.inputVisible = true;
+        this.$nextTick(_ => {
+          this.$refs.saveTagInput.$refs.input.focus();
+        });
+      },
+    colseitem(tag){
+        this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
+      },
+            // 添加标签
+      handleInputConfirm(){
+      let inputValue = this.inputValue;
+        if (inputValue) {
+          // 去重
+          if(this.ruleForm.tags.length !== 0){
+            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
+          }else{
+            this.ruleForm.tags.push(inputValue);
+          }
+        }
+        this.inputVisible = false;
+        this.inputValue = '';
+    },
     beforeUpload(file) {  
       const isJPG = file.type === 'image/jpeg';
       const isPNG = file.type === 'image/png';
@@ -161,8 +259,11 @@ export default {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           this.loading = true;
-          let {isshow} = this.ruleForm
-          let res = await allAddreq({...this.ruleForm,isshow:+isshow,channelname:this.$route.meta.channelname})
+          let {isshow,tags} = this.ruleForm
+          if(tags.length !== 0){
+            tags = tags.join(',')
+          }
+          let res = await allAddreq({...this.ruleForm,tags,isshow:+isshow,channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)

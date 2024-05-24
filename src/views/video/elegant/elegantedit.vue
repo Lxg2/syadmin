@@ -1,11 +1,11 @@
 <template>
   <div class="container-box">
     <!-- 政策模块 -->
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
-      <el-form-item label="政策标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+      <el-form-item label="党建风采标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="党建风采标题"></el-input>
       </el-form-item>
-      <el-form-item label="政策内容" prop="content">
+      <el-form-item label="风采内容" prop="content">
         <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
@@ -39,7 +39,7 @@
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
-      <el-form-item label="活动封面" prop="imgurl">
+      <el-form-item label="风采封面" prop="imgurl">
         <el-upload  
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
@@ -103,10 +103,10 @@ export default {
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
           content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+            { required: true, message: '请填写内容', trigger: 'change' }
           ],
           categoryId: [
             {  required: true, message: '请选择所属类别', trigger: 'change' }

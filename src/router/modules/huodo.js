@@ -43,15 +43,15 @@ const compRouter = {
       channelname:'huodong'
     }
   },
-  {
-    path: 'applyadmin',
-    component: () => import('@/views/huodo/about.vue'),
-    name: 'applyadmin',
-    meta: {
-      title: '报名管理',
-      channelname:'huodong'
-    }
-  },
+  // {
+  //   path: 'applyadmin',
+  //   component: () => import('@/views/huodo/about.vue'),
+  //   name: 'applyadmin',
+  //   meta: {
+  //     title: '报名管理',
+  //     channelname:'huodong'
+  //   }
+  // },
   {
     path: 'hdclass',
     component: () => import('@/views/huodo/contact.vue'),

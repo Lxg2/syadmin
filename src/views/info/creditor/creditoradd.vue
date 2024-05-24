@@ -7,12 +7,10 @@
       <el-form-item label="标签展示">
         <el-tag
           :key="tag"
-          v-for="tag in ruleForm.dynamicTags"
+          v-for="tag in ruleForm.tags"
           closable
           :disable-transitions="false"
-          @close="(tag)=>{
-            ruleForm.dynamicTags.splice(ruleForm.dynamicTags.indexOf(tag), 1);
-          }">
+          @close="colseitem(tag)">
           {{tag}}
         </el-tag>
         <el-input
@@ -132,7 +130,7 @@ export default {
       ruleForm: {
         title:'',
         content:'',
-        dynamicTags:[],
+        tags:[],
         hotstr:[],
         sortid:'',
         companyname:'',
@@ -163,15 +161,18 @@ export default {
     this.getclasslist()
   },
   methods: {
+    colseitem(tag){
+        this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
+      },
      // 添加标签
      handleInputConfirm(){
       let inputValue = this.inputValue;
         if (inputValue) {
           // 去重
-          if(this.ruleForm.dynamicTags.length !== 0){
-            !this.ruleForm.dynamicTags.includes(inputValue) && this.ruleForm.dynamicTags.push(inputValue);
+          if(this.ruleForm.tags.length !== 0){
+            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
           }else{
-            this.ruleForm.dynamicTags.push(inputValue);
+            this.ruleForm.tags.push(inputValue);
           }
         }
         this.inputVisible = false;
@@ -216,8 +217,11 @@ export default {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           this.loading = true
-          let {isshow,hotstr} = this.ruleForm
-          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+          let {isshow,hotstr,tags} = this.ruleForm
+          if(tags && tags.length > 0){
+            tags = tags.join(',')
+          }
+          let res = await allAddreq({...this.ruleForm,tags,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)
             // 回退

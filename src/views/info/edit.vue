@@ -44,6 +44,12 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
+      <el-form-item label="联系人">
+        <el-input v-model="ruleForm.communityusername" placeholder="请输入联系人"></el-input>
+      </el-form-item>
+      <el-form-item label="电话">
+        <el-input v-model="ruleForm.communityusermobile" placeholder="请输入电话"></el-input>
+      </el-form-item>
       <el-form-item label="所属分类" prop="categoryid">
         <el-select v-model="ruleForm.categoryid" clearable placeholder="请选择分类" style="width: 100%;">
           <el-option
@@ -116,6 +122,8 @@ export default {
         title:'',
         tags:[],
         jrCompanyname:'',
+        communityusername:'',
+        communityusermobile:'',
         remarks:'',
         content:'',
         hotstr:[],
@@ -148,13 +156,15 @@ export default {
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Title:title,Tags:tags,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Remarks:remarks,JrCompanyname:jrCompanyname} = res.datalist
+      let {Communityusername:communityusername,Communityusermobile:communityusermobile,Title:title,Tags:tags,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Remarks:remarks,JrCompanyname:jrCompanyname} = res.datalist
       this.ruleForm.title = title
       if(tags){
         this.ruleForm.tags = tags.split(',')
       }
       this.ruleForm.remarks = remarks
       this.editflag = true
+      this.ruleForm.communityusername = communityusername
+      this.ruleForm.communityusermobile = communityusermobile
       this.ruleForm.jrCompanyname = jrCompanyname
       this.ruleForm.hotstr = hotstr.split(',')
       this.ruleForm.categoryid = categoryid

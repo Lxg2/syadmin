@@ -75,7 +75,7 @@
           categorytitle:'',
           sortid:'',
           imgurl:'',
-          isshow:false,
+          isshow:true,
         },
         rules: {
           categorytitle: [

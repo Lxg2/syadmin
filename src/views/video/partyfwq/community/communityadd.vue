@@ -101,7 +101,7 @@ export default {
     // 图片验证规则
     var validateImg = (rule, value, callback) => {
         if (value === '' || value === undefined) {
-          callback(new Error('请上传活动封面'));
+          callback(new Error('请上传封面'));
         } else {
           callback();
         }
@@ -131,7 +131,7 @@ export default {
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
           // categoryid: [
           //   { required: true, message: '请选择分类', trigger: 'blur' },
