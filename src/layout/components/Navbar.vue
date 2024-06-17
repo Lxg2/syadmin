@@ -12,7 +12,7 @@
       <div class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper row">
           <!-- <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" /> -->
-          <span>HI,姚一亿</span>
+          <!-- <span>HI,姚一亿</span> -->
         </div>
       </div>
       <div

@@ -2,7 +2,7 @@
   <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
     <textarea :id="tinymceId" class="tinymce-textarea" />
     <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
+      <!-- <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" /> -->
     </div>
   </div>
 </template>
@@ -21,7 +21,7 @@ import PluginManagerLetterspacing from "./fonsize";
 
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
-const tinymceCDN = '/tinymce/tinymce.min.js'
+const tinymceCDN = '././tinymce/tinymce.min.js'
 
 export default {
   name: 'Tinymce',
@@ -172,8 +172,8 @@ style_formats_merge:false,//走否将style_formats设置中的样式附加到默
         },
         setup(editor) {
           editor.on('init', function(ed) {
-            ed.target.editorCommands.execCommand("fontSize", false, "16px");
-            ed.target.editorCommands.execCommand("fontName", false, "微软雅黑");
+            // ed.target.editorCommands.execCommand("fontSize", false, "16px");
+            // ed.target.editorCommands.execCommand("fontName", false, "微软雅黑");
           });
           editor.on('FullscreenStateChanged', (e) => {
             _this.fullscreen = e.state
@@ -201,7 +201,8 @@ style_formats_merge:false,//走否将style_formats设置中的样式附加到默
             const formData = new FormData();
             formData.append('token',token);
             formData.append('file', blobInfo.blob());
-            fetch('https://syzw.qiieer.net/cloud/UploadReturnPathAndSite',{
+            // https://syzw.qiieer.net
+            fetch('/govcloud/syapi/cloud/UploadReturnPathAndSite',{
               method: 'POST',
               body: formData,
               headers: {

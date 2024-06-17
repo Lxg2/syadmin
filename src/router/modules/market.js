@@ -78,18 +78,18 @@ const compRouter = {
     //   },
     //   hidden: true,
     // },
-    {
-      path: "spacedetail",
-      component: () => import("@/views/market/detail"),
-      name: "spacedetail",
-      meta: {
-        title: "市场详情",
-        noCache: true,
-        activeMenu: "/market/marketadmin",
-        channelname: "shichang",
-      },
-      hidden: true,
-    },
+    // {
+    //   path: "spacedetail",
+    //   component: () => import("@/views/market/detail"),
+    //   name: "spacedetail",
+    //   meta: {
+    //     title: "市场详情",
+    //     noCache: true,
+    //     activeMenu: "/market/marketadmin",
+    //     channelname: "shichang",
+    //   },
+    //   hidden: true,
+    // },
   ],
 };
 export default compRouter

@@ -140,16 +140,50 @@ export default {
             { type: 'date', required: true, message: '请选择活动开始时间', trigger: 'change' }
           ],
           imgurl: [
-            { required: true, trigger: 'change', validator: validateImg, }
+            { required: true, trigger: 'change', validator: validateImg,}
           ],
       },
     };
   },
   mounted() {
     this.upheaders = {'Authorization':getToken()}
-    this.getclasslist()
+    this.getclasslist()//获取分类列表
+     // 检查腾讯地图是否已经加载  
   },
   methods: {
+    // 获取经纬度
+    getLatLng() {
+      const geocoder = new TMap.service.Geocoder({  
+      });  
+      // 调用 getLocation 方法解析地址
+      geocoder.getLocation({ address: this.ruleForm.hdAddress })
+        .then(async(result) => {
+          if (result.status === 0 && result.message === "Success") {
+            // 解析成功，更新经纬度数据
+            this.ruleForm.hdLat = result.result.location.lat;
+            this.ruleForm.hdLng = result.result.location.lng;
+            let {isshow,hotstr} = this.ruleForm
+            let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+            if(res.status === 200){
+              this.$message.success(res.msg)
+              this.$router.go(-1)
+            }else{
+              this.$message.error(res.msg)
+            }
+            this.loading = false
+            // 这里提交数据
+          } else {
+            // 解析失败或地址不完整等错误处理
+            this.loading = false
+            this.$message.error('地址解析失败，请重新输入地址');  
+          }  
+        })
+        .catch((error) => {  
+          // 网络错误或其他异常处理  
+          this.loading = false
+          this.$message.error('网络错误，请稍后再试');
+        });  
+    },  
     async getclasslist() {
       let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
       this.options = res.datalist
@@ -183,13 +217,7 @@ export default {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           this.loading = true;
-          let {isshow,hotstr} = this.ruleForm
-          let res = await allAddreq({...this.ruleForm,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
-          if(res.status === 200){
-            this.$message.success(res.msg)
-            this.$router.go(-1)
-          }
-          this.loading = false
+          this.getLatLng()
         }
       });
     }

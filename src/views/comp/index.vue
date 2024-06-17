@@ -29,7 +29,7 @@
       class="ranking_table"
     >
       <el-table-column width="10" align="center" />
-      <el-table-column width="237px" label="标题" prop="Title">
+      <el-table-column width="237px" show-overflow-tooltip label="标题" prop="Title">
       </el-table-column>
       <!-- <el-table-column width="208px" label="封面">
         <template slot-scope="scope">

@@ -57,10 +57,6 @@
       <el-form-item label="面积(单位:m²)">
         <el-input v-model="ruleForm.area" placeholder="请输入面积"></el-input>
       </el-form-item>
-
-
-
-      
       <!-- <el-form-item label="房屋类型" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item>
@@ -358,20 +354,45 @@ export default {
       let index = this.ruleForm.filelist.findIndex(item => item.uid === data.uid);
       this.ruleForm.filelist.splice(index, 1);
     },
+     // 获取经纬度
+     getLatLng() {
+      const geocoder = new TMap.service.Geocoder({  
+      });  
+      // 调用 getLocation 方法解析地址
+      geocoder.getLocation({ address: this.ruleForm.hdAddress })
+        .then(async(result) => {
+          if (result.status === 0 && result.message === "Success") {
+            // 解析成功，更新经纬度数据
+            this.ruleForm.hdLat = result.result.location.lat;
+            this.ruleForm.hdLng = result.result.location.lng;
+            let {isshow,hotstr,filelist,tags} = this.ruleForm
+              filelist = filelist.map(item => item.filepath).join(',')
+              tags = tags.join(',')
+              let res = await allAddreq({...this.ruleForm,tags,filelist,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
+              if(res.status === 200){
+                this.$message.success(res.msg)
+                this.$router.go(-1)
+              }
+            this.loading = false
+            // 这里提交数据
+          } else {
+            // 解析失败或地址不完整等错误处理
+            this.loading = false
+            this.$message.error('地址解析失败，请重新输入地址');  
+          }  
+        })
+        .catch((error) => {  
+          // 网络错误或其他异常处理  
+          this.loading = false
+          this.$message.error('网络错误，请稍后再试');
+        });  
+    },  
     // 提交表单
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
           this.loading = true;
-          let {isshow,hotstr,filelist,tags} = this.ruleForm
-          filelist = filelist.map(item => item.filepath).join(',')
-          tags = tags.join(',')
-          let res = await allAddreq({...this.ruleForm,tags,filelist,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
-          if(res.status === 200){
-            this.$message.success(res.msg)
-            this.$router.go(-1)
-          }
-          this.loading = false;
+          this.getLatLng()
         }
       });
     }

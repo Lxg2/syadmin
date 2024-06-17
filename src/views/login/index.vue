@@ -4,7 +4,7 @@
       <div class="company-profile">
         <div class="name mb24">石岩街道虚拟园区</div>
         <div class="explain">数字化管理-助力企业数字化转型</div>
-        <svg-icon icon-class="3d" style="font-size: 400px;" />
+        <svg-icon icon-class="3d" style="font-size: 380px;" />
       </div>
       <el-form
         ref="loginForm"
@@ -56,10 +56,6 @@
         >
       </el-form>
     </div>
-    <!-- <div class="copyright">
-      Copyright © 2015-2021 All Rights Reserved 深圳市深腾数字科技有限公司
-      粤ICP备16120692号 网站地图 联系我们
-    </div> -->
   </div>
 </template>
 
@@ -85,8 +81,8 @@ export default {
     };
     return {
       loginForm: {
-        username: "13714748405",
-        userpwd: "123123",
+        username: "",
+        userpwd: "",
       },
       loginRules: {
         username: [
@@ -143,16 +139,16 @@ export default {
           this.$store
             .dispatch("user/login", this.loginForm)
             .then(() => {
-              this.$notify({
-              title: '登录成功',
-              message: '欢迎回来！',
-              type: 'success'
-            });
               this.$router.push({
                 path: this.redirect || "/",
                 query: this.otherQuery,
               });
               this.loading = false;
+              this.$notify({
+              title: '登录成功',
+              message: '欢迎回来！',
+              type: 'success'
+            });
             })
             .catch(() => {
               this.loading = false;
@@ -182,38 +178,45 @@ $light_gray: #eee;
 .login-container {
   height: 100%;
   width: 100%;
-  padding-top: 13.885%;
   background-color: #e4eff9;
   overflow: hidden;
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   .login-box {
-    width: 75%;
-    height: 60%;
+    width: 1100px;
+    height: 550px;
     box-sizing: border-box;
     max-width: 100%;
     margin: 0 auto;
     .company-profile {
-      width: 48%;
+      width: 49%;
       color: #fff;
+      height: 100%;
+      box-sizing: border-box;
       background-color: #096bed;
-      padding: 6.945% 0 0;
+      padding: 5.945% 0 0;
       text-align: center;
       .name {
         height: 38px;
-        font-size: 40px;
+        font-size: 35px;
         font-weight: bold;
       }
 
       .explain {
         height: 24px;
         font-size: 24px;
+        margin-bottom: 20px;
       }
     }
 
     .login-form {
       overflow: hidden;
+      box-sizing: border-box;
+      height: 100%;
       flex: 1;
-      padding: 4.656% 6.945% 5.3%;
+      padding: 5.656% 6.945% 5.3%;
       background-color: #fff;
       .welcome {
         height: 20px;

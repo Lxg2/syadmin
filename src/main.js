@@ -16,6 +16,9 @@ import router from './router'
 import './icons' // icon
 import './permission' // permission control
 
+  import mapPlugin from './utils/map.js';
+  
+  Vue.use(mapPlugin, { mapKey: 'D5KBZ-AYDK3-BKV3U-Y2BNV-MQGIE-F2BC2' });
 
 /**
  * If you don't want to use mock-server

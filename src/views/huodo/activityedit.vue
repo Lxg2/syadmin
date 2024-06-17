@@ -77,7 +77,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="btnloading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -103,6 +103,7 @@ export default {
         }
       };
     return {
+      btnloading:false,
       form:{},
       fileList:[],
       imgdialogVisible:false,
@@ -195,16 +196,45 @@ export default {
       let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
       this.options = res.datalist
     },
+      // 获取经纬度
+      getLatLng() {
+      const geocoder = new TMap.service.Geocoder({
+      });  
+      // 调用 getLocation 方法解析地址
+      geocoder.getLocation({ address: this.ruleForm.hdAddress })
+        .then(async(result) => {
+          if (result.status === 0 && result.message === "Success") {
+            // 解析成功，更新经纬度数据
+            this.ruleForm.hdLat = result.result.location.lat;
+            this.ruleForm.hdLng = result.result.location.lng;
+            let {hotstr,isshow} = this.ruleForm
+            this.ruleForm.hotstr = hotstr.join(',')
+            let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
+            if(res.status == 200){
+              this.$message.success(res.msg)
+              this.$router.go(-1)
+            }else{
+              this.$message.error(res.msg)
+            }
+            this.btnloading = false
+            // 这里提交数据
+          } else {
+            // 解析失败或地址不完整等错误处理
+            this.btnloading = false
+            this.$message.error('地址解析失败，请重新输入地址');  
+          }  
+        })
+        .catch((error) => {  
+          // 网络错误或其他异常处理  
+          this.btnloading = false
+          this.$message.error('地址解析错误，请检查后再试');
+        });  
+    },  
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {hotstr,isshow} = this.ruleForm
-          this.ruleForm.hotstr = hotstr.join(',')
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
-          if(res.status == 200){
-            this.$message.success(res.msg)
-            this.$router.go(-1)
-          }
+          this.btnloading = true
+          this.getLatLng()
         }
       });
     }

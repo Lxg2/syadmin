@@ -35,7 +35,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="标题" prop="Categorytitle">
+      <el-table-column label="标题" show-overflow-tooltip prop="Categorytitle">
       </el-table-column>
 
       <el-table-column min-width="153px" label="状态" align="center">

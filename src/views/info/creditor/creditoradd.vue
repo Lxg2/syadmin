@@ -218,9 +218,7 @@ export default {
         if (valid) {
           this.loading = true
           let {isshow,hotstr,tags} = this.ruleForm
-          if(tags && tags.length > 0){
             tags = tags.join(',')
-          }
           let res = await allAddreq({...this.ruleForm,tags,isshow:+isshow,hotstr:hotstr.join(','),channelname:this.$route.meta.channelname})
           if(res.status === 200){
             this.$message.success(res.msg)

@@ -5,7 +5,8 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: 'https://syzw.qiieer.net', // url = base url + request url
+  // /govcloud/syapi
+  baseURL: '/govcloud/syapi', // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -13,9 +14,11 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
-    let {hotstr} = config.data
-    if(hotstr){
-      hotstr = hotstr.split(',');
+    if(config.data && config.data.hotstr){
+    let hotstr = config.data.hotstr
+      if(!Array.isArray(hotstr)){
+        hotstr = hotstr.split(',');
+      }
       hotstr.forEach((item,index) => {
         switch(item){
           case '置顶':
@@ -28,7 +31,11 @@ service.interceptors.request.use(
               break;
         }
       });
-      config.data.hotstr = hotstr.join(',')
+      if(Array.isArray(hotstr)){
+        config.data.hotstr = hotstr.join(',')
+      }else{
+        res.datalist.Hotstr =  hotstr
+      }
     }
     //发请求前做的一些处理，数据转化，配置请求头，设置token,设置loading等，根据需求去添加
    config.data = JSON.stringify(config.data); //数据转化,也可以使用qs转换
@@ -46,7 +53,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
-    console.log(error) // for debug
+    // console.log(error) // for debug
     return Promise.reject(error)
   }
 )
@@ -57,7 +64,6 @@ service.interceptors.response.use(
    * If you want to get http information such as headers or status
    * Please return  response => response
   */
-
   /**
    * Determine the request status by custom code
    * Here is just an example
@@ -65,12 +71,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    // if(res.datalist?.Hotstr){
-    //   alert(9)
-    // }
-    // console.log(res);
-    // if the custom code is not 20000, it is judged as an error
-      if(res.datalist?.Hotstr){
+      if(res.datalist && res.datalist.Hotstr){
         let hotstr = res.datalist.Hotstr
         if(!Array.isArray(hotstr)){
           hotstr = res.datalist.Hotstr.split(',')
@@ -87,8 +88,12 @@ service.interceptors.response.use(
               break;
           }
       })
-      res.datalist.Hotstr = hotstr.join(',')
-    }
+      if(Array.isArray(hotstr)){
+        config.data.hotstr = hotstr.join(',')
+      }else{
+        res.datalist.Hotstr =  hotstr
+      }
+      }
     if (res.status !== 200) {
       Message({
         message: res.msg || 'Error',

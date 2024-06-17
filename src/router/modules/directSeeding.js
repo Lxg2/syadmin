@@ -8,7 +8,7 @@ const compRouter = {
   redirect: '/directseeding/directseedingadminedit',
   name: 'directseeding',
   meta: {
-    title: '影视直播管理',
+    title: '影视管理',
     icon: 'zhibo',
   },
   children: [
@@ -65,17 +65,17 @@ const compRouter = {
       },
       hidden: true
     },
-    {
-      path: 'directseedingadminedit',
-      component: () => import('@/views/directseeding/edit'),
-      name: 'directseedingadminedit',
-      meta: {
-        title: '直播管理',
-        activeMenu: '/directseeding/directseedingadminedit',
-        channelname:'zhibo',
-        queryid:'8ee90c33-3dcd-4c24-8c3f-0b81a10bd52b'
-      },
-    },
+    // {
+    //   path: 'directseedingadminedit',
+    //   component: () => import('@/views/directseeding/edit'),
+    //   name: 'directseedingadminedit',
+    //   meta: {
+    //     title: '直播管理',
+    //     activeMenu: '/directseeding/directseedingadminedit',
+    //     channelname:'zhibo',
+    //     queryid:'8ee90c33-3dcd-4c24-8c3f-0b81a10bd52b'
+    //   },
+    // },
   ]
 }
 export default compRouter

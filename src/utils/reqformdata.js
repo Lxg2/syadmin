@@ -5,15 +5,18 @@ import { getToken } from '@/utils/auth'
 
 //1. 创建新的axios实例，
 const service = axios.create({
-  baseURL: 'https://syzw.qiieer.net',
-  timeout: 8 * 1000,
+  // https://syzw.qiieer.net
+  baseURL: '/govcloud/syapi',
+  timeout: 5 * 1000,
 });
 // 2.请求拦截器
 service.interceptors.request.use(
   (config) => {
-    let {hotstr} = config.data
-    if(hotstr){
-      hotstr = hotstr.split(',');
+    if(config.data && config.data.hotstr){
+      let hotstr = config.data.hotstr
+      if(!Array.isArray(hotstr)){
+        hotstr = hotstr.split(',');
+      }
       hotstr.forEach((item,index) => {
         switch(item){
           case '置顶':
@@ -26,7 +29,11 @@ service.interceptors.request.use(
               break;
         }
       });
-      config.data.hotstr = hotstr.join(',')
+      if(Array.isArray(hotstr)){
+        res.datalist.Hotstr =  hotstr.join(',')
+      }else{
+        res.datalist.Hotstr =  hotstr
+      }
     }
     if (config.data instanceof FormData === false) {
       config.transformRequest = function (obj) {
@@ -73,7 +80,7 @@ service.interceptors.response.use(
      */
     response => {
       const res = response.data
-      if(res.datalist?.Hotstr){
+      if(res.datalist && res.datalist.Hotstr){
         let hotstr = res.datalist.Hotstr
         if(!Array.isArray(hotstr)){
           hotstr = res.datalist.Hotstr.split(',')
@@ -90,8 +97,11 @@ service.interceptors.response.use(
               break;
           }
       })
-      console.log('hotstr',hotstr);
-      res.datalist.Hotstr = hotstr.join(',')
+      if(Array.isArray(hotstr)){
+        res.datalist.Hotstr =  hotstr.join(',')
+      }else{
+        res.datalist.Hotstr =  hotstr
+      }
     }
       // if the custom code is not 20000, it is judged as an error.
       if (res.status !== 200) {

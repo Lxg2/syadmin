@@ -46,7 +46,7 @@
         </Tinymce>
       </el-form-item>
       <el-form-item label="地区">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入地区（例:广州-深圳）"></el-input>
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入地区"></el-input>
       </el-form-item>
       <el-form-item label="学历">
         <el-select style="width: 100%;" v-model="ruleForm.educational" clearable placeholder="请选择分类">
@@ -172,7 +172,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="submitLoading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -201,6 +201,8 @@ export default {
         }
       };
     return {
+      submitLoading:false,
+      editflag:false,
       options4:[
         {
           Categorytitle:'面议'
@@ -433,18 +435,48 @@ export default {
       this.fileList = [];
       // 你可以在这里处理删除文件后的逻辑，比如更新fileList  
     },
-    // 提交表单
-    async submitForm(formName) {
-      this.$refs[formName].validate(async(valid) => {
-        if (valid) {
-          let {isshow,hotstr,tags} = this.ruleForm
+     // 获取经纬度
+     getLatLng() {
+      const geocoder = new TMap.service.Geocoder({
+      });  
+      // 调用 getLocation 方法解析地址
+      geocoder.getLocation({ address: this.ruleForm.hdAddress })
+        .then(async(result) => {
+          if (result.status === 0 && result.message === "Success") {
+            // 解析成功，更新经纬度数据
+            this.ruleForm.hdLat = result.result.location.lat;
+            this.ruleForm.hdLng = result.result.location.lng;
+            let {isshow,hotstr,tags} = this.ruleForm
           hotstr = hotstr.join(',')
           tags = tags.join(',')
           let res = await UpdateArticle({...this.ruleForm,hotstr,tags,isshow:+isshow,channelname:this.$route.meta.channelname,id:this.$route.query.id})
           if(res.status === 200){
             this.$message.success(res.msg)
             this.$router.go(-1)
+          }else{
+            this.$message.error(res.msg)
           }
+            this.submitLoading = false
+            // 这里提交数据
+          } else {
+            // 解析失败或地址不完整等错误处理
+            this.submitLoading = false
+            this.$message.error('地址解析失败，请重新输入地址');  
+          }  
+        })
+        .catch((error) => {  
+          // 网络错误或其他异常处理  
+          this.submitLoading = false
+          this.$message.error('地址解析错误，请检查后再试');
+        });  
+    },  
+    // 提交表单
+    async submitForm(formName) {
+      this.$refs[formName].validate(async(valid) => {
+        if (valid) {
+          this.submitLoading = true
+          this.getLatLng()
+          // this.submitLoading = false
         }
       });
     }

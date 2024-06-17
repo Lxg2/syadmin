@@ -45,12 +45,14 @@
         </div>
       </el-form-item>
       <el-form-item label="企业简介">
-        <el-input
+        <Tinymce ref="editor" v-if="editflag" v-model="ruleForm.content" :height="300">
+        </Tinymce>
+        <!-- <el-input
           type="textarea"
           :rows="2"
           placeholder="请输入内容"
           v-model="ruleForm.remarks">
-        </el-input>
+        </el-input> -->
 
       </el-form-item>
       <el-form-item label="产业定位" prop="categoryid">
@@ -107,7 +109,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="editloading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -135,6 +137,8 @@ export default {
         }
       };
     return {
+      editloading:false,
+      editflag:false,
       fileList: [],
       options:[
         {
@@ -167,7 +171,7 @@ export default {
         imgurl:'',
         categoryid:'',
         isshow:true,
-        remarks:'',
+        content:'',
         tags:[],
         tellphone:'',
         hdAddress:'',
@@ -233,8 +237,11 @@ export default {
         this.inputValue = '';
     },
     async getinfofn(){
-      let {datalist:{Remarks:remarks,Companyname:companyname,Title:title,Sortid:sortid,Categoryid:categoryid,Isshow:isshow,Imgurl:imgurl,Tags:tags,Tellphone:tellphone,HdAddress:hdAddress,Worktime:worktime}} = await GetArtcileInfo({id:this.$route.query.id,})
-      this.ruleForm.remarks = remarks
+      let {datalist:{Content:content,Companyname:companyname,Title:title,Sortid:sortid,Categoryid:categoryid,Isshow:isshow,Imgurl:imgurl,Tags:tags,Tellphone:tellphone,HdAddress:hdAddress,Worktime:worktime}} = await GetArtcileInfo({id:this.$route.query.id,})
+      this.$nextTick(()=>{
+        this.ruleForm.content = content
+      })
+      this.editflag = true
       this.ruleForm.companyname = companyname
       this.ruleForm.categoryid = categoryid
       if(tags && tags.length !== 0){
@@ -272,8 +279,8 @@ export default {
       this.ruleForm.imgurl = response.filepath;
     },  
     handleError(error) {
-      this.$message.error(error.msg);  
-      // 你可以在这里处理上传失败后的逻辑  
+      this.$message.error(error.msg);
+      // 你可以在这里处理上传失败后的逻辑
     },  
     handleRemove() {
       this.ruleForm.imgurl = '';
@@ -284,6 +291,7 @@ export default {
     async submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
+          this.editloading = true
           let {isshow,tags} = this.ruleForm
           if(tags && tags.length !== 0){
             tags = tags.join(',')
@@ -293,6 +301,7 @@ export default {
             this.$message.success(res.msg)
             this.$router.go(-1)
           }
+          this.editloading = false
         }
       });
     }

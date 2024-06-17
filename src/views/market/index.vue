@@ -61,22 +61,18 @@
 
       <el-table-column width="135px" label="创建时间">
         <template slot-scope="scope">
-          <span>{{
+          <span>
+            {{
             scope.row.Createtime
           }}</span>
         </template>
       </el-table-column>
-
       <el-table-column align="center" fixed="right" label="操作" width="240">
         <template slot-scope="scope">
           <div class="operate">
             <el-button type="text" @click="$router.push({path:'/market/marketadminedit',query:{id:scope.row.id}}
             )">
               编辑
-            </el-button>
-            <span class="line">|</span>
-            <el-button type="text" @click="$router.push({path:'/market/spacedetail',query:{id:scope.row.id}})">
-              查看评论
             </el-button>
             <span class="line">|</span>
             <el-popconfirm

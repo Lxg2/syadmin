@@ -26,13 +26,14 @@
         <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
       </el-form-item>
       <el-form-item label="企业简介">
-        <el-input
+        <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce>
+        <!-- <el-input
           type="textarea"
           :rows="2"
           placeholder="请输入内容"
           v-model="ruleForm.remarks">
-        </el-input>
-
+        </el-input> -->
       </el-form-item>
       <el-form-item label="直播宣传片">
         <el-upload
@@ -88,10 +89,10 @@
       </el-form-item>
       <el-form-item label="封面" prop="imgurl">
         <el-upload
-          :action="$store.state.user.beseFile"  
+          :action="$store.state.user.beseFile"
           list-type="picture-card"  
-          :on-success="handleSuccess"  
-          :on-error="handleError"  
+          :on-success="handleSuccess"
+          :on-error="handleError"
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
@@ -172,7 +173,7 @@ export default {
         tellphone:'',
         hdAddress:'',
         worktime:'',
-        remarks:''
+        content:''
       },
       rules: {
         categoryid: [

@@ -39,7 +39,7 @@
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
-      <el-form-item label="活动封面">
+      <el-form-item label="政策封面">
         <el-upload
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  

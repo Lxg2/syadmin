@@ -112,12 +112,9 @@ export function UpdateArticle(data) {
 }
 
 
-
-
-
 export function getInfo(token) {
   return request({
-    url: '/vue-element-admin/user/info',
+    url: '/api/admin/GetUserInfo',
     method: 'get',
     params: { token }
   })

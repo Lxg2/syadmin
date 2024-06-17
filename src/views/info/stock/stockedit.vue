@@ -52,11 +52,11 @@
         <el-input v-model="ruleForm.jijinguanliren" placeholder="请输入基金管理人"></el-input>
       </el-form-item>
       <el-form-item label="管理人简介">
-        <Tinymce ref="editor"  v-if="ruleForm.guanlirenjieshao" v-model="ruleForm.guanlirenjieshao" :height="300">
+        <Tinymce ref="editor"  v-if="editflag" v-model="ruleForm.guanlirenjieshao" :height="300">
         </Tinymce>
       </el-form-item>
       <el-form-item label="管理人投资案例">
-        <Tinymce ref="editor" v-if="ruleForm.guanlirentouzianli" v-model="ruleForm.guanlirentouzianli" :height="300">
+        <Tinymce ref="editor" v-if="editflag" v-model="ruleForm.guanlirentouzianli" :height="300">
         </Tinymce>
       </el-form-item>
 

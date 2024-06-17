@@ -9,24 +9,23 @@
         <Tinymce v-if="ruleForm.content" ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item> -->
-
       <el-form-item label="服务地址">
-        <el-input v-model="ruleForm.hdAddress" placeholder="请输入社区地址"></el-input>
+        <el-input v-model="ruleForm.hdAddress" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="工作时间">
-        <el-input v-model="ruleForm.worktime" placeholder="请输入社区工作时间"></el-input>
+        <el-input v-model="ruleForm.worktime" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="所属社区">
-        <el-input v-model="ruleForm.communityname" placeholder="请输入社区工作时间"></el-input>
+        <el-input v-model="ruleForm.communityname" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="负责人姓名">
-        <el-input v-model="ruleForm.communityusername" placeholder="请输入社区工作时间"></el-input>
+        <el-input v-model="ruleForm.communityusername" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="负责人电话">
-        <el-input v-model="ruleForm.communityusermobile" placeholder="请输入社区工作时间"></el-input>
+        <el-input v-model="ruleForm.communityusermobile" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="负责人职务">
-        <el-input v-model="ruleForm.communitypositon" placeholder="请输入社区工作时间"></el-input>
+        <el-input v-model="ruleForm.communitypositon" placeholder="请输入"></el-input>
       </el-form-item>
 
       <el-form-item label="置顶/热门">
@@ -37,7 +36,7 @@
           </el-checkbox-group>
         </div>
       </el-form-item>
-      <el-form-item label="所属分类" prop="categoryid">
+      <!-- <el-form-item label="所属分类" prop="categoryid">
         <el-select v-model="ruleForm.categoryid" clearable placeholder="请选择分类" style="width: 100%;">
           <el-option
             v-for="item in options"
@@ -46,7 +45,7 @@
             :value="item.id">
           </el-option>
         </el-select>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
           <el-switch
@@ -79,7 +78,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button v-loading="btnloading" type="primary" @click="submitForm('myform')">发布</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -105,6 +104,7 @@ export default {
         }
       };
     return {
+      btnloading:false,
       form:{},
       fileList:[],
       imgdialogVisible:false,
@@ -115,7 +115,6 @@ export default {
         title:'',
         // content:'',
         hotstr:[],
-        categoryid:'',
         sortid:'',
         isshow:true,
         imgurl:'',
@@ -133,9 +132,9 @@ export default {
           // content: [
           //   { required: true, message: '请填写政策内容', trigger: 'change' }
           // ],
-          categoryId: [
-            {  required: true, message: '请选择所属类别', trigger: 'change' }
-          ],
+          // categoryId: [
+          //   {  required: true, message: '请选择所属类别', trigger: 'change' }
+          // ],
           imgurl: [
             { required: true, trigger: 'change', validator: validateImg, }
           ],
@@ -153,10 +152,10 @@ export default {
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
       let {
         HdAddress:hdAddress,Worktime:worktime,Communityname:communityname,Communityusername:communityusername,Communityusermobile:communityusermobile,Communitypositon:communitypositon,
-        Title:title,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Isshow:isshow} = res.datalist
+        Title:title,Hotstr:hotstr,Sortid:sortid,Imgurl:imgurl,Isshow:isshow} = res.datalist
       this.ruleForm.title = title
       this.ruleForm.hotstr = hotstr.split(',')
-      this.ruleForm.categoryid = categoryid
+      // this.ruleForm.categoryid = categoryid
       this.ruleForm.sortid = sortid
       this.ruleForm.isshow = isshow? true : false
       this.ruleForm.imgurl = imgurl
@@ -203,16 +202,49 @@ export default {
       let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
       this.options = res.datalist
     },
+     // 获取经纬度
+     getLatLng() {
+      const geocoder = new TMap.service.Geocoder({
+      });  
+      // 调用 getLocation 方法解析地址
+      geocoder.getLocation({ address: this.ruleForm.hdAddress })
+        .then(async(result) => {
+          if (result.status === 0 && result.message === "Success") {
+            // 解析成功，更新经纬度数据
+            this.ruleForm.hdLat = result.result.location.lat;
+            this.ruleForm.hdLng = result.result.location.lng;
+            let {hotstr,isshow,communitypositon,communityusername} = this.ruleForm
+            if(communitypositon === null || communityusername === null){
+              communitypositon = ''
+              communityusername = ''
+            }
+            this.ruleForm.hotstr = hotstr.join(',')
+            let res = await UpdateArticle({...this.ruleForm,communitypositon,communityusername,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
+            if(res.status == 200){
+              this.$message.success(res.msg)
+              this.$router.go(-1)
+            }else{
+              this.$message.error(res.msg)
+            }
+            this.btnloading = false
+            // 这里提交数据
+          } else {
+            // 解析失败或地址不完整等错误处理
+            this.btnloading = false
+            this.$message.error('地址解析失败，请重新输入地址');  
+          }  
+        })
+        .catch((error) => {  
+          // 网络错误或其他异常处理  
+          this.btnloading = false
+          this.$message.error('地址解析错误，请检查后再试');
+        });  
+    },  
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {hotstr,isshow} = this.ruleForm
-          this.ruleForm.hotstr = hotstr.join(',')
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
-          if(res.status == 200){
-            this.$message.success(res.msg)
-            this.$router.go(-1)
-          }
+          this.btnloading = true
+          this.getLatLng()
         }
       });
     }

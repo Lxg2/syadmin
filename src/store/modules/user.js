@@ -8,7 +8,9 @@ const state = {
   avatar: '',
   introduction: '',
   roles: [],
-  beseFile:'https://syzw.qiieer.net/cloud/UploadReturnPathAndSite'
+  mapkey:'D5KBZ-AYDK3-BKV3U-Y2BNV-MQGIE-F2BC2',//作废
+  beseFile:'/govcloud/syapi/cloud/UploadReturnPathAndSite'
+  // beseFile:'https://syzw.qiieer.net/cloud/UploadReturnPathAndSite'
 }
 
 const mutations = {
@@ -47,8 +49,26 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      // getInfo(state.token).then(response => {
-      //   const { data } = response
+      getInfo(state.token).then(response => {
+        const { data } = response
+        if (!data) {
+          reject('Verification failed, please Login again.')
+        }
+        const { Username, IszHeadimg } = data
+        data.roles = ['admin']
+        // roles must be a non-empty array
+        if (!data.roles || data.roles.length <= 0) {
+          reject('getInfo: roles must be a non-null array!')
+        }
+        commit('SET_ROLES', data.roles)
+        commit('SET_NAME', Username)
+        commit('SET_AVATAR', IszHeadimg)
+        commit('SET_INTRODUCTION', 'I am a super administrator')
+        resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+      // const data = {roles:['admin',],name:'zs',avatar:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',introduction:'I am a super administrator'}
       //   if (!data) {
       //     reject('Verification failed, please Login again.')
       //   }
@@ -62,23 +82,6 @@ const actions = {
       //   commit('SET_AVATAR', avatar)
       //   commit('SET_INTRODUCTION', introduction)
       //   resolve(data)
-      // }).catch(error => {
-      //   reject(error)
-      // })
-      const data = {roles:['admin',],name:'zs',avatar:'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',introduction:'I am a super administrator'}
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
-        const { roles, name, avatar, introduction } = data
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
-        }
-        commit('SET_ROLES', roles)
-        commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        commit('SET_INTRODUCTION', introduction)
-        resolve(data)
     })
   },
 
@@ -120,16 +123,12 @@ const actions = {
 
     commit('SET_TOKEN', token)
     setToken(token)
-
     const { roles } = await dispatch('getInfo')
-
     resetRouter()
-
     // generate accessible routes map based on roles
     const accessRoutes = await dispatch('permission/generateRoutes', roles, { root: true })
     // dynamically add accessible routes
     router.addRoutes(accessRoutes)
-
     // reset visited views and cached views
     dispatch('tagsView/delAllViews', null, { root: true })
   }

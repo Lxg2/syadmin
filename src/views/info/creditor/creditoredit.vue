@@ -245,9 +245,7 @@ export default {
         if (valid) {
           let {hotstr,isshow,tags} = this.ruleForm
           this.ruleForm.hotstr = hotstr.join(',')
-          if(tags && tags.length !== 0){
             tags = tags.join(',')
-          }
           let res = await UpdateArticle({...this.ruleForm,tags,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
           if(res.status == 200){
             this.$message.success(res.msg)
@@ -259,6 +257,7 @@ export default {
   }
 }
 </script>
+
 
 <style lang="scss" scoped>
 ::v-deep {

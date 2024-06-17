@@ -37,6 +37,9 @@
           </el-option>
         </el-select>
       </el-form-item> -->
+      <el-form-item label="公司名称">
+        <el-input v-model="ruleForm.companyname" placeholder="请输入公司名称" size="small" style="width: 100%;"></el-input>
+      </el-form-item>
       <el-form-item label="服务简介" prop="remarks">
         <!-- <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce> -->
@@ -167,6 +170,7 @@ export default {
       ruleForm: {
         remarks:'',
         tags:[],
+        companyname:'',
         title:'',
         content:'',
         hotstr:[],

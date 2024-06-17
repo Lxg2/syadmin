@@ -37,6 +37,9 @@
           </el-option>
         </el-select>
       </el-form-item> -->
+      <el-form-item label="公司名称">
+        <el-input v-model="ruleForm.companyname" placeholder="请输入公司名称" size="small" style="width: 100%;"></el-input>
+      </el-form-item>
       <el-form-item label="服务简介" prop="remarks">
         <!-- <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce> -->
@@ -168,6 +171,7 @@ export default {
         tags:[],
         title:'',
         content:'',
+        companyname:'',
         hotstr:[],
         sortid:'',
         imgurl:'',
@@ -212,6 +216,7 @@ export default {
         Categoryid:categoryid,
         Tags:tags,
         Remarks:remarks,
+        Companyname:companyname,
         Content:content,
         Hotstr:hotstr,
         Sortid:sortid,
@@ -226,6 +231,7 @@ export default {
       this.ruleForm.remarks = remarks
       this.ruleForm.categoryid = categoryid
       this.editflag = true
+      this.ruleForm.companyname = companyname
       this.ruleForm.hotstr = hotstr.split(',')
       this.ruleForm.sortid = sortid
       this.ruleForm.communityusermobile = communityusermobile
