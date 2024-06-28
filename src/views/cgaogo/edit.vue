@@ -2,10 +2,10 @@
   <div class="container-box">
     <!-- 政策模块 -->
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
-      <el-form-item label="政策标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入政策标题"></el-input>
+      <el-form-item label="公告标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入公告标题"></el-input>
       </el-form-item>
-      <el-form-item label="政策内容" prop="content">
+      <el-form-item label="公告内容" prop="content">
         <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
@@ -103,10 +103,10 @@ export default {
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入标题', trigger: 'blur' },
           ],
           content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+            { required: true, message: '请填写内容', trigger: 'change' }
           ],
           // categoryId: [
           //   {  required: true, message: '请选择所属类别', trigger: 'change' }

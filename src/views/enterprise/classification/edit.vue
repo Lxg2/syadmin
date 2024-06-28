@@ -4,10 +4,10 @@
       <el-form-item label="岗位" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入招聘岗位"></el-input>
       </el-form-item>
-      <el-form-item label="招聘人数" prop="title">
+      <el-form-item label="招聘人数">
         <el-input type="number" v-model="ruleForm.jobpersoncount" placeholder="请输入招聘人数"></el-input>
       </el-form-item>
-      <el-form-item label="企业" prop="title">
+      <el-form-item label="企业">
         <el-input v-model="ruleForm.companyname" placeholder="请输入企业"></el-input>
       </el-form-item>
       <el-form-item label="职务福利">
@@ -322,7 +322,7 @@ export default {
       },
       rules: {
         title: [
-            { required: true, message: '请输入标题', trigger: 'blur' },
+            { required: true, message: '请输入岗位', trigger: 'blur' },
           ],
           categoryid: [
             { required: true, message: '请选择企业', trigger: 'blur' },

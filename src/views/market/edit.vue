@@ -14,6 +14,15 @@
           </el-option>
         </el-select>
       </el-form-item>
+      <el-form-item v-if="ruleForm.supplytype === 0" label="供应企业" prop="communityname" :rules="[{ required: true, message: '请输入供应企业', trigger: 'blur' }]">
+        <el-input v-model="ruleForm.communityname" placeholder="请输入联系人"></el-input>
+      </el-form-item>
+      <el-form-item label="联系人" prop="communityusername" :rules="[{ required: true, message: '请输入联系人', trigger: 'blur' }]">
+        <el-input v-model="ruleForm.communityusername" placeholder="请输入联系人"></el-input>
+      </el-form-item>
+      <el-form-item label="联系方式" prop="communityusermobile" :rules="[{ required: true, message: '请输入联系方式', trigger: 'blur' }]">
+        <el-input v-model="ruleForm.communityusermobile" placeholder="请输入联系方式"></el-input>
+      </el-form-item>
       <el-form-item label="供需内容" prop="remarks">
         <!-- <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce> -->
@@ -120,8 +129,9 @@ export default {
       editflag:false,
       containertext:'',
       ruleForm: {
-        communityusermobile:'',
+        communityname:'',
         communityusername:'',
+        communityusermobile:'',
         title:'',
         remarks:'',
         hotstr:[],
@@ -132,10 +142,10 @@ export default {
       },
       rules: {
         title: [
-            { required: true, message: '请输入政策标题', trigger: 'blur' },
+            { required: true, message: '请输入供需标题', trigger: 'blur' },
           ],
           content: [
-            { required: true, message: '请填写政策内容', trigger: 'change' }
+            { required: true, message: '请填写供需内容', trigger: 'change' }
           ],
           categoryId: [
             {  required: true, message: '请选择所属类别', trigger: 'change' }
@@ -159,12 +169,18 @@ export default {
         Content:content,
         Hotstr:hotstr,
         Categoryid:categoryid,
+        Communityname:communityname,
+        Communityusername:communityusername,
+        Communityusermobile:Communityusermobile,
         Sortid:sortid,
         Remarks:remarks,
         Fileslist:fileslist,
         Supplytype:supplytype,
         Isshow:isshow} = res.datalist
       this.ruleForm.title = title
+      this.ruleForm.communityname = communityname
+      this.ruleForm.communityusername = communityusername
+      this.ruleForm.communityusermobile = Communityusermobile
       this.ruleForm.hotstr = hotstr.split(',')
       this.ruleForm.categoryid = categoryid
       this.editflag = true

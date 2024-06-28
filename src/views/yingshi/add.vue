@@ -12,6 +12,7 @@
           :action="$store.state.user.beseFile"
           :before-upload="beforeUploadvideo"
           :on-success="handleSuccess"
+          :on-remove="handleRemove"
           :headers="upheaders"
           :limit="1"
           :on-error="handleError"
@@ -169,7 +170,7 @@ export default {
     // handleError(error) {  
     //   this.$message.error(error.msg);  
     //   // 你可以在这里处理上传失败后的逻辑  
-    // },  
+    // },
     handleRemove() {
       this.ruleForm.imgurl = '';
       this.fileList = [];

@@ -1,7 +1,7 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="推荐企业" prop="title">
+      <el-form-item label="推荐企业" prop="title" :rules="[{ required: true, message: '请输入推荐企业', trigger: 'blur' }]">
         <el-input v-model="ruleForm.title" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="企业标签">

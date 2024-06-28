@@ -36,15 +36,6 @@ const infoRouter = {
       },
       hidden: true,
     },
-    // {
-    //   path: "enterprise",
-    //   component: () => import("@/views/info/enterprise"),
-    //   name: "enterprise",
-    //   meta: {
-    //     title: "企业管理",
-    //     channelname: "qiye",
-    //   },
-    // },
     {
       path: "financingadmin",
       component: () => import("@/views/info"),

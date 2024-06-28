@@ -6,7 +6,7 @@ import { getToken } from '@/utils/auth'
 // create an axios instance
 const service = axios.create({
   // /govcloud/syapi
-  baseURL: '/govcloud/syapi', // url = base url + request url
+  baseURL: 'https://syzw.qiieer.net', // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })

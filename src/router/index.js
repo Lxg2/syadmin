@@ -11,10 +11,15 @@ import Layout from '@/layout'
 import policyRouter from './modules/policy'
 // 找融资
 import infoRouter from './modules/info'
+// 广告
+import coverRouter from './modules/cover'
 // 找活动
 import huodo from './modules/huodo'
 //角色
 import proRouter from './modules/promotion'
+//走进石岩
+import sy from './modules/sy'
+// 党建
 import videoRouter from './modules/partybuilding'
 // 企业管理
 import enterpriseRouter from './modules/enterprise'
@@ -75,7 +80,8 @@ export const constantRoutes = [{
     path: '/401',
     component: () => import('@/views/error-page/401'),
     hidden: true
-  }/* ,
+  }
+/* ,
   {
     path: '*',
     redirect: '/404',
@@ -91,6 +97,8 @@ export const asyncRoutes = [
   gogaoRouter,
   policyRouter,//找政策
   infoRouter,//找融资
+  sy,
+  coverRouter,//广告
   huodo,//找活动
   marketRouter,
   enterpriseRouter,

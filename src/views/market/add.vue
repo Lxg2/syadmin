@@ -19,6 +19,15 @@
         </Tinymce> -->
         <el-input type="textarea" v-model="ruleForm.remarks" placeholder="请输入供需信息"></el-input>
       </el-form-item>
+      <el-form-item v-if="ruleForm.supplytype === 0" label="供应企业" prop="communityname" :rules="[{ required: true, message: '请输入供应企业', trigger: 'blur' }]">
+        <el-input v-model="ruleForm.communityname" placeholder="请输入联系人"></el-input>
+      </el-form-item>
+      <el-form-item label="联系人" prop="communityusername" :rules="[{ required: true, message: '请输入联系人', trigger: 'blur' }]">
+        <el-input v-model="ruleForm.communityusername" placeholder="请输入联系人"></el-input>
+      </el-form-item>
+      <el-form-item label="联系方式" prop="communityusermobile" :rules="[{ required: true, message: '请输入联系方式', trigger: 'blur' }]">
+        <el-input v-model="ruleForm.communityusermobile" placeholder="请输入联系方式"></el-input>
+      </el-form-item>
       <!-- <el-form-item label="供应企业" v-if="ruleForm.supplytype === 0">
         <el-select style="width: 100%;" filterable v-model="ruleForm.categoryid" clearable placeholder="请选择">
           <el-option
@@ -131,6 +140,9 @@ export default {
         communityusername:'',
         title:'',
         remarks:'',
+        communityname:'',
+        communityusername:'',
+        communityusermobile:'',
         hotstr:[],
         sortid:'',
         filelist:[],

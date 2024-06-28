@@ -346,8 +346,8 @@ export default {
     handleSuccess(response,file) {
       this.ruleForm.filelist.push({filepath:response.filepath,uid:file.uid});
     },  
-    handleError(error) {  
-      this.$message.error(error.msg);  
+    handleError(error) {
+      this.$message.error(error.msg);
       // 你可以在这里处理上传失败后的逻辑  
     },  
     handleRemove() {
@@ -356,8 +356,8 @@ export default {
     },
      // 获取经纬度
      getLatLng() {
-      const geocoder = new TMap.service.Geocoder({  
-      });  
+      const geocoder = new TMap.service.Geocoder({
+      });
       // 调用 getLocation 方法解析地址
       geocoder.getLocation({ address: this.ruleForm.hdAddress })
         .then(async(result) => {

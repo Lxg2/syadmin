@@ -8,7 +8,6 @@ export function login(data) {
     data
   })
 }
-
 // 添加统一接口
 export function allAddreq(data) {
   return request({
@@ -124,5 +123,38 @@ export function logout() {
   return request({
     url: '/vue-element-admin/user/logout',
     method: 'post'
+  })
+}
+// 广告添加
+export function SubmitAd(data) {
+  return request({
+    url: '/api/admin/SubmitAd',
+    method: 'post',
+    data
+  })
+}
+// 获取广告列表
+// /api/admin/GetAdList
+export function GetAdList(data) {
+  return request({
+    url: '/api/admin/GetAdList',
+    method: 'post',
+    data
+  })
+}
+// 删除广告
+export function DeleteAd(data) {
+  return fmreq({
+    url: '/api/admin/DeleteAd',
+    method: 'post',
+    data
+  })
+}
+// 修改广告数据
+export function UpdateAd(data) {
+  return request({
+    url: '/api/admin/UpdateAd',
+    method: 'post',
+    data
   })
 }

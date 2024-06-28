@@ -21,7 +21,9 @@ import PluginManagerLetterspacing from "./fonsize";
 
 
 // why use this cdn, detail see https://github.com/PanJiaChen/tinymce-all-in-one
+// const tinymceCDN = '././tinymce/tinymce.min.js'
 const tinymceCDN = '././tinymce/tinymce.min.js'
+
 
 export default {
   name: 'Tinymce',
@@ -201,8 +203,8 @@ style_formats_merge:false,//走否将style_formats设置中的样式附加到默
             const formData = new FormData();
             formData.append('token',token);
             formData.append('file', blobInfo.blob());
-            // https://syzw.qiieer.net
-            fetch('/govcloud/syapi/cloud/UploadReturnPathAndSite',{
+            // /govcloud/syapi/cloud/UploadReturnPathAndSite
+            fetch('https://syzw.qiieer.net/cloud/UploadReturnPathAndSite',{
               method: 'POST',
               body: formData,
               headers: {

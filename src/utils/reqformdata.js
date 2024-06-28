@@ -6,7 +6,8 @@ import { getToken } from '@/utils/auth'
 //1. 创建新的axios实例，
 const service = axios.create({
   // https://syzw.qiieer.net
-  baseURL: '/govcloud/syapi',
+  // baseURL: '/govcloud/syapi',
+  baseURL: 'https://syzw.qiieer.net',
   timeout: 5 * 1000,
 });
 // 2.请求拦截器
