@@ -94,7 +94,7 @@ export const constantRoutes = [{
  */
 export const asyncRoutes = [
   caseRouter,
-  gogaoRouter,
+  // gogaoRouter,//公告
   policyRouter,//找政策
   infoRouter,//找融资
   sy,

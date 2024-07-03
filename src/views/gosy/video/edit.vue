@@ -2,10 +2,10 @@
   <div class="container-box">
     <!-- 政策模块 -->
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
-      <el-form-item label="影视标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入影视标题"></el-input>
+      <el-form-item label="宣传标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入宣传标题"></el-input>
       </el-form-item>
-     <el-form-item label="影视视频" prop="imgurl">
+     <el-form-item label="宣传视频" prop="imgurl">
         <el-upload
           class="upload-demo"
           v-if="!ruleForm.imgurl"
@@ -83,7 +83,7 @@ export default {
     // 图片验证规则
     var validateImg = (rule, value, callback) => {
         if (value === '' || value === undefined) {
-          callback(new Error('请上传影视'));
+          callback(new Error('请上传宣传'));
         } else {
           callback();
         }

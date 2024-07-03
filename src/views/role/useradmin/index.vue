@@ -1,102 +1,81 @@
 <template>
-  <div class="role-container">
-    <div class="filter-container row-between">
-      <div>
-        <el-button
-          size="small"
-          class="filter-item"
-          type="primary"
-          icon="el-icon-plus"
-        >
-          <router-link :to="'/role/role-add'">新增</router-link>
+  <div class="comp-container">
+    <div class="search-box row-between">
+      <router-link :to="'/role/ticadd'">
+        <el-button type="primary" size="small" icon="el-icon-plus">
+         新增
         </el-button>
-        <el-button size="small" class="filter-item">删除</el-button>
+    </router-link>
+      <div class="search-right" style="align-items: center;display: flex;">
+          <el-input v-model="listQuery.keywords" placeholder="请输入关键词" clearable style="width: 250px;margin-right: 10px;"></el-input>
+        <el-button @click="handleFilter" icon="el-icon-search" size="small" type="primary">
+          搜索
+        </el-button>
+        <!-- <el-button size="small" @click="resetListdata">搜索</el-button> -->
       </div>
-      <el-input
-        v-model="listQuery.title"
-        placeholder="输入关键词搜索"
-        style="width: 360px; background: #f8f8f8"
-        class="filter-item item-input"
-        @keyup.enter.native="handleFilter"
-      >
-        <i slot="prefix" class="el-input__icon el-icon-search"></i>
-      </el-input>
     </div>
-
     <el-table
       v-loading="listLoading"
       :data="list"
       fit
       highlight-current-row
+      style="width: 100%"
       class="ranking_table"
     >
-      <el-table-column type="selection" align="center" />
-
-      <el-table-column width="199px" label="管理员姓名">
+    <el-table-column width="10" align="center" />
+    <el-table-column label="用户名">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{
+            scope.row.Title
+          }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column width="210px" label="手机号">
+      <el-table-column label="Banner图">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <el-image 
+            style="width: 130px; height: 100px;margin: 10px 0px !important;"
+            :src="scope.row.Filepath" 
+            :preview-src-list="[scope.row.Imgurl]">
+          </el-image>
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="账号" width="216px">
+     
+      <el-table-column label="跳转小程序链接">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.Gourl }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column class-name="status-col" label="密码" width="218px">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="164px" label="所属部门">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="166px" label="状态">
-        <template slot-scope="{ row }">
-          <el-switch
-            v-model="row.status"
-            active-color="#1BD9A1"
-            inactive-color="#D1D1D1"
-          ></el-switch>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="创建时间">
-        <template slot-scope="scope">
-          <span>{{ scope.row.timestamp }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="操作" width="200">
-        <template>
           <div class="operate">
-            <el-button type="text">
-              <router-link :to="'/role/add/'">编辑</router-link>
+            <el-button type="text" @click="$router.push({name:'Ticedit',params:scope.row}
+            )">
+              编辑
             </el-button>
             <span class="line">|</span>
-            <el-button type="text">删除</el-button>
+            <el-popconfirm
+            confirm-button-text='确定'
+            cancel-button-text='取消'
+            icon="el-icon-info"
+            @onConfirm="deletaFn(scope.row.id)"
+            icon-color="red"
+            title="你确定删除此广告封面吗?"
+          >
+            <el-button type="text" slot="reference">删除</el-button>
+          </el-popconfirm>
           </div>
         </template>
       </el-table-column>
     </el-table>
-
-    <div class="underpart">
+    <!-- <Delete @close="close" @confirmDelete="confirmDelete" :deletedialogVisible="deletedialogVisible"></Delete> -->
+    <div class="row-center">
       <pagination
         v-show="total > 0"
         :total="total"
         :page.sync="listQuery.page"
-        :limit.sync="listQuery.limit"
+        :limit.sync="listQuery.pagesize"
         @pagination="getList"
       />
     </div>
@@ -104,14 +83,10 @@
 </template>
 
 <script>
-import Upload from "@/components/Upload/SingleImage2";
-import { fetchList } from "@/api/article";
 import Pagination from "@/components/Pagination";
+import {GetAdList,DeleteAd} from '@/api/user.js'
 
 export default {
-  components: {
-    Upload,
-  },
   name: "ArticleList",
   components: { Pagination },
   filters: {
@@ -126,42 +101,89 @@ export default {
   },
   data() {
     return {
+      Types:'index',
+      options:[
+          {
+              name: '首页',
+              value:'index'
+          },
+          {
+              name: '知识产权',
+              value:'zhishi'
+          },
+          {
+              name: '财税咨询',
+              value:'caishui'
+          }
+      ],
       list: null,
       total: 0,
-      listLoading: true,
+      deletedialogVisible: false,
+      listLoading: false,
+      dId:'',
       listQuery: {
         page: 1,
-        limit: 10,
-        title: undefined,
-        type: undefined,
-        sort: "+id",
-        value1: null,
+        pagesize: 10,
+        keywords:'',
       },
     };
   },
   created() {
-    this.getList();
+    // this.getList();
   },
   methods: {
+    close() {
+      this.deletedialogVisible = false
+    },
+    async deletaFn(id){
+      let res = await DeleteAd({id})
+      if(res.status === 200){
+        this.getList()
+        this.$message.success(res.msg)
+      }else{
+        this.$message.error(res.msg)
+      }
+      this.deletedialogVisible = false
+    },
+    // 删除框
+    showDeleteDialog(id){
+      this.dId = id
+      this.deletedialogVisible = true
+    },
+    handleFilter(){
+      this.getList()
+    },
     getList() {
       this.listLoading = true;
-      fetchList(this.listQuery).then((response) => {
-        this.list = response.data.items;
-        this.total = response.data.total;
+      GetAdList(this.listQuery).then((response) => {
+        this.list = response.datalist.datalist;
+        this.total = response.datalist.totalcount;
         this.listLoading = false;
       });
     },
+    resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.role-container {
-  padding: 40px 40px 52px;
-  background: #ffffff;
 
-  .underpart {
-    margin-top: 86px;
+.comp-container {
+  padding: 40px 40px 55px;
+  background: #FFFFFF;
+  min-height: 100%;
+  .row-center {
+    margin-top: 52px;
+  }
+  .tab-box {
+    .thumb {
+      width: 88px;
+      height: 64px;
+      border-radius: 4px;
+    }
   }
 }
+
 </style>

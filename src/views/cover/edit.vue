@@ -1,12 +1,6 @@
 <template>
      <div class="container-box">
       <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="150px">
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="ruleForm.title" placeholder="请输入标题"></el-input>
-        </el-form-item>
-        <el-form-item label="跳转小程序链接" prop="gourl">
-          <el-input v-model="ruleForm.gourl" placeholder="请输入跳转小程序链接"></el-input>
-        </el-form-item>
         <el-form-item label="广告封面" prop="imgurl">
           <!-- <FilOrImgUpload :ismultiple="true" :limit="1" fileType='img' @backData="backData"> </FilOrImgUpload> -->
           <el-upload  
@@ -25,7 +19,19 @@
           </div>  
         </el-upload>
         </el-form-item>
-  <!-- <el-form-item label="显示">
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="ruleForm.title" placeholder="请输入标题"></el-input>
+        </el-form-item>
+        <el-form-item label="跳转小程序链接" prop="gourl">
+          <el-input v-model="ruleForm.gourl" placeholder="请输入跳转小程序链接"></el-input>
+        </el-form-item>
+        <el-form-item label="显示位置" prop="channelname" :rules="[{ required: true, message: '请选择显示位置', trigger: 'blur' }]">
+          <el-select style="width: 100%;" v-model="ruleForm.channelname" placeholder="请选择显示位置">
+            <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+    <!-- <el-form-item label="显示">
         <el-switch v-model="ruleForm.Isdelete" active-text="是" inactive-text="否">
         </el-switch>
       </el-form-item> -->
@@ -54,6 +60,16 @@
           }
         };
       return {
+        options:[
+        {
+                name: '首页Banner',
+                value:'index'
+            },
+            {
+                name: '走进石岩',
+                value:'zoujinshiyan'
+            },
+        ],
         imgdialogVisible:false,
         fileList:[],
         validateImg,
@@ -64,29 +80,29 @@
         ruleForm: {
           gourl:'',
           title:'',
+          channelname:'',
           imgurl:'',
         },
         rules: {
             title: [
-              { required: true, message: '请选择标题', trigger: 'blur' },
+              { required: true, message: '请选择标题', trigger: 'blur'},
             ],
             gourl: [
-              { required: true, message: '请填写跳转路径', trigger: 'change' }
+              { required: true, message: '请填写跳转路径', trigger: 'change'}
             ],
             imgurl: [
-                 { required: true, trigger: 'change', validator: validateImg, }
+                 { required: true, trigger: 'change', validator: validateImg,}
             ],
         },
       }
     },
     mounted(){
-        console.log(this.$route.params)
         if(this.$route.params){
-            let {Title,Gourl,Imgurl,id} = this.$route.params
+            let {Title,Gourl,Imgurl,id,Channelname} = this.$route.params
             if(Imgurl){
                 this.fileList = [{name:Imgurl,url:Imgurl}]
             }
-            this.ruleForm = {title:Title,gourl:Gourl,imgurl:Imgurl,id}
+            this.ruleForm = {title:Title,gourl:Gourl,imgurl:Imgurl,id,channelname:Channelname}
             console.log(this.ruleForm);
         }
     },

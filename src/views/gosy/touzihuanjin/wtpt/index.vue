@@ -31,7 +31,7 @@
       <el-table-column width="10" align="center" />
       <el-table-column width="237px" label="标题" prop="Title">
       </el-table-column>
-      <el-table-column width="208px" label="封面">
+      <el-table-column label="封面">
         <template slot-scope="scope">
           <el-image 
             style="width: 100px; height: 100px;margin: 10px 0px !important;"
@@ -46,6 +46,11 @@
           <span>{{ scope.row.CategoryName }}</span>
         </template>
       </el-table-column> -->
+      <el-table-column label="类别" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.Categoryid === 1?'图书馆':scope.row.Categoryid === 2?'博物馆':scope.row.Categoryid === 3?'电影院':'其它' }}</span>
+        </template>
+      </el-table-column>
 
       <el-table-column label="排序" align="center">
         <template slot-scope="scope">
@@ -66,7 +71,6 @@
           }}</span>
         </template>
       </el-table-column>
-
       <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <div class="operate">

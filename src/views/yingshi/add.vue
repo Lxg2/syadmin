@@ -125,7 +125,7 @@ export default {
     };
   },
   mounted() {
-    this.upheaders = {'Authorization':getToken()}
+    this.upheaders = {'Authorization': 'Bearer ' + getToken()}
     this.getclasslist()
   },
   methods: {

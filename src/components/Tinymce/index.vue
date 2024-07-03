@@ -204,7 +204,7 @@ style_formats_merge:false,//走否将style_formats设置中的样式附加到默
             formData.append('token',token);
             formData.append('file', blobInfo.blob());
             // /govcloud/syapi/cloud/UploadReturnPathAndSite
-            fetch('https://syzw.qiieer.net/cloud/UploadReturnPathAndSite',{
+            fetch('https://baoanqifu.tgovcloud.com/govcloud/syapi/cloud/UploadReturnPathAndSite',{
               method: 'POST',
               body: formData,
               headers: {

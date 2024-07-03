@@ -34,13 +34,11 @@
           <template slot-scope="scope">
             <el-image 
               style="width: 130px; height: 100px;margin: 10px 0px !important;"
-              :src="scope.row.Filepath" 
+              :src="scope.row.Imgurl" 
               :preview-src-list="[scope.row.Imgurl]">
             </el-image>
           </template>
         </el-table-column>
-  
-       
         <el-table-column label="跳转小程序链接">
           <template slot-scope="scope">
             <span>{{ scope.row.Gourl }}</span>

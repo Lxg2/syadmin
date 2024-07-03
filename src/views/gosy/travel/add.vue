@@ -1,10 +1,28 @@
 <template>
     <div class="container-box">
       <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="200px">
-        <el-form-item label="封面" prop="filelist">
+        <el-form-item label="封面(限一张)" prop="filelist">
           <el-upload
             :action="$store.state.user.beseFile"  
-            list-type="picture-card"  
+            list-type="picture-card"
+            :on-success="waibuhandleSuccess"
+            :on-error="handleError"
+            :before-upload="beforeUpload"
+            :on-remove="waubuhandleRemove"
+            :file-list="waibufileList"
+            :headers="upheaders"
+            :limit="1"
+          >
+            <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+              <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
+              <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="详情图片" prop="filelist">
+          <el-upload
+            :action="$store.state.user.beseFile"  
+            list-type="picture-card" 
             :on-success="handleSuccess"
             :on-error="handleError"
             :before-upload="beforeUpload"
@@ -15,7 +33,7 @@
           >
             <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
               <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
-              <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+              <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加图片</i>  
             </div>
           </el-upload>
         </el-form-item>
@@ -88,6 +106,7 @@
         };
       return {
         fileList: [],
+        waibufileList: [],
         upheaders:{},
         loading: false,
         imgdialogVisible:false,
@@ -97,6 +116,7 @@
         inputValue: '',
         ruleForm: {
           title:'',
+          imgurl:'',
           worktime:'',
           content:'',
           isshow:true,
@@ -131,25 +151,31 @@
       beforeUpload(file) {
         const isJPG = file.type === 'image/jpeg';  
         const isPNG = file.type === 'image/png';  
-        const isLt10M = file.size / 1024 / 1024 < 10;
+        const isLt10M = file.size / 1024 / 1024 < 4;
         if (!isJPG && !isPNG) {  
           this.$message.error('上传图片只能是 JPG/PNG 格式!');  
         }  
         if (!isLt10M) {
-          this.$message.error('上传图片大小不能超过 10MB!');
+          this.$message.error('上传图片大小不能超过 4MB!');
         }  
         return isJPG || isPNG && isLt10M;
       },  
       handleSuccess(response,file) {
         this.ruleForm.filelist.push({filepath:response.filepath,uid:file.uid});
       },  
+      waibuhandleSuccess(response,file) {
+        this.ruleForm.imgurl = response.filepath
+      },
       handleError(error) {
         this.$message.error(error.msg);
         // 你可以在这里处理上传失败后的逻辑
-      },  
+      }, 
       handleRemove() {
         let index = this.ruleForm.filelist.findIndex(item => item.uid === data.uid);
         this.ruleForm.filelist.splice(index, 1);
+      },
+      waubuhandleRemove() {
+        this.ruleForm.imgulr = ''
       },
        // 获取经纬度
        getLatLng() {

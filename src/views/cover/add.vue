@@ -1,12 +1,6 @@
 <template>
     <div class="container-box">
       <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="150px">
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="ruleForm.title" placeholder="请输入标题"></el-input>
-        </el-form-item>
-        <el-form-item label="跳转小程序链接" prop="gourl">
-          <el-input v-model="ruleForm.gourl" placeholder="请输入跳转小程序链接"></el-input>
-        </el-form-item>
         <el-form-item label="广告封面" prop="imgurl">
           <!-- <FilOrImgUpload :ismultiple="true" :limit="1" fileType='img' @backData="backData"> </FilOrImgUpload> -->
           <el-upload  
@@ -25,7 +19,19 @@
           </div>  
         </el-upload>
         </el-form-item>
-  <!-- <el-form-item label="显示">
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="ruleForm.title" placeholder="请输入标题"></el-input>
+        </el-form-item>
+        <el-form-item label="跳转小程序链接" prop="gourl" :rules="[{ required: true, message: '请填写跳转路径', trigger: 'blur' }]">
+          <el-input v-model="ruleForm.gourl" placeholder="请输入跳转小程序链接"></el-input>
+        </el-form-item>
+        <el-form-item label="显示位置" prop="channelname" :rules="[{ required: true, message: '请选择显示位置', trigger: 'change' }]">
+          <el-select style="width: 100%;" v-model="ruleForm.channelname" placeholder="请选择显示位置">
+            <el-option v-for="item in options" :key="item.value" :label="item.name" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+    <!-- <el-form-item label="显示">
         <el-switch v-model="ruleForm.Isdelete" active-text="是" inactive-text="否">
         </el-switch>
       </el-form-item> -->
@@ -41,7 +47,7 @@
   
   <script>
   import { getToken } from '@/utils/auth'
-  import {GetSelectCategory} from '@/api/user'
+  import {GetSelectchannelname} from '@/api/user'
 import {SubmitAd} from '@/api/user.js'
   export default {
     components: {
@@ -58,17 +64,13 @@ import {SubmitAd} from '@/api/user.js'
       return {
         options:[
             {
-                name: '首页',
+                name: '首页Banner',
                 value:'index'
             },
             {
-                name: '知识产权',
-                value:'zhishi'
+                name: '走进石岩',
+                value:'zoujinshiyan'
             },
-            {
-                name: '财税咨询',
-                value:'caishui'
-            }
         ],
         fileList: [],
         upheaders:{},
@@ -78,6 +80,7 @@ import {SubmitAd} from '@/api/user.js'
         dialogImageUrl:'',
         ruleForm: {
           gourl:'',
+          channelname:'',
           title:'',
           imgurl:'',
         },
@@ -96,16 +99,10 @@ import {SubmitAd} from '@/api/user.js'
     },
     mounted() {
       this.upheaders = {'Authorization':getToken()}
-      // this.getclasslist()
     },
     methods: {
       backData(val){
         this.ruleForm.Filepath = val
-      },
-      // 获取列表
-      async getclasslist() {
-        let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
-        this.options = res.datalist
       },
       // 提交表单
       submitForm(formName) {

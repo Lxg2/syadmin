@@ -1,7 +1,24 @@
 <template>
   <div class="container-box">
     <!-- 政策模块 -->
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+      <el-form-item label="街道商会封面" prop="imgurl">
+        <el-upload  
+          :action="$store.state.user.beseFile"  
+          list-type="picture-card"  
+          :on-success="handleSuccess"  
+          :on-error="handleError"  
+          :before-upload="beforeUpload"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :limit="1"
+        >  
+          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
+            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+          </div>  
+        </el-upload>
+      </el-form-item>
       <el-form-item label="街道商会标题" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入街道商会标题"></el-input>
       </el-form-item>
@@ -9,9 +26,9 @@
         <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
-      <el-form-item label="发布单位">
+      <!-- <el-form-item label="发布单位">
         <el-input v-model="ruleForm.author" placeholder="请输入发布单位"></el-input>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
@@ -42,23 +59,7 @@
       <el-form-item label="排序ID">
         <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
       </el-form-item>
-      <el-form-item label="街道商会封面" prop="imgurl">
-        <el-upload  
-          :action="$store.state.user.beseFile"  
-          list-type="picture-card"  
-          :on-success="handleSuccess"  
-          :on-error="handleError"  
-          :before-upload="beforeUpload"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          :limit="1"
-        >  
-          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
-            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
-            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
-          </div>  
-        </el-upload>
-      </el-form-item>
+      
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
@@ -99,10 +100,8 @@ export default {
         title:'',
         content:'',
         hotstr:[],
-        categoryid:'',
         sortid:'',
         isshow:true,
-        author:'',
         imgurl:'',
       },
       rules: {
@@ -130,12 +129,10 @@ export default {
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Author:author,Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Isshow:isshow} = res.datalist
+      let {Author:author,Title:title,Content:content,Hotstr:hotstr,Sortid:sortid,Imgurl:imgurl,Isshow:isshow} = res.datalist
       this.ruleForm.title = title
-      this.ruleForm.author = author
       this.editflag = true
       this.ruleForm.hotstr = hotstr.split(',')
-      this.ruleForm.categoryid = categoryid
       this.ruleForm.sortid = sortid
       this.ruleForm.isshow = isshow? true : false
       this.ruleForm.imgurl = imgurl

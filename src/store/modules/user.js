@@ -10,8 +10,8 @@ const state = {
   roles: [],
   mapkey:'D5KBZ-AYDK3-BKV3U-Y2BNV-MQGIE-F2BC2',//作废
   // beseFile:'/govcloud/syapi/cloud/UploadReturnPathAndSite'
-  beseFile:'https://syzw.qiieer.net/cloud/UploadReturnPathAndSite'
   // beseFile:'https://syzw.qiieer.net/cloud/UploadReturnPathAndSite'
+  beseFile:'https://baoanqifu.tgovcloud.com/govcloud/syapi/cloud/UploadReturnPathAndSite'
 }
 
 const mutations = {

@@ -158,3 +158,29 @@ export function UpdateAd(data) {
     data
   })
 }
+// 添加单表
+export function SubmitContent(data) {
+  return request({
+    url: '/api/admin/SubmitContent',
+    method: 'post',
+    data,
+    loading: true
+  })
+}
+// 单表详情
+export function GetContentInfo(data) {
+  return fmreq({
+    url: '/api/admin/GetContentInfo',
+    method: 'post',
+    data,
+  })
+}
+// 修改单表数据
+export function UpdateContent(data) {
+  return request({
+    url: '/api/admin/UpdateContent',
+    method: 'post',
+    data,
+    loading: true
+  })
+}

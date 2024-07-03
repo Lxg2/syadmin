@@ -19,6 +19,7 @@ const caseRouter = {
       name: "syinfo",
       meta: {
         title: "走进石岩",
+        serverid:'about',
         channelname: "shiyan",
       },
     },
@@ -159,7 +160,7 @@ const caseRouter = {
           name: "highland",
           meta: {
             title: "产业高地",
-            serverid:'362764234623472131237238127312',
+            serverid:'36276423462347213112',
             channelname: "chanyegaodi",
           },
         },
@@ -169,7 +170,7 @@ const caseRouter = {
           name: "policy",
           meta: {
             title: "政策支持",
-            serverid:'9873786761863726482716274819287',
+            serverid:'98737867652427481928',
             channelname: "policy",
           },
         },
@@ -248,7 +249,7 @@ const caseRouter = {
           name: "regionaltransportation",
           meta: {
             title: "区位交通",
-            serverid:'986217384827467773216712368721',
+            serverid:'98621738482746777321',
             channelname: "quweijiaotong",
           },
         },
@@ -259,7 +260,7 @@ const caseRouter = {
           name: "publicservices",
           meta: {
             title: "公共服务",
-            serverid:'887766625715263748987362518721',
+            serverid:'88776662571526374721',
             channelname: "gonggongfuwu",
           },
         },
@@ -305,6 +306,7 @@ const caseRouter = {
       name: "future",
       meta: {
         title: "未来规划",
+        serverid:'981726472546189827362',
         channelname: "weilai",
       },
     },

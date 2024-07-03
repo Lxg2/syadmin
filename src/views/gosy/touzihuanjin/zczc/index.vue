@@ -1,16 +1,16 @@
 <template>
     <div class="container-box">
       <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
-        <el-form-item label="资讯内容" prop="content">
+        <el-form-item label="政策内容" prop="content">
           <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
           </Tinymce>
         </el-form-item>
         <!-- <el-form-item label="资讯封面" prop="imgurl">
           <el-upload  
-            :action="$store.state.user.beseFile"  
-            list-type="picture-card"  
-            :on-success="handleSuccess"  
-            :on-error="handleError"  
+            :action="$store.state.user.beseFile"
+            list-type="picture-card"
+            :on-success="handleSuccess"
+            :on-error="handleError"
             :before-upload="beforeUpload"
             :on-remove="handleRemove"
             :file-list="fileList"
@@ -35,7 +35,7 @@
   <script>
   import ImageUpload from "@/components/Upload/ImageUpload.vue";
   import Tinymce from "@/components/Tinymce";
-  import {GetArtcileInfo,GetSelectCategory,UpdateArticle} from '@/api/user'
+  import {UpdateContent,GetContentInfo,SubmitContent} from '@/api/user'
   export default {
     components: {
       ImageUpload,
@@ -79,35 +79,34 @@
       ]
       }
     },
-    created(){
-      // 获取分类无分页
-      this.getselectlist()
-    },
     mounted(){
-      // 获取文章详情
-      GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-        let {Content:content} = res.datalist
-        this.ruleForm.content = content
-         this.$nextTick(()=>{
-        // 获取富文本内容
-          this.$refs.editor.setContent(content)
-        })
-      })
+      this.getdetailinfo()
     },
     methods: {
-      async getselectlist(){
-        let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
-        this.options = res.datalist
-      },
+      async getdetailinfo (){
+        this.containertext = ''
+      let res = await GetContentInfo({typename:this.$route.meta.serverid})
+      if(res.status === 200){
+        let {Content:content} = res.datalist
+          this.ruleForm.content = content
+          this.containertext = content
+          this.$nextTick(()=>{
+            this.$refs.editor.setContent(this.ruleForm.content)
+          })
+      }
+    },
       submitForm(formName) {
         this.$refs[formName].validate(async(valid) => {
           if (valid) {
-            let {hotstr,isshow} = this.ruleForm
-            this.ruleForm.hotstr = hotstr.join(',')
-            let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
+            let res = null
+            if(this.containertext){
+              res = await UpdateContent({...this.ruleForm,typename:this.$route.meta.serverid})
+            }else{
+              res = await SubmitContent({...this.ruleForm,typename:this.$route.meta.serverid})
+              this.containertext = this.ruleForm.content
+            }
             if(res.status == 200){
               this.$message.success(res.msg)
-              this.$router.go(-1)
             }
           }
         });

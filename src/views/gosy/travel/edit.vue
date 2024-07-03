@@ -1,7 +1,25 @@
 <template>
        <div class="container-box">
       <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="200px">
-        <el-form-item label="封面" prop="filelist">
+        <el-form-item label="封面(限一张)" prop="filelist">
+          <el-upload
+            :action="$store.state.user.beseFile"  
+            list-type="picture-card"  
+            :on-success="waibuhandleSuccess"
+            :on-error="handleError"
+            :before-upload="beforeUpload"
+            :on-remove="waubuhandleRemove"
+            :file-list="waibufileList"
+            :headers="upheaders"
+            multiple
+          >
+            <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+              <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
+              <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+            </div>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="详情图片" prop="filelist">
           <el-upload
             :action="$store.state.user.beseFile"  
             list-type="picture-card"  
@@ -86,6 +104,7 @@
       return {
         editflag:false,
         editloadingflag:false,
+        waibufileList: [],
         fileList: [],
         upheaders:{},
         imgdialogVisible:false,
@@ -95,6 +114,7 @@
         inputValue: '',
         ruleForm: {
           title:'',
+          imgurl:'',
           worktime:'',
           content:'',
           isshow:true,
@@ -121,11 +141,15 @@
       this.getclasslist()
          // 获取详情
          GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-          let {Title:title,Worktime:worktime,Content:content,Hotstr:hotstr,Sortid:sortid,Isshow:isshow,Remarks:remarks,Fileslist:filelist,HdAddress:hdAddress
+          let {Imgurl:imgurl,Title:title,Worktime:worktime,Content:content,Hotstr:hotstr,Sortid:sortid,Isshow:isshow,Remarks:remarks,Fileslist:filelist,HdAddress:hdAddress
           } = res.datalist
           this.ruleForm.title = title
           this.ruleForm.worktime = worktime
           let arr = []
+          if(imgurl){
+            this.waibufileList = [{url:imgurl,uid:Math.ceil(Math.random() * 100000+Math.random(10))}]
+            this.ruleForm.imgurl = imgurl
+          }
           filelist.forEach(item=>arr.push({uid:Math.ceil(Math.random() * 100000+Math.random(10)),url:item}))
           this.ruleForm.filelist = arr
           this.fileList = arr
@@ -180,6 +204,12 @@
         // 排除
         let index = this.ruleForm.filelist.findIndex(item => item.uid === data.uid);
         this.ruleForm.filelist.splice(index, 1);
+      },
+      waubuhandleRemove() {
+        this.ruleForm.imgulr = ''
+      },
+      waibuhandleSuccess(response,file) {
+        this.ruleForm.imgurl = response.filepath
       },
       async getselectlist(){
         let res = await GetSelectCategory({channelname:this.$route.meta.channelname})

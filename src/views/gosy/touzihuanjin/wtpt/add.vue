@@ -1,6 +1,24 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+      <el-form-item label="文体配套封面" prop="imgurl">
+        <el-upload
+          :action="$store.state.user.beseFile"  
+          list-type="picture-card"  
+          :on-success="handleSuccess"
+          :on-error="handleError"  
+          :before-upload="beforeUpload"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :headers="upheaders"
+          :limit="1"
+        >  
+          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
+            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+          </div>  
+        </el-upload>
+      </el-form-item>
       <el-form-item label="文体配套标题" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入文体配套标题"></el-input>
       </el-form-item>
@@ -38,24 +56,7 @@
           </el-switch>
         </div>
       </el-form-item>
-      <el-form-item label="文体配套封面" prop="imgurl">
-        <el-upload
-          :action="$store.state.user.beseFile"  
-          list-type="picture-card"  
-          :on-success="handleSuccess"
-          :on-error="handleError"  
-          :before-upload="beforeUpload"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          :headers="upheaders"
-          :limit="1"
-        >  
-          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
-            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
-            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
-          </div>  
-        </el-upload>
-      </el-form-item>
+     
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
@@ -93,22 +94,22 @@ export default {
         {
           id:1,
           name:'图书馆',
-          value:1
+          value:'1'
         },
         {
           id:2,
           name:'博物馆',
-          value:2
+          value:'2'
         },
         {
           id:3,
           name:'电影院',
-          value:3
+          value:'3'
         },
         {
           id:4,
           name:'其它',
-          value:4
+          value:'4'
         }
       ],
       fileList: [],

@@ -1,18 +1,30 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import { MessageBox, Message,Loading } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+
+let loadingClose = null//关闭loading实例
 
 //1. 创建新的axios实例，
 const service = axios.create({
   // https://syzw.qiieer.net
   // baseURL: '/govcloud/syapi',
-  baseURL: 'https://syzw.qiieer.net',
+  // baseURL: 'https://syzw.qiieer.net',
+  // baseURL: 'https://syzw.qiieer.net/govcloud/syapi',
+  baseURL: 'https://baoanqifu.tgovcloud.com/govcloud/syapi', // url = base url + request
   timeout: 5 * 1000,
 });
 // 2.请求拦截器
 service.interceptors.request.use(
   (config) => {
+    if(config.loading){
+      loadingClose = Loading.service({
+        lock: true,
+        text: '正在保存中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.1)'
+      });
+    }
     if(config.data && config.data.hotstr){
       let hotstr = config.data.hotstr
       if(!Array.isArray(hotstr)){
@@ -80,6 +92,9 @@ service.interceptors.response.use(
      * You can also judge the status by HTTP Status Code
      */
     response => {
+      if(loadingClose){
+        loadingClose.close();
+      }
       const res = response.data
       if(res.datalist && res.datalist.Hotstr){
         let hotstr = res.datalist.Hotstr
@@ -130,7 +145,9 @@ service.interceptors.response.use(
       }
     },
     error => {
-      console.log('err' + error) // for debug
+      if(loadingClose){
+        loadingClose.close();
+      }
       Message({
         message: error.message,
         type: 'error',

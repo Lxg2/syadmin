@@ -24,35 +24,58 @@ const proRouter = {
     meta: {
       title: '角色管理'
     }
-  }, {
-    path: 'jurisdiction',
-    component: () => import('@/views/role/authority'),
-    name: 'jurisdiction',
-    meta: {
-      title: '权限管理',
-    },
   },
-  // , {
-  //   path: 'tic-add',
-  //   component: () => import('@/views/pro/tic-add'),
-  //   name: 'TicAdd',
-  //   meta: {
-  //     title: '新增',
-  //     noCache: true,
-  //     activeMenu: '/pro/tic'
-  //   },
-  //   hidden: true
-  // },
+  {
+    path: 'roleadd',
+    component: () => import('@/views/role/roleadmin/add.vue'),
+    name: 'Roleadd',
+    meta: {
+      title: '新建角色',
+      noCache: true,
+      activeMenu: '/role/usersrole'
+    },
+    hidden: true
+  },
+  {
+    path: 'roleedit',
+    component: () => import('@/views/role/roleadmin/edit.vue'),
+    name: 'Roleedit',
+    meta: {
+      title: '编辑角色',
+      noCache: true,
+      activeMenu: '/role/usersrole'
+    },
+    hidden: true
+  },
+ {
+    path: 'ticadd',
+    component: () => import('@/views/role/useradmin/add.vue'),
+    name: 'TicAdd',
+    meta: {
+      title: '新建管理员',
+      noCache: true,
+      activeMenu: '/role/users'
+    },
+    hidden: true
+  },
+  {
+    path: 'ticedit',
+    component: () => import('@/views/role/useradmin/edit.vue'),
+    name: 'Ticedit',
+    meta: {
+      title: '编辑管理员',
+      noCache: true,
+      activeMenu: '/role/users'
+    },
+    hidden: true
+  }
   // {
-  //   path: 'goodsad',
-  //   component: () => import('@/views/pro/goodsad'),
-  //   name: 'GoodsAd',
+  //   path: 'jurisdiction',
+  //   component: () => import('@/views/role/authority'),
+  //   name: 'jurisdiction',
   //   meta: {
-  //     title: '新增',
-  //     noCache: true,
-  //     activeMenu: '/pro/tic-add'
+  //     title: '权限管理',
   //   },
-  //   hidden: true
   // }
 ]
 }

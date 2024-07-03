@@ -1,7 +1,7 @@
 <template>
-    <div class="container-box">
-      <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="200px">
-        <el-form-item label="石岩封面" prop="filelist">
+    <div class="container-box" style="padding-right: 20px;">
+      <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="120px">
+        <!-- <el-form-item label="石岩封面" prop="filelist">
           <el-upload
             :action="$store.state.user.beseFile"
             list-type="picture-card"
@@ -18,9 +18,9 @@
               <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
             </div>  
           </el-upload>
-        </el-form-item>
-        <el-form-item label="街道概况" prop="remarks" :rules="[{ required: true, message: '请填写内容', trigger: 'change' }]">
-          <Tinymce ref="editor" :value="ruleForm.remarks" v-model="ruleForm.remarks" :height="250">
+        </el-form-item> -->
+        <el-form-item label="街道概况" prop="content" :rules="[{ required: true, message: '请填写内容', trigger: 'change' }]">
+          <Tinymce ref="editor" :value="ruleForm.content" v-model="ruleForm.content" :height="250">
           </Tinymce>
         </el-form-item>
         <!-- <el-form-item label="地理位置" prop="hdAddress" :rules="[{ required: true, message: '请输入', trigger: 'blur' }]">
@@ -46,14 +46,14 @@
                 <i @click="ruleForm.title = ''" class="el-icon-circle-close" style="font-size: 30px;position: absolute;top: -10px;left: 36%;cursor: pointer;"></i>
               </div>
         </el-form-item> -->
-        <el-form-item label="历史文化" prop="content" :rules="[{ required: true, message: '请填写内容', trigger: 'change' }]">
+        <!-- <el-form-item label="历史文化" prop="content" :rules="[{ required: true, message: '请填写内容', trigger: 'change' }]">
           <Tinymce ref="editor2" :value="ruleForm.content" v-model="ruleForm.content" :height="250">
           </Tinymce>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <div class="but-b">
             <el-button @click="$router.go(-1)">取消</el-button>
-            <el-button v-loading="editloadingflag" type="primary" @click="submitForm('myform')">保存</el-button>
+            <el-button type="primary" @click="submitForm('myform')">保存</el-button>
            </div>
         </el-form-item>
       </el-form>
@@ -63,7 +63,7 @@
   <script>
   import ImageUpload from "@/components/Upload/ImageUpload.vue";
   import Tinymce from "@/components/Tinymce";
-  import {GetArtcileInfo,UpdateArticle,allAddreq} from '@/api/user'
+  import {UpdateContent,GetContentInfo,SubmitContent} from '@/api/user'
   export default {
     components: {
       ImageUpload,
@@ -80,17 +80,15 @@
         };
       return {
         editflag:false,
-        editloadingflag:false,
         fileList: [],
         upheaders:{},
         imgdialogVisible:false,
         validateImg,
         dialogImageUrl:'',
         inputVisible: false,
+        containertext:'',
         inputValue: '',
         ruleForm: {
-          filelist:[],
-          remarks:'',
           content:'',
         },
         rules: {
@@ -110,25 +108,14 @@
       };
     },
     mounted(){
+      this.containertext = ''
          // 获取详情
-         GetArtcileInfo({id:'a507e0f8-e5f0-4d50-802e-a6742f6c7588'}).then(res=>{
-          let {Content:content,Remarks:remarks,
-            Fileslist:filelist,
-          } = res.datalist
-          // this.ruleForm.title = title
-          let arr = []
-          filelist.forEach(item=>arr.push({uid:Math.ceil(Math.random() * 100000+Math.random(10)),url:item}))
-          this.ruleForm.filelist = arr
-          this.fileList = arr
-          // this.ruleForm.hdAddress = hdAddress
-          this.editflag = true
-          this.ruleForm.remarks = remarks
+         GetContentInfo({typename:this.$route.meta.serverid}).then(res=>{
+          let {Content:content} = res.datalist
           this.ruleForm.content = content
+          this.containertext = content
           this.$nextTick(()=>{
-            console.log(this.$refs.editor);
-            console.log(this.$refs.editor2);
             this.$refs.editor.setContent(this.ruleForm.content)
-            this.$refs.editor2.setContent(this.ruleForm.content)
           })
         })
     },
@@ -196,16 +183,17 @@
        // 获取经纬度
        async getLatLng () {
         // const geocoder = new TMap.service.Geocoder({
-        // });  
-        let {filelist} = this.ruleForm
-            if(filelist.length > 0){
-              filelist = filelist.map(item => item.url).join(',')
-              }
-            let res = await allAddreq({...this.ruleForm,filelist,id:this.$route.query.id,channelname:this.$route.meta.channelname})
-            if(res.status == 200){
+        // });
+        let res = null
+        if(this.containertext){
+          res = await UpdateContent({...this.ruleForm,typename:this.$route.meta.serverid})
+        }else{
+          res = await SubmitContent({...this.ruleForm,typename:this.$route.meta.serverid})
+          this.containertext = this.ruleForm.content
+        }
+        if(res.status == 200){
               this.$message.success(res.msg)
             }
-            this.editloadingflag = false
         // 调用 getLocation 方法解析地址
         // geocoder.getLocation({ address: this.ruleForm.hdAddress })
         //   .then(async(result) => {
@@ -230,7 +218,6 @@
       submitForm(formName) {
         this.$refs[formName].validate(async(valid) => {
           if (valid) {
-            this.editloadingflag = true
             this.getLatLng()
             // this.editloadingflag = false
           }

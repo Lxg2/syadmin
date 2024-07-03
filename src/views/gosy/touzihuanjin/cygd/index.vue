@@ -1,7 +1,7 @@
 <template>
   <div class="container-box">
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
-      <el-form-item label="资讯内容" prop="content">
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+      <el-form-item label="产业高地简介" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
@@ -10,7 +10,7 @@
           :action="$store.state.user.beseFile"  
           list-type="picture-card"  
           :on-success="handleSuccess"  
-          :on-error="handleError"  
+          :on-error="handleError"
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
@@ -25,7 +25,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button type="primary" @click="submitForm('myform')">保存</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -35,7 +35,7 @@
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
-import {GetArtcileInfo,GetSelectCategory,UpdateArticle} from '@/api/user'
+import {GetSelectCategory,UpdateContent,GetContentInfo,SubmitContent} from '@/api/user'
 export default {
   components: {
     ImageUpload,
@@ -81,20 +81,33 @@ export default {
   },
   created(){
     // 获取分类无分页
-    this.getselectlist()
+    // this.getselectlist()
+    this.getdetailinfo()
   },
   mounted(){
     // 获取文章详情
-    GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Content:content} = res.datalist
-      this.ruleForm.content = content
-       this.$nextTick(()=>{
-      // 获取富文本内容
-        this.$refs.editor.setContent(content)
-      })
-    })
+    // GetArtcileInfo({id:this.$route.query.id}).then(res=>{
+    //   let {Content:content} = res.datalist
+    //   this.ruleForm.content = content
+    //    this.$nextTick(()=>{
+    //   // 获取富文本内容
+    //     this.$refs.editor.setContent(content)
+    //   })
+    // })
   },
   methods: {
+    async getdetailinfo (){
+      this.containertext = ''
+      let res = await GetContentInfo({typename:this.$route.meta.serverid})
+      if(res.status === 200){
+        let {Content:content} = res.datalist
+          this.ruleForm.content = content
+          this.containertext = content
+          this.$nextTick(()=>{
+            this.$refs.editor.setContent(this.ruleForm.content)
+          })
+      }
+    },
     async getselectlist(){
       let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
       this.options = res.datalist
@@ -102,12 +115,15 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {hotstr,isshow} = this.ruleForm
-          this.ruleForm.hotstr = hotstr.join(',')
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
+          let res = null
+          if(this.containertext){
+            res = await UpdateContent({...this.ruleForm,typename:this.$route.meta.serverid})
+          }else{
+            res = await SubmitContent({...this.ruleForm,typename:this.$route.meta.serverid})
+          this.containertext = this.ruleForm.content
+          }
           if(res.status == 200){
             this.$message.success(res.msg)
-            this.$router.go(-1)
           }
         }
       });

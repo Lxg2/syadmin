@@ -1,58 +1,7 @@
 <template>
   <div class="container-box">
     <!-- 政策模块 -->
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="100px">
-      <el-form-item label="文体配套标题" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入文体配套标题"></el-input>
-      </el-form-item>
-      <el-form-item label="文体类型">
-        <el-select style="width: 100%;" v-model="ruleForm.categoryid" placeholder="请选择分类">
-          <el-option
-            v-for="item in options"
-            v-model="ruleForm.categoryid"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="文体配套内容" prop="content">
-        <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
-        </Tinymce>
-      </el-form-item>
-      <el-form-item label="发布单位">
-        <el-input v-model="ruleForm.author" placeholder="请输入发布单位"></el-input>
-      </el-form-item>
-      <el-form-item label="置顶/热门">
-        <div style="margin-left: 10px;">
-          <el-checkbox-group v-model="ruleForm.hotstr">
-            <el-checkbox label="置顶" :value="1"></el-checkbox>
-            <el-checkbox label="热门" :value="2"></el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </el-form-item>
-      <!-- <el-form-item label="所属分类" prop="categoryid">
-        <el-select v-model="ruleForm.categoryid" clearable placeholder="请选择分类" style="width: 100%;">
-          <el-option
-            v-for="item in options"
-            :key="item.id"
-            :label="item.Categorytitle"
-            :value="item.id">
-          </el-option>
-        </el-select>
-      </el-form-item> -->
-      <el-form-item label="是否显示">
-        <div style="margin-left: 10px;">
-          <el-switch
-            v-model="ruleForm.isshow"
-            active-text="显示"
-            inactive-text="隐藏">
-          </el-switch>
-        </div>
-      </el-form-item>
-      <el-form-item label="排序ID">
-        <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
-      </el-form-item>
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
       <el-form-item label="文体配套封面" prop="imgurl">
         <el-upload  
           :action="$store.state.user.beseFile"  
@@ -70,6 +19,47 @@
           </div>  
         </el-upload>
       </el-form-item>
+      <el-form-item label="文体配套标题" prop="title">
+        <el-input v-model="ruleForm.title" placeholder="请输入文体配套标题"></el-input>
+      </el-form-item>
+      <el-form-item label="文体类型">
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" placeholder="请选择分类">
+          <el-option
+            v-for="item in options"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="文体配套内容" prop="content">
+        <Tinymce v-if="editflag" ref="editor" v-model="ruleForm.content" :height="300">
+        </Tinymce>
+      </el-form-item>
+      <!-- <el-form-item label="发布单位">
+        <el-input v-model="ruleForm.author" placeholder="请输入发布单位"></el-input>
+      </el-form-item> -->
+      <el-form-item label="置顶/热门">
+        <div style="margin-left: 10px;">
+          <el-checkbox-group v-model="ruleForm.hotstr">
+            <el-checkbox label="置顶" :value="1"></el-checkbox>
+            <el-checkbox label="热门" :value="2"></el-checkbox>
+          </el-checkbox-group>
+        </div>
+      </el-form-item>
+      <el-form-item label="排序ID">
+        <el-input v-model="ruleForm.sortid" placeholder="ID越小越靠前"></el-input>
+      </el-form-item>
+      <el-form-item label="是否显示">
+        <div style="margin-left: 10px;">
+          <el-switch
+            v-model="ruleForm.isshow"
+            active-text="显示"
+            inactive-text="隐藏">
+          </el-switch>
+        </div>
+      </el-form-item>
+     
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
@@ -105,22 +95,22 @@ export default {
         {
           id:1,
           name:'图书馆',
-          value:1
+          value:'1'
         },
         {
           id:2,
           name:'博物馆',
-          value:2
+          value:'2'
         },
         {
           id:3,
           name:'电影院',
-          value:3
+          value:'3'
         },
         {
           id:4,
           name:'其它',
-          value:4
+          value:'4'
         }
       ],
       imgdialogVisible:false,
@@ -135,7 +125,6 @@ export default {
         categoryid:'',
         sortid:'',
         isshow:true,
-        author:'',
         imgurl:'',
       },
       rules: {
@@ -154,16 +143,11 @@ export default {
       },
     }
   },
-  created(){
-    // 获取分类无分页
-    // this.getselectlist()
-  },
   mounted(){
     // 获取文章详情
     GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Author:author,Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Isshow:isshow} = res.datalist
+      let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Imgurl:imgurl,Isshow:isshow} = res.datalist
       this.ruleForm.title = title
-      this.ruleForm.author = author
       this.editflag = true
       this.ruleForm.hotstr = hotstr.split(',')
       this.ruleForm.categoryid = categoryid
@@ -202,10 +186,6 @@ export default {
       this.ruleForm.imgurl = '';
       this.fileList = [];
       // 你可以在这里处理删除文件后的逻辑，比如更新fileList
-    },
-    async getselectlist(){
-      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
-      this.options = res.datalist
     },
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {

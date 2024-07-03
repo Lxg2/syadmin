@@ -1,6 +1,24 @@
 <template>
   <div class="container-box">
     <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+      <el-form-item label="街道商会封面" prop="imgurl">
+        <el-upload
+          :action="$store.state.user.beseFile"  
+          list-type="picture-card"  
+          :on-success="handleSuccess"
+          :on-error="handleError"  
+          :before-upload="beforeUpload"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :headers="upheaders"
+          :limit="1"
+        >  
+          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
+            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
+          </div>  
+        </el-upload>
+      </el-form-item>
       <el-form-item label="街道商会标题" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入街道商会标题"></el-input>
       </el-form-item>
@@ -27,24 +45,6 @@
             inactive-text="隐藏">
           </el-switch>
         </div>
-      </el-form-item>
-      <el-form-item label="街道商会封面" prop="imgurl">
-        <el-upload
-          :action="$store.state.user.beseFile"  
-          list-type="picture-card"  
-          :on-success="handleSuccess"
-          :on-error="handleError"  
-          :before-upload="beforeUpload"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          :headers="upheaders"
-          :limit="1"
-        >  
-          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
-            <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
-            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
-          </div>  
-        </el-upload>
       </el-form-item>
       <el-form-item>
         <div class="but-b">
@@ -87,7 +87,6 @@ export default {
       dialogImageUrl:'',
       ruleForm: {
         title:'',
-        author:'',
         content:'',
         hotstr:[],
         sortid:'',

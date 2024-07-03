@@ -31,13 +31,9 @@
       <el-table-column width="10" align="center" />
       <el-table-column width="237px" label="标题" prop="Title">
       </el-table-column>
-      <el-table-column width="208px" label="封面">
+      <el-table-column width="208px" show-overflow-tooltip label="摘要">
         <template slot-scope="scope">
-          <el-image 
-            style="width: 100px; height: 100px;margin: 10px 0px !important;"
-            :src="scope.row.Imgurl" 
-            :preview-src-list="[scope.row.Imgurl]">
-          </el-image>
+          <span>{{ scope.row.Content }}</span>
         </template>
       </el-table-column>
 <!-- 

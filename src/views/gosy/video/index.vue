@@ -32,9 +32,9 @@
       <el-table-column width="337px" label="标题" prop="Title">
       </el-table-column>
       <el-table-column width="100px"></el-table-column>
-      <el-table-column width="150px" label="封面">
+      <el-table-column width="150px" label="视频">
         <template slot-scope="scope">
-          <video @click="showvideoFn(scope.row.Imgurl)" :src="scope.row.Imgurl" width="100px" height="100px"></video>
+          <video @click="showvideoFn(scope.row.Imgurl)" :src="scope.row.Imgurl" width="100px" class="video-container"></video>
         </template>
       </el-table-column>
 
@@ -178,6 +178,9 @@ export default {
 </script>
 
 <style>
+.video-container{
+  border: 2px solid #ccc;
+}
 .el-tooltip__popper{
   max-width:50% !important;
 }</style>

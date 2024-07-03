@@ -1,33 +1,21 @@
 <template>
   <div class="container-box">
-    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="120px">
-      <el-form-item label="医疗机构" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入医疗机构"></el-input>
-      </el-form-item>
-      <el-form-item label="社康中心" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入社康中心"></el-input>
-      </el-form-item>
-      <el-form-item label="长者服务中心(站)" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入长者服务中心(站)"></el-input>
-      </el-form-item>
-      <el-form-item label="养老机构" prop="title">
-        <el-input v-model="ruleForm.title" placeholder="请输入养老机构"></el-input>
-      </el-form-item>
-      <el-form-item label="区位交通" prop="content">
+    <el-form class="my-form" :rules="rules" ref="myform" :model="ruleForm" label-width="130px">
+      <el-form-item label="公共服务简介" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
         </Tinymce>
       </el-form-item>
       <!-- <el-form-item label="资讯封面" prop="imgurl">
-        <el-upload  
-          :action="$store.state.user.beseFile"  
-          list-type="picture-card"  
-          :on-success="handleSuccess"  
-          :on-error="handleError"  
+        <el-upload
+          :action="$store.state.user.beseFile"
+          list-type="picture-card"
+          :on-success="handleSuccess"
+          :on-error="handleError"
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
           :limit="1"
-        >  
+        >
           <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
             <i style="font-size: 80px;" class="el-icon-picture-outline"></i>  
             <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
@@ -37,7 +25,7 @@
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
-          <el-button type="primary" @click="submitForm('myform')">发布</el-button>
+          <el-button type="primary" @click="submitForm('myform')">保存</el-button>
          </div>
       </el-form-item>
     </el-form>
@@ -47,7 +35,7 @@
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
-import {GetArtcileInfo,GetSelectCategory,UpdateArticle} from '@/api/user'
+import {UpdateContent,GetContentInfo,SubmitContent} from '@/api/user'
 export default {
   components: {
     ImageUpload,
@@ -93,33 +81,45 @@ export default {
   },
   created(){
     // 获取分类无分页
-    this.getselectlist()
+    // this.getselectlist()
+    this.getdetailinfo()
   },
   mounted(){
     // 获取文章详情
-    GetArtcileInfo({id:this.$route.query.id}).then(res=>{
-      let {Content:content} = res.datalist
-      this.ruleForm.content = content
-       this.$nextTick(()=>{
-      // 获取富文本内容
-        this.$refs.editor.setContent(content)
-      })
-    })
+    // GetArtcileInfo({id:this.$route.query.id}).then(res=>{
+    //   let {Content:content} = res.datalist
+    //   this.ruleForm.content = content
+    //    this.$nextTick(()=>{
+    //   // 获取富文本内容
+    //     this.$refs.editor.setContent(content)
+    //   })
+    // })
   },
   methods: {
-    async getselectlist(){
-      let res = await GetSelectCategory({channelname:this.$route.meta.channelname})
-      this.options = res.datalist
+    async getdetailinfo (){
+      this.containertext = ''
+      let res = await GetContentInfo({typename:this.$route.meta.serverid})
+      if(res.status === 200){
+        let {Content:content} = res.datalist
+          this.ruleForm.content = content
+          this.containertext = content
+          this.$nextTick(()=>{
+            this.$refs.editor.setContent(this.ruleForm.content)
+          })
+      }
     },
     submitForm(formName) {
       this.$refs[formName].validate(async(valid) => {
         if (valid) {
-          let {hotstr,isshow} = this.ruleForm
-          this.ruleForm.hotstr = hotstr.join(',')
-          let res = await UpdateArticle({...this.ruleForm,id:this.$route.query.id,channelname:this.$route.meta.channelname,isshow:+isshow})
+          let res = null
+          if(this.containertext){
+            res = await UpdateContent({...this.ruleForm,typename:this.$route.meta.serverid})
+          }else{
+            res = await SubmitContent({...this.ruleForm,typename:this.$route.meta.serverid})
+          this.containertext = this.ruleForm.content
+          }
           if(res.status == 200){
             this.$message.success(res.msg)
-            this.$router.go(-1)
           }
         }
       });
