@@ -51,11 +51,11 @@
       <el-form-item label="楼层/栋">
         <el-input v-model="ruleForm.floor" placeholder="例如C栋3层"></el-input>
       </el-form-item>
-      <el-form-item label="租金(单位:元/m²)">
-        <el-input v-model="ruleForm.rent" placeholder="请输入租金"></el-input>
+      <el-form-item label="租金(元/m²)(暂无请填0)">
+        <el-input v-model="ruleForm.rent" type="number" placeholder="请输入租金"></el-input>
       </el-form-item>
       <el-form-item label="面积(单位:m²)">
-        <el-input v-model="ruleForm.area" placeholder="请输入面积"></el-input>
+        <el-input v-model="ruleForm.area" type="number" placeholder="请输入面积"></el-input>
       </el-form-item>
       <!-- <el-form-item label="房屋类型" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
@@ -66,9 +66,6 @@
       <!-- <el-form-item label="月租价格(单位:元/m²)" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item> -->
-      <el-form-item label="层高(单位:m)">
-        <el-input v-model="ruleForm.floorheight" placeholder="请输入层高"></el-input>
-      </el-form-item>
       <el-form-item label="电梯类型">
         <el-select style="width: 100%;" v-model="ruleForm.elevatortype" clearable placeholder="请选择电梯">
           <el-option
@@ -79,11 +76,8 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="荷载(单位:kg/m²)">
-        <el-input v-model="ruleForm.loads" placeholder="请输入荷载"></el-input>
-      </el-form-item>
-      <el-form-item label="在租楼层与户型">
-        <el-input v-model="ruleForm.rentingfloors" placeholder="请输入在租楼层与户型"></el-input>
+      <el-form-item label="招商定位">
+        <el-input v-model="ruleForm.companyname" placeholder="请输入招商定位"></el-input>
       </el-form-item>
       <el-form-item label="交付标准">
         <el-select style="width: 100%;" v-model="ruleForm.deliverystandards" clearable placeholder="请选择交付标准">
@@ -96,15 +90,20 @@
         </el-select>
       </el-form-item>
       <el-form-item label="建成年份">
-        <el-input v-model="ruleForm.recruitmentRegion" placeholder="请输入年份"></el-input>
+        <el-input v-model="ruleForm.yearbuilt" type="number" placeholder="请输入年份"></el-input>
       </el-form-item>
       <el-form-item label="详细地址">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入详细地址"></el-input>
       </el-form-item>
-      <el-form-item label="联系电话">
-        <el-input v-model="ruleForm.communityusermobile" placeholder="请输入联系方式"></el-input>
+      <el-form-item label="运营商">
+        <el-input v-model="ruleForm.rentingfloors" placeholder="请输入运营商"></el-input>
       </el-form-item>
-      
+      <el-form-item label="负责人">
+        <el-input v-model="ruleForm.floorheight" placeholder="请输入负责人"></el-input>
+      </el-form-item>
+      <el-form-item label="联系电话">
+        <el-input v-model="ruleForm.communityusermobile" type="number" placeholder="请输入联系方式"></el-input>
+      </el-form-item>
       <el-form-item label="空间简介" prop="content">
         <Tinymce ref="editor" v-model="ruleForm.remarks" :height="250">
         </Tinymce>
@@ -119,7 +118,6 @@
       <el-form-item label="公司地址">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入公司地址"></el-input>
       </el-form-item> -->
-
       <el-form-item label="置顶/热门">
         <div style="margin-left: 10px;">
           <el-checkbox-group v-model="ruleForm.hotstr">
@@ -270,11 +268,10 @@ export default {
         floorheight:'',
         elevatortype:'',
         isshow:true,
-        loads:'',
+        companyname:'',
         rentingfloors:'',
         deliverystandards:'',
         yearbuilt:'',
-        recruitmentRegion:'',
         communityusermobile:'',
         remarks:'',
         hotstr:[],

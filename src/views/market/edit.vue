@@ -187,7 +187,7 @@ export default {
       this.ruleForm.remarks = remarks
       this.ruleForm.sortid = sortid
       let arr = []
-      fileslist.forEach(item=>arr.push({uid:Math.ceil(Math.random() * 10000000000000+Math.random(10)),url:item}))
+      fileslist.forEach(item=>arr.push({uid:item,url:item}))
       this.ruleForm.filelist = arr
       this.fileList = arr
       this.ruleForm.isshow = isshow? true : false

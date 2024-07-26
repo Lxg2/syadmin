@@ -51,16 +51,12 @@
       <el-form-item label="楼层/栋">
         <el-input v-model="ruleForm.floor" placeholder="例如C栋3层"></el-input>
       </el-form-item>
-      <el-form-item label="租金(单位:元/m²)">
-        <el-input v-model="ruleForm.rent" placeholder="请输入租金"></el-input>
+      <el-form-item label="租金(元/m²)(暂无请填0)">
+        <el-input v-model="ruleForm.rent" type="number" placeholder="请输入租金"></el-input>
       </el-form-item>
       <el-form-item label="面积(单位:m²)">
-        <el-input v-model="ruleForm.area" placeholder="请输入面积"></el-input>
+        <el-input v-model="ruleForm.area" type="number" placeholder="请输入面积"></el-input>
       </el-form-item>
-
-
-
-      
       <!-- <el-form-item label="房屋类型" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item>
@@ -70,9 +66,6 @@
       <!-- <el-form-item label="月租价格(单位:元/m²)" prop="title">
         <el-input v-model="ruleForm.title" placeholder="请输入空间名称"></el-input>
       </el-form-item> -->
-      <el-form-item label="层高(单位:m)">
-        <el-input v-model="ruleForm.floorheight" placeholder="请输入空间名称"></el-input>
-      </el-form-item>
       <el-form-item label="电梯类型">
         <el-select style="width: 100%;" v-model="ruleForm.elevatortype" clearable placeholder="请选择电梯">
           <el-option
@@ -83,12 +76,10 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="荷载(单位:kg/m²)">
-        <el-input v-model="ruleForm.loads" placeholder="请输入荷载"></el-input>
+      <el-form-item label="招商定位">
+        <el-input v-model="ruleForm.companyname" placeholder="请输入招商定位"></el-input>
       </el-form-item>
-      <el-form-item label="在租楼层与户型">
-        <el-input v-model="ruleForm.rentingfloors" placeholder="请输入在租楼层与户型"></el-input>
-      </el-form-item>
+   
       <el-form-item label="交付标准">
         <el-select style="width: 100%;" v-model="ruleForm.deliverystandards" clearable placeholder="请选择交付标准">
           <el-option
@@ -100,15 +91,20 @@
         </el-select>
       </el-form-item>
       <el-form-item label="建成年份">
-        <el-input v-model="ruleForm.recruitmentRegion" placeholder="请输入公司地址"></el-input>
+        <el-input v-model="ruleForm.yearbuilt" type="number" placeholder="请输入建成年份"></el-input>
       </el-form-item>
       <el-form-item label="详细地址">
         <el-input v-model="ruleForm.hdAddress" placeholder="请输入详细地址"></el-input>
       </el-form-item>
-      <el-form-item label="联系电话">
-        <el-input v-model="ruleForm.communityusermobile" placeholder="请输入公司地址"></el-input>
+      <el-form-item label="负责人">
+        <el-input v-model="ruleForm.floorheight" placeholder="请输入负责人"></el-input>
       </el-form-item>
-      
+      <el-form-item label="联系电话">
+        <el-input v-model="ruleForm.communityusermobile" type="number" placeholder="请输入联系方式"></el-input>
+      </el-form-item>
+      <el-form-item label="运营商">
+        <el-input v-model="ruleForm.rentingfloors" placeholder="请输入运营商"></el-input>
+      </el-form-item>
       <el-form-item label="空间简介" prop="content">
         <Tinymce ref="editor" v-if="editflag" v-model="ruleForm.remarks" :height="250">
         </Tinymce>
@@ -146,7 +142,7 @@
       </el-form-item>
       <el-form-item label="封面" prop="filelist">
         <el-upload
-          :action="$store.state.user.beseFile"  
+          :action="$store.state.user.beseFile"
           list-type="picture-card"  
           :on-success="handleSuccess"
           :on-error="handleError"
@@ -282,11 +278,10 @@ export default {
         area:'',
         floorheight:'',
         elevatortype:'',
-        loads:'',
+        companyname:'',
         rentingfloors:'',
         deliverystandards:'',
         yearbuilt:'',
-        recruitmentRegion:'',
         communityusermobile:'',
         remarks:'',
         isshow:true,
@@ -318,8 +313,7 @@ export default {
        GetArtcileInfo({id:this.$route.query.id}).then(res=>{
         let {Title:title,Content:content,Hotstr:hotstr,Categoryid:categoryid,Sortid:sortid,Isshow:isshow,
           Tags:tags,Areaid:areaid,Floor:floor,Rent:rent,Area:area,Floorheight:floorheight,Elevatortype:elevatortype,
-          Loads:loads,Rentingfloors:rentingfloors,Deliverystandards:deliverystandards,Yearbuilt:yearbuilt,
-          RecruitmentRegion:recruitmentRegion,Communityusermobile:communityusermobile,Remarks:remarks,
+          Companyname:companyname,Rentingfloors:rentingfloors,Deliverystandards:deliverystandards,Yearbuilt:yearbuilt,Communityusermobile:communityusermobile,Remarks:remarks,
           Fileslist:filelist,HdAddress:hdAddress
         } = res.datalist
         this.ruleForm.title = title
@@ -334,14 +328,13 @@ export default {
         this.ruleForm.area = area
         this.ruleForm.floorheight = floorheight
         this.ruleForm.elevatortype = elevatortype
-        this.ruleForm.loads = loads
+        this.ruleForm.companyname = companyname
         this.ruleForm.rentingfloors = rentingfloors
         this.ruleForm.deliverystandards = deliverystandards
         this.ruleForm.yearbuilt = yearbuilt
-        this.ruleForm.recruitmentRegion = recruitmentRegion
         this.ruleForm.communityusermobile = communityusermobile
         let arr = []
-        filelist.forEach(item=>arr.push({uid:Math.ceil(Math.random() * 10000000000000+Math.random(10)),url:item}))
+        filelist.forEach(item=>arr.push({uid:item,url:item}))
         this.ruleForm.filelist = arr
         this.fileList = arr
         this.ruleForm.hdAddress = hdAddress
@@ -427,10 +420,11 @@ export default {
      // 获取经纬度
      getLatLng() {
       const geocoder = new TMap.service.Geocoder({
-      });  
+      });
       // 调用 getLocation 方法解析地址
       geocoder.getLocation({ address: this.ruleForm.hdAddress })
         .then(async(result) => {
+          console.log(result,'------');
           if (result.status === 0 && result.message === "Success") {
             // 解析成功，更新经纬度数据
             this.ruleForm.hdLat = result.result.location.lat;
@@ -453,9 +447,9 @@ export default {
           }  
         })
         .catch((error) => {  
-          // 网络错误或其他异常处理  
+          // 网络错误或其他异常处理
           this.editloadingflag = false
-          this.$message.error('地址解析错误，请检查后再试');
+          this.$message.error('网络错误，请检查后再试');
         });  
     }, 
     submitForm(formName) {

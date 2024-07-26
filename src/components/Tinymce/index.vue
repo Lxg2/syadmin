@@ -1,5 +1,5 @@
 <template>
-  <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
+  <div :class="{ fullscreen: fullscreen }" class="tinymce-container" :style="{ width: containerWidth }">
     <textarea :id="tinymceId" class="tinymce-textarea" />
     <div class="editor-custom-btn-container">
       <!-- <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" /> -->
@@ -31,7 +31,7 @@ export default {
   props: {
     id: {
       type: String,
-      default: function() {
+      default: function () {
         return 'vue-tinymce-' + +new Date() + ((Math.random() * 1000).toFixed(0) + '')
       }
     },
@@ -134,21 +134,28 @@ export default {
         fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px',  // 字体大小
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
         font_formats: fontFamily,//字然
-        style_formats:[
+        style_formats: [
           {
-            title:'行高',
-          items:[
-          { title:"1",block:"p", styles: { "line-height":'1.0'} },
-          { title:"1.5",block:"p", styles: { "line-height":"1.5" } },
-          { title:"1.75",block:"p",styles:{ "line-height":"1.75"} },
-          { title:"2",block: "p",styles: { "line-height":"2"} },
-          { title:"3",block:"p", styles: { "line-height": "3" } },
-          { title:"4",block:"p",styles: { "line-height":"4" } },
-          { title:"5",block:"p",styles:{ "line-height":"5"} },
-        ]
+            title: '首行缩进',
+            block: 'p',
+            styles: {
+              'text-indent': '2em'
+            }
+          },
+          {
+            title: '行高',
+            items: [
+              { title: "1", block: "p", styles: { "line-height": '1.0' } },
+              { title: "1.5", block: "p", styles: { "line-height": "1.5" } },
+              { title: "1.75", block: "p", styles: { "line-height": "1.75" } },
+              { title: "2", block: "p", styles: { "line-height": "2" } },
+              { title: "3", block: "p", styles: { "line-height": "3" } },
+              { title: "4", block: "p", styles: { "line-height": "4" } },
+              { title: "5", block: "p", styles: { "line-height": "5" } },
+            ]
           }
         ],
-style_formats_merge:false,//走否将style_formats设置中的样式附加到默认祥式格武还无完全芒style_formats_autohide:true,/
+        style_formats_merge: false,//走否将style_formats设置中的样式附加到默认祥式格武还无完全芒style_formats_autohide:true,/
         lineheight_formats: '1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 4.0',  // 行高
         menubar: this.menubar,
         plugins: plugins,
@@ -173,7 +180,7 @@ style_formats_merge:false,//走否将style_formats设置中的样式附加到默
           })
         },
         setup(editor) {
-          editor.on('init', function(ed) {
+          editor.on('init', function (ed) {
             // ed.target.editorCommands.execCommand("fontSize", false, "16px");
             // ed.target.editorCommands.execCommand("fontName", false, "微软雅黑");
           });
@@ -200,26 +207,27 @@ style_formats_merge:false,//走否将style_formats设置中的样式附加到默
         images_upload_handler(blobInfo, success, failure, progress) {
           progress(0);
           const token = _this.$store.state.user.token;
-            const formData = new FormData();
-            formData.append('token',token);
-            formData.append('file', blobInfo.blob());
-            // /govcloud/syapi/cloud/UploadReturnPathAndSite
-            fetch('https://baoanqifu.tgovcloud.com/govcloud/syapi/cloud/UploadReturnPathAndSite',{
-              method: 'POST',
-              body: formData,
-              headers: {
-                'Authorization': 'Bearer ' + token
+          const formData = new FormData();
+          formData.append('token', token);
+          formData.append('file', blobInfo.blob());
+          // https://baoanqifu.tgovcloud.com/govcloud/syapi/cloud/UploadReturnPathAndSite//线上地址
+          // /govcloud/syapi/cloud/UploadReturnPathAndSite//打包地址
+          fetch('https://baoanqifu.tgovcloud.com/govcloud/syapi/cloud/UploadReturnPathAndSite', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Authorization': 'Bearer ' + token
+            }
+          }).then((res) => {
+            res.json().then((data) => {
+              if (data.status === 200) {
+                success(data.filepath);
+                progress(100);
+              } else {
+                this.$message.error(data.msg);
               }
-            }).then((res) => {
-              res.json().then((data) => {
-                if (data.status === 200){
-                  success(data.filepath);
-                  progress(100);
-                }else{
-                  this.$message.error(data.msg);
-                }
-              })
             })
+          })
         },
       })
     },
