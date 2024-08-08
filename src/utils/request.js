@@ -8,7 +8,7 @@ let loadingClose = null//关闭loading实例
 const service = axios.create({
   // /govcloud/syapi
   // baseURL: 'https://syzw.qiieer.net', // url = base url + request 
-  baseURL: 'https://baoanqifu.tgovcloud.com/govcloud/syapi', // url = base url + request 
+  baseURL: 'https://baoanqifu.tgovcloud.com/govcloud/syapi', // url = base url + request
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })

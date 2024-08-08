@@ -90,6 +90,7 @@ import Tinymce from "@/components/Tinymce";
 import {allAddreq} from '@/api/user'
 import { getToken } from '@/utils/auth'
 import {GetSelectCategory} from '@/api/user'
+import axios from 'axios'
 
 export default {
   components: {
@@ -108,6 +109,7 @@ export default {
     return {
       fileList: [],
       upheaders:{},
+      url:'https://mp.weixin.qq.com/s/Uitrf3KUdmylJhBpBF98_Q',
       loading: false,
       imgdialogVisible:false,
       validateImg,
@@ -148,9 +150,28 @@ export default {
   mounted() {
     this.upheaders = {'Authorization':getToken()}
     this.getclasslist()//获取分类列表
-     // 检查腾讯地图是否已经加载  
+     // 检查腾讯地图是否已经加载 
+    //  this.getUrl(this.url)
   },
   methods: {
+     getUrl(URL) {
+     let http = (window.location.protocol === 'http:' ? 'http:' : 'https:');
+      //调用跨域API
+      let realurl = http + '//cors-anywhere.herokuapp.com/' + URL;
+      axios.get(realurl).then((response) => {
+          // console.log(response)
+          let html = response.data;
+          html = html.replace(/data-src/g, "src")
+              .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/g, '')
+              .replace(/https/g, 'http');
+          //let html_src = 'data:text/html;charset=utf-8,' + html;
+          let html_src = html;
+          $('#a').html(html)
+          // console.log(html_src);
+      }, (err) => {
+          console.log(err);
+      });
+  },
     // 获取经纬度
     getLatLng() {
       const geocoder = new TMap.service.Geocoder({  
