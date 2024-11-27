@@ -18,10 +18,10 @@
       </el-form-item>
       <!-- <el-form-item label="分类封面" prop="imgurl">
         <el-upload
-          :action="$store.state.user.beseFile"  
-          list-type="picture-card"  
-          :on-success="handleSuccess"  
-          :on-error="handleError"  
+          :action="$store.state.user.beseFile"
+          list-type="picture-card"
+          :on-success="handleSuccess"
+          :on-error="handleError"
           :before-upload="beforeUpload"
           :on-remove="handleRemove"
           :file-list="fileList"
@@ -73,7 +73,7 @@ export default {
       dialogImageUrl:'',
       ruleForm: {
         categorytitle:'',
-        isshow:false,
+        isshow:true,
       },
       rules: {
         categorytitle: [

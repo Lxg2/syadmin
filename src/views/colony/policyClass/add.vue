@@ -5,25 +5,14 @@
         <el-input v-model="ruleForm.title" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="企业标签">
-        <el-tag
-          :key="tag"
-          v-for="tag in ruleForm.tags"
-          closable
-          :disable-transitions="false"
-          @close="colseitem(tag)">
-          {{tag}}
+        <el-tag :key="tag" v-for="tag in ruleForm.tags" closable :disable-transitions="false" @close="colseitem(tag)">
+          {{ tag }}
         </el-tag>
-        <el-input
-          class="input-new-tag"
-          v-if="inputVisible"
-          v-model="inputValue"
-          ref="saveTagInput"
-          size="small"
-          @keyup.enter.native="handleInputConfirm"
-          @blur="handleInputConfirm"
-        >
+        <el-input class="input-new-tag" v-if="inputVisible" v-model="inputValue" ref="saveTagInput" size="small"
+          @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm">
         </el-input>
-        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+ 类型标签</el-button>
+        <el-button v-else class="button-new-tag" size="small" @click="showInput" style="font-size: 13px !important;">+
+          类型标签</el-button>
       </el-form-item>
       <el-form-item label="企业简介">
         <Tinymce ref="editor" v-model="ruleForm.content" :height="300">
@@ -36,35 +25,25 @@
         </el-input> -->
       </el-form-item>
       <el-form-item label="直播宣传片">
-        <el-upload
-          class="upload-demo"
-          v-if="!ruleForm.companyname"
-          drag
-          :action="$store.state.user.beseFile"
-          :before-upload="beforeUploadvideo"
-          :on-success="handleSuccessvideo"
-          :limit="1"
-          :on-error="handleErrorvideo"
+        <el-upload class="upload-demo" v-if="!ruleForm.companyname" drag :action="$store.state.user.beseFile"
+          :before-upload="beforeUploadvideo" :on-success="handleSuccessvideo" :limit="1" :on-error="handleErrorvideo"
           multiple>
           <i class="el-icon-upload"></i>
           <div class="el-upload__text">将视频拖到此处，或<em>点击上传</em></div>
         </el-upload>
         <div v-else style="position: relative;">
-          <video width="500"  controls :src="ruleForm.companyname"></video>
-          <i @click="ruleForm.companyname = ''" class="el-icon-circle-close" style="font-size: 30px;position: absolute;top: -10px;left: 505px;cursor: pointer;"></i>
+          <video width="500" controls :src="ruleForm.companyname"></video>
+          <i @click="ruleForm.companyname = ''" class="el-icon-circle-close"
+            style="font-size: 30px;position: absolute;top: -10px;left: 505px;cursor: pointer;"></i>
         </div>
       </el-form-item>
       <el-form-item label="产业定位" prop="categoryid">
         <!-- <el-input v-model="ruleForm.categorytitle" placeholder="请输入产业定位标题"></el-input>
          -->
-          <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
-            <el-option
-              v-for="item in options"
-              :key="item.id"
-              :label="item.Categorytitle"
-              :value="item.id">
-            </el-option>
-          </el-select>
+        <el-select style="width: 100%;" v-model="ruleForm.categoryid" clearable placeholder="请选择分类">
+          <el-option v-for="item in options" :key="item.id" :label="item.Categorytitle" :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="成立时间">
         <el-input v-model="ruleForm.worktime" placeholder="请输入成立时间"></el-input>
@@ -80,36 +59,26 @@
       </el-form-item>
       <el-form-item label="是否显示">
         <div style="margin-left: 10px;">
-          <el-switch
-            v-model="ruleForm.isshow"
-            active-text="显示"
-            inactive-text="隐藏">
+          <el-switch v-model="ruleForm.isshow" active-text="显示" inactive-text="隐藏">
           </el-switch>
         </div>
       </el-form-item>
       <el-form-item label="封面" prop="imgurl">
-        <el-upload
-          :action="$store.state.user.beseFile"
-          list-type="picture-card"  
-          :on-success="handleSuccess"
-          :on-error="handleError"
-          :before-upload="beforeUpload"
-          :on-remove="handleRemove"
-          :file-list="fileList"
-          :headers="upheaders"
-          :limit="1"
-        >  
-          <div slot="trigger" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">  
+        <el-upload :action="$store.state.user.beseFile" list-type="picture-card" :on-success="handleSuccess"
+          :on-error="handleError" :before-upload="beforeUpload" :on-remove="handleRemove" :file-list="fileList"
+          :headers="upheaders" :limit="1">
+          <div slot="trigger"
+            style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
             <i style="font-size: 80px;" class="el-icon-picture-outline"></i>
-            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>  
-          </div>  
+            <i style="font-size: 14px; margin-top: 10px;" class="el-icon-plus">添加封面</i>
+          </div>
         </el-upload>
       </el-form-item>
       <el-form-item>
         <div class="but-b">
           <el-button @click="$router.go(-1)">取消</el-button>
           <el-button v-loading="loading" type="primary" @click="submitForm('myform')">发布</el-button>
-         </div>
+        </div>
       </el-form-item>
     </el-form>
   </div>
@@ -118,7 +87,7 @@
 <script>
 import ImageUpload from "@/components/Upload/ImageUpload.vue";
 import Tinymce from "@/components/Tinymce";
-import {allAddCategoryreq,allAddreq} from '@/api/user'
+import { allAddCategoryreq, allAddreq } from '@/api/user'
 import { getToken } from '@/utils/auth'
 
 export default {
@@ -129,147 +98,171 @@ export default {
   data() {
     // 图片验证规则
     var validateImg = (rule, value, callback) => {
-        if (value === '' || value === undefined) {
-          callback(new Error('请上传封面'));
-        } else {
-          callback();
-        }
-      };
+      if (value === '' || value === undefined) {
+        callback(new Error('请上传封面'));
+      } else {
+        callback();
+      }
+    };
     return {
       fileList: [],
-      options:[
+      options: [
         {
-          id:1,
-          Categorytitle:'超高清视频产业'
+          id: 1,
+          Categorytitle: '超高清视频产业'
         },
         {
-          id:2,
-          Categorytitle:'新能源产业'
+          id: 2,
+          Categorytitle: '新能源产业'
         },
         {
-          id:3,
-          Categorytitle:'智能终端产业'
+          id: 3,
+          Categorytitle: '智能终端产业'
         },
         {
-          id:4,
-          Categorytitle:'半导体与集成电路产业'
+          id: 4,
+          Categorytitle: '半导体与集成电路产业'
         }
       ],
-      upheaders:{},
+      upheaders: {},
       loading: false,
-      imgdialogVisible:false,
+      imgdialogVisible: false,
       validateImg,
-      dialogImageUrl:'',
+      dialogImageUrl: '',
       inputVisible: false,
       inputValue: '',
       ruleForm: {
         // categorytitle:'',
-        sortid:'',
-        imgurl:'',
-        categoryid:'',
-        companyname:'',
-        isshow:true,
-        tags:[],
-        tellphone:'',
-        hdAddress:'',
-        worktime:'',
-        content:''
+        sortid: '',
+        imgurl: '',
+        categoryid: '',
+        companyname: '',
+        isshow: true,
+        tags: [],
+        tellphone: '',
+        hdAddress: '',
+        worktime: '',
+        content: ''
       },
       rules: {
         categoryid: [
-            { required: true, message: '请选择', trigger: 'blur' },
-          ],
-          // imgurl: [
-          //   { required: true, trigger: 'change', validator: validateImg, }
-          // ],
+          { required: true, message: '请选择', trigger: 'blur' },
+        ],
+        // imgurl: [
+        //   { required: true, trigger: 'change', validator: validateImg, }
+        // ],
       },
     };
   },
   mounted() {
-    this.upheaders = {'Authorization':getToken()}
+    this.upheaders = { 'Authorization': getToken() }
   },
   methods: {
     beforeUploadvideo(file) {
-    const isVideo = file.type.startsWith('video/');  
-    if (!isVideo) {  
-      this.$message.error('请上传视频文件！');  
-      return false;  
-    }  
-    // 如果需要限制文件大小，可以在这里添加逻辑  
+      const isVideo = file.type.startsWith('video/');
+      if (!isVideo) {
+        this.$message.error('请上传视频文件！');
+        return false;
+      }
+      // 如果需要限制文件大小，可以在这里添加逻辑  
       return true;
     },
     // 文件上传成功时的钩子
     handleSuccessvideo(response, file, fileList) {
       this.ruleForm.companyname = response.filepath;
       // 可以在这里处理上传成功后的逻辑，比如更新UI或存储文件信息等  
-    },  
+    },
     // 文件上传失败时的钩子  
     handleErrorvideo(error, file, fileList) {
-      this.$message.error('视频上传失败，请重试！'+error.msg);  
+      this.$message.error('视频上传失败，请重试！' + error.msg);
       // 可以在这里处理上传失败后的逻辑，比如重试上传或显示更详细的错误信息  
     },
     showInput() {
-        this.inputVisible = true;
-        this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
-      },
-    colseitem(tag){
-        this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
-      },
-            // 添加标签
-      handleInputConfirm(){
-      let inputValue = this.inputValue;
-        if (inputValue) {
-          // 去重
-          if(this.ruleForm.tags.length !== 0){
-            !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
-          }else{
-            this.ruleForm.tags.push(inputValue);
-          }
-        }
-        this.inputVisible = false;
-        this.inputValue = '';
+      this.inputVisible = true;
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus();
+      });
     },
-    beforeUpload(file) {  
+    colseitem(tag) {
+      this.ruleForm.tags.splice(this.ruleForm.tags.indexOf(tag), 1);
+    },
+    // 添加标签
+    handleInputConfirm() {
+      let inputValue = this.inputValue;
+      if (inputValue) {
+        // 去重
+        if (this.ruleForm.tags.length !== 0) {
+          !this.ruleForm.tags.includes(inputValue) && this.ruleForm.tags.push(inputValue);
+        } else {
+          this.ruleForm.tags.push(inputValue);
+        }
+      }
+      this.inputVisible = false;
+      this.inputValue = '';
+    },
+    beforeUpload(file) {
       const isJPG = file.type === 'image/jpeg';
       const isPNG = file.type === 'image/png';
       const isLt10M = file.size / 1024 / 1024 < 10;
-      if (!isJPG && !isPNG) {  
-        this.$message.error('上传图片只能是 JPG/PNG 格式!');  
-      }  
+      if (!isJPG && !isPNG) {
+        this.$message.error('上传图片只能是 JPG/PNG 格式!');
+      }
       if (!isLt10M) {
         this.$message.error('上传图片大小不能超过 10MB!');
-      }  
+      }
       return isJPG || isPNG && isLt10M;
     },
     handleSuccess(response) {
       this.ruleForm.imgurl = response.filepath;
-    },  
+    },
     handleError(error) {
-      this.$message.error(error.msg);  
+      this.$message.error(error.msg);
       // 你可以在这里处理上传失败后的逻辑  
-    },  
+    },
     handleRemove() {
       this.ruleForm.imgurl = '';
       this.fileList = [];
       // 你可以在这里处理删除文件后的逻辑，比如更新fileList
     },
+    // 获取经纬度
+    getLatLng() {
+      const geocoder = new TMap.service.Geocoder({
+      });
+      // 调用 getLocation 方法解析地址
+      geocoder.getLocation({ address: this.ruleForm.hdAddress })
+        .then(async (result) => {
+          if (result.status === 0 && result.message === "Success") {
+            // 解析成功，更新经纬度数据
+            this.ruleForm.hdLat = result.result.location.lat;
+            this.ruleForm.hdLng = result.result.location.lng;
+            let { isshow, tags } = this.ruleForm
+            if (tags.length !== 0) {
+              tags = tags.join(',')
+            }
+            let res = await allAddreq({ ...this.ruleForm, tags, isshow: +isshow, channelname: this.$route.meta.channelname })
+            if (res.status === 200) {
+              this.$message.success(res.msg)
+              this.$router.go(-1)
+            }
+            this.loading = false;
+          } else {
+            // 解析失败或地址不完整等错误处理
+            this.btnloading = false
+            this.$message.error('地址解析失败，请重新输入地址');
+          }
+        })
+        .catch((error) => {
+          // 网络错误或其他异常处理  
+          this.btnloading = false
+          this.$message.error('地址解析错误，请检查后再试');
+        });
+    },
     // 提交表单
     async submitForm(formName) {
-      this.$refs[formName].validate(async(valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           this.loading = true;
-          let {isshow,tags} = this.ruleForm
-          if(tags.length !== 0){
-            tags = tags.join(',')
-          }
-          let res = await allAddreq({...this.ruleForm,tags,isshow:+isshow,channelname:this.$route.meta.channelname})
-          if(res.status === 200){
-            this.$message.success(res.msg)
-            this.$router.go(-1)
-          }
-          this.loading = false;
+          this.getLatLng()
         }
       });
     }
@@ -279,10 +272,11 @@ export default {
 
 <style lang="scss" scoped>
 ::v-deep {
-  .my-form .el-form-item .el-form-item__label{
+  .my-form .el-form-item .el-form-item__label {
     font-size: 17px !important;
+  }
 }
-}
+
 .container-box {
   min-height: 100%;
   height: auto !important;

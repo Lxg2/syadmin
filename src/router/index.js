@@ -21,7 +21,7 @@ import proRouter from './modules/promotion'
 import sy from './modules/sy'
 // 党建
 import videoRouter from './modules/partybuilding'
-// 企业管理
+// 找服务
 import enterpriseRouter from './modules/enterprise'
 import caseRouter from './modules/case'
 import gogaoRouter from './modules/gogao'

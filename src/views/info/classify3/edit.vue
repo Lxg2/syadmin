@@ -123,7 +123,7 @@ export default {
       this.ruleForm.imgurl = response.filepath;
     },  
     handleError(error) {
-      this.$message.error(error.msg);  
+      this.$message.error(error.msg);
       // 你可以在这里处理上传失败后的逻辑  
     },  
     handleRemove() {

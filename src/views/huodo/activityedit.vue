@@ -199,7 +199,7 @@ export default {
       this.options = res.datalist
     },
       // 获取经纬度
-      getLatLng() {
+    getLatLng() {
       const geocoder = new TMap.service.Geocoder({
       });  
       // 调用 getLocation 方法解析地址

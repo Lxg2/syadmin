@@ -43,9 +43,7 @@
             @keyup.enter.native="handleLogin"
           />
           <span class="show-pwd" @click="showPwd">
-            <svg-icon
-              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-            />
+            <i style="font-size: 16px; color: #b6c2cd;" class="el-icon-view"></i>
           </span>
         </el-form-item>
         <el-button
@@ -274,7 +272,7 @@ $light_gray: #eee;
     right: 21px;
     top: 22px;
     bottom: 22px;
-    font-size: 20px;
+    font-size: 17px;
     color: #b6c2cd;
     cursor: pointer;
     user-select: none;
